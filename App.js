@@ -6,7 +6,7 @@ import * as SplashScreen from "expo-splash-screen"
 import { useCallback } from 'react';
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+ import Cart from './screens/cart';
 import BottomTabNav from './navigation/bottomTabNavigateur';
 const Stack= createNativeStackNavigator()
 
@@ -18,7 +18,8 @@ export default function App() {
     extraBold:require('./assets/fonts/Zain-ExtraBold.ttf'),
     light:require('./assets/fonts/Zain-Light.ttf'),
     Black:require('./assets/fonts/Zain-Black.ttf'),
-    extraLight:require('./assets/fonts/Zain-ExtraLight.ttf')
+    extraLight:require('./assets/fonts/Zain-ExtraLight.ttf'),
+    semibold:require("./assets/fonts/Poppins-SemiBold.ttf")
   })
 
 const onLayoutRootView= useCallback(async()=>{
@@ -38,6 +39,7 @@ const onLayoutRootView= useCallback(async()=>{
    <NavigationContainer>
     <Stack.Navigator>
       <Stack.Screen name='BottomTabNav' component={BottomTabNav} options={{headerShown:false}}/>
+      <Stack.Screen name='Cart' component={Cart} options={{headerShown:false}}/>
     </Stack.Navigator>
    </NavigationContainer>
   );
