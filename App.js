@@ -4,6 +4,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from "expo-splash-screen"
 import { useCallback } from 'react';
+import { NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import BottomTabNav from './navigation/bottomTabNavigateur';
+const Stack= createNativeStackNavigator()
+
 export default function App() {
  
   const [fontsLoaded]=useFonts({
@@ -29,13 +35,14 @@ const onLayoutRootView= useCallback(async()=>{
 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.textStyle}>asslemedd ahmhed</Text>
-      <StatusBar style="auto" />
-    </View>
+   <NavigationContainer>
+    <Stack.Navigator>
+      <Stack.Screen name='BottomTabNav' component={BottomTabNav} options={{headerShown:false}}/>
+    </Stack.Navigator>
+   </NavigationContainer>
   );
 }
-//hey
+
 
 const styles = StyleSheet.create({
   container: {
