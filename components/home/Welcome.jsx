@@ -21,7 +21,7 @@ const Welcome=()=>{
         <View>
        <View style={styles.container}>
 <Text style={styles.tex}>
-Find the most
+عمر دارك بأرخص الأسوام
 </Text>
 <Text style={styles.texx} >
 Luxurious furniture
@@ -65,7 +65,7 @@ const  styles=StyleSheet.create({
     },
     tex:{
         fontFamily:"bold",
-        fontSize:SIZES.xxLarge -5,
+        fontSize:SIZES.xLarge,
         marginTop:SIZES.xSmall,
         color:COLORS.black,
         marginHorizontal:12,
