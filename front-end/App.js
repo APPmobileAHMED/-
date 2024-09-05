@@ -7,7 +7,12 @@ import { useCallback } from 'react';
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
  import Cart from './screens/cart';
+ import ProductDetails from "./screens/produitDetail"
 import BottomTabNav from './navigation/bottomTabNavigateur';
+import Login from './components/auth/Login';
+import SignUp from './components/auth/signup';
+import SignUp2 from './components/auth/signup2';
+import { AuthProvider } from './components/authcontext/authcontext';
 const Stack= createNativeStackNavigator()
 
 export default function App() {
@@ -36,12 +41,22 @@ const onLayoutRootView= useCallback(async()=>{
 
 
   return (
+   
    <NavigationContainer>
-    <Stack.Navigator>
+     <AuthProvider>
+    <Stack.Navigator initialRouteName="Login">
+    <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
+    <Stack.Screen name='SignUp' component={SignUp} options={{headerShown:false}}/>
+    <Stack.Screen name='SignUp2' component={SignUp2} options={{headerShown:false}}/>
+ 
       <Stack.Screen name='BottomTabNav' component={BottomTabNav} options={{headerShown:false}}/>
       <Stack.Screen name='Cart' component={Cart} options={{headerShown:false}}/>
+      <Stack.Screen name='ProductDetails' component={ProductDetails} options={{headerShown:false}}/>
+      
     </Stack.Navigator>
+    </AuthProvider>
    </NavigationContainer>
+   
   );
 }
 
