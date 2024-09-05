@@ -6,6 +6,7 @@ import { Fontisto, Ionicons } from "@expo/vector-icons";
 import Welcome from "../components/home/Welcome";
 import Carousel from "../components/home/carousel"
 import Headings from "../components/home/heading";
+import ProductRow from "../components/products/productRow";
 
 
 
@@ -16,6 +17,7 @@ const Home=()=>{
 
 
     return(
+        
         <SafeAreaView>
             < View style={styles.appBarWrapper}>
              
@@ -42,6 +44,7 @@ const Home=()=>{
                 <Welcome/>
                 <Carousel/>
                 <Headings/>
+                <ProductRow/>
             </ScrollView>
             
         </SafeAreaView>
