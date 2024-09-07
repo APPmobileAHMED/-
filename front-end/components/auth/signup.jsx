@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS,SIZES } from '../../constants';
 import { useNavigation } from "@react-navigation/native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 const SignUp = () => {
   const navigation=useNavigation()
+  const [firstname,steFirstname]=useState("")
+  const [lastname,stelastname]=useState("")
+
   return (
     <View style={styles.container}>
         <TouchableOpacity style={{bottom:300,right:130}} >
@@ -23,28 +26,26 @@ const SignUp = () => {
               placeholder="الإسم" 
               placeholderTextColor={COLORS.white} 
               style={styles.input} 
+              value={firstname}
+              onChangeText={steFirstname}
             />
           </View>
           <View style={styles.formInp}>
             <TextInput 
               placeholder="اللقب" 
               placeholderTextColor={COLORS.white} 
-               
-              secureTextEntry 
-              style={{  width: '100%',
-                backgroundColor: 'none',
-                fontSize: 13.4,
-                color: '#00FF7F',
-                borderWidth: 0,
-                padding: 0,
-                margin: 0, left:180}  }
+              style={styles.input} 
+               value={lastname}
+               onChangeText={stelastname}
+              
+             
              
             />
           </View>
         </View>
         <View style={styles.submitButtonCvr}>
           <TouchableOpacity style={{left:100,}} >
-          <Ionicons name="arrow-forward-circle-outline" size={45} color={COLORS.green} onPress={()=>{navigation.navigate("SignUp2")}}/>
+          <Ionicons name="arrow-forward-circle-outline" size={45} color={COLORS.green} onPress={()=>{navigation.navigate("SignUp2",{firstname:firstname,lastname:lastname})}}/>
           </TouchableOpacity>
         </View>
         <View style={styles.forgotPass}>

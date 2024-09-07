@@ -4,9 +4,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import {Home,Search,Profile} from "../screens/index.js"
 import {Ionicons} from "@expo/vector-icons" 
 import {COLORS} from "../constants/index"
+import { useAuth } from "../components/authcontext/authcontext.jsx"
 
 
 const Tab =createBottomTabNavigator()
+
+
 
 const screenOptions = {
     tabBarShowLabel: false,
@@ -22,7 +25,12 @@ const screenOptions = {
     }
 }
 const BottomTabNav=()=>{
+    const {token,information}=useAuth()
 
+  
+      
+   
+    console.log(information)
 
 
 
