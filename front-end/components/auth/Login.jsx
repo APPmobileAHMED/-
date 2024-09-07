@@ -34,15 +34,7 @@ const Login = () => {
               placeholderTextColor={COLORS.white} 
                value={password}
                onChangeText={setPassword}
-              secureTextEntry 
-              style={{  width: '100%',
-                backgroundColor: 'none',
-                fontSize: 13.4,
-                color: '#00FF7F',
-                borderWidth: 0,
-                padding: 0,
-                margin: 0, left:160}  }
-             
+               style={styles.input}
             />
           </View>
         </View>
