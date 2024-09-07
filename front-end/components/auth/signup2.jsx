@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS,SIZES } from '../../constants';
 import { useNavigation } from "@react-navigation/native";
 import { Feather, Ionicons } from "@expo/vector-icons";
-const SignUp2 = () => {
+import { useAuth } from '../authcontext/authcontext';
+
+
+const SignUp2 = ({route}) => {
   const navigation=useNavigation()
+
+  const {firstname,lastname}=route.params
+  const [email,setemail]=useState("")
+  const [password,setpassword]=useState("")
+  const [confirmPassword,setconfirmPassword]=useState("")
+
+const {register}=useAuth()
+   
+
+  
   return (
     <View style={styles.container}>
         <TouchableOpacity style={{bottom:300,right:130}} >
@@ -23,13 +36,16 @@ const SignUp2 = () => {
               placeholder="البريد الإلكتروني " 
               placeholderTextColor={COLORS.white} 
               style={styles.input} 
-            />
+              value={email}
+              onChangeText={setemail}            />
           </View>
           <View style={styles.formInp}>
             <TextInput 
               placeholder="كلمة السر " 
               placeholderTextColor={COLORS.white} 
               style={styles.input} 
+              value={password}
+              onChangeText={setpassword}
             />
           </View>
           <View style={styles.formInp}>
@@ -37,12 +53,14 @@ const SignUp2 = () => {
               placeholder="كلمة السر مرة أخرى "
               placeholderTextColor={COLORS.white} 
               style={styles.input} 
+              value={confirmPassword}
+              onChangeText={setconfirmPassword}
             />
           </View>
          
         </View>
         <View style={styles.submitButtonCvr}>
-          <TouchableOpacity style={{left:100,}} >
+          <TouchableOpacity style={{left:100,}} onPress={()=>{register(firstname,lastname,email,password)}} >
           <Ionicons name="arrow-forward-circle-outline" size={45} color={COLORS.green}/>
           </TouchableOpacity>
         </View>
