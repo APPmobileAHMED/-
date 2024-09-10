@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../constants";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../authcontext/authcontext";
 
 
 
@@ -12,10 +13,10 @@ import { useNavigation } from "@react-navigation/native";
 
 const Welcome=()=>{
     const navigation=useNavigation()
+const {token}=useAuth()
 
 
-
-
+console.log(token)
     return(
 
         <View>

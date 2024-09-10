@@ -22,6 +22,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      role: {
+        type: DataTypes.ENUM('buyer', 'seller'),
+        allowNull: false,
+      }
+      
+      
     });
     return User;
   };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet,KeyboardAvoidingView,Platform,ScrollView } from 'react-native';
 import { COLORS } from '../../constants';
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../authcontext/authcontext';
@@ -12,6 +12,11 @@ const Login = () => {
 
  
   return (
+    <KeyboardAvoidingView
+    
+    behavior={Platform.OS === "ios" ? "padding" : null} 
+  >
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
     <View style={styles.container}>
       <View style={styles.formBody}>
         <View style={styles.welcomeLines}>
@@ -54,6 +59,8 @@ const Login = () => {
 
       </View>
     </View>
+    </ScrollView >
+    </KeyboardAvoidingView>
   );
 };
 

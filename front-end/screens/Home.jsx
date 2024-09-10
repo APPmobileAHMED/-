@@ -7,13 +7,14 @@ import Welcome from "../components/home/Welcome";
 import Carousel from "../components/home/carousel"
 import Headings from "../components/home/heading";
 import ProductRow from "../components/products/productRow";
-
+import { useNavigation } from "@react-navigation/native";
+import Categories from "../components/home/categories";
 
 
 
 const Home=()=>{
 
-
+    const navigation=useNavigation()
 
 
     return(
@@ -32,7 +33,7 @@ const Home=()=>{
     <Text style={styles.cartnumber}>8</Text>
 
 </View>
-<TouchableOpacity>
+<TouchableOpacity onPress={()=>{navigation.navigate("Cart")}} >
    <Fontisto name="shopping-bag" size={24}/> 
 </TouchableOpacity>
 </View>
@@ -43,6 +44,7 @@ const Home=()=>{
             <ScrollView>
                 <Welcome/>
                 <Carousel/>
+                <Categories/>
                 <Headings/>
                 <ProductRow/>
             </ScrollView>
