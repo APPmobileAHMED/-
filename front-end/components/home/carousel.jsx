@@ -3,8 +3,8 @@ import { View, Image, FlatList, Animated, Dimensions, StyleSheet, TouchableOpaci
 
 // Dummy data for carousel
 const DATA = [
-  { id: '1', title: 'https://scontent.ftun16-1.fna.fbcdn.net/v/t39.30808-6/450145387_459719513539751_5441717218828238399_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_ohc=YNAHE3MLMjIQ7kNvgEvAau1&_nc_ht=scontent.ftun16-1.fna&oh=00_AYAOs4-PwI3Iuww5Q3lqIPWVT6FvTsAVK7ghhZ0aPwhRDw&oe=66A86063' },
-  { id: '2', title: 'https://scontent.ftun16-1.fna.fbcdn.net/v/t39.30808-6/449522245_459034326941603_6763103756103614841_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=6fgsbkcigOAQ7kNvgEXh7__&_nc_ht=scontent.ftun16-1.fna&oh=00_AYBxKwGwbsES00CDUX0-x8aIo3H-vdTTvws9tkXc8OM8_Q&oe=66A8520E' },
+  { id: '1', title: 'https://quattro.tn/wp-content/uploads/2019/05/porte_chene-2-1170x756.jpg' },
+  { id: '2', title: 'https://quattro.tn/wp-content/uploads/2019/05/porte_chene-2-1170x756.jpg' },
 ];
 
 // Screen width

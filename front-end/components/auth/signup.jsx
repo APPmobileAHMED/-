@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet,KeyboardAvoidingView,Platform,ScrollView } from 'react-native';
 import { COLORS,SIZES } from '../../constants';
 import { useNavigation } from "@react-navigation/native";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import {Picker} from '@react-native-picker/picker';
 const SignUp = () => {
   const navigation=useNavigation()
   const [firstname,steFirstname]=useState("")
   const [lastname,stelastname]=useState("")
+  const [role, setrole] = useState('');
 
   return (
+
+    <KeyboardAvoidingView
+    
+    behavior={Platform.OS === "ios" ? "padding" : null} 
+  >
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
     <View style={styles.container}>
         <TouchableOpacity style={{bottom:300,right:130}} >
           <Ionicons name="arrow-back-outline" size={45}  onPress={()=>{navigation.goBack()}}/>
@@ -42,10 +50,23 @@ const SignUp = () => {
              
             />
           </View>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                      <Text>Select Role:</Text>
+                      <Picker
+                        role={role}
+                        style={{ height: 50, width: 150 }}
+                        onValueChange={(itemValue, itemIndex) => setrole(itemValue)}
+                      >
+                        <Picker.Item label="choose your Role"  />
+                        <Picker.Item label="Buyer" value="buyer" />
+                        <Picker.Item label="Seller" value="seller" />
+                      </Picker>
+                      <Text>You selected: {role}</Text>
+                    </View>
         </View>
         <View style={styles.submitButtonCvr}>
           <TouchableOpacity style={{left:100,}} >
-          <Ionicons name="arrow-forward-circle-outline" size={45} color={COLORS.green} onPress={()=>{navigation.navigate("SignUp2",{firstname:firstname,lastname:lastname})}}/>
+          <Ionicons name="arrow-forward-circle-outline" size={45} color={COLORS.green} onPress={()=>{navigation.navigate("SignUp2",{firstname:firstname,lastname:lastname,role:role})}}/>
           </TouchableOpacity>
         </View>
         <View style={styles.forgotPass}>
@@ -57,6 +78,8 @@ const SignUp = () => {
 
       </View>
     </View>
+    </ScrollView >
+    </KeyboardAvoidingView>
   );
 };
 

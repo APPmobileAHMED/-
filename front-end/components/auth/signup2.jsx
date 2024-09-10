@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet,KeyboardAvoidingView,Platform,ScrollView } from 'react-native';
 import { COLORS,SIZES } from '../../constants';
 import { useNavigation } from "@react-navigation/native";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -9,7 +9,7 @@ import { useAuth } from '../authcontext/authcontext';
 const SignUp2 = ({route}) => {
   const navigation=useNavigation()
 
-  const {firstname,lastname}=route.params
+  const {firstname,lastname,role}=route.params
   const [email,setemail]=useState("")
   const [password,setpassword]=useState("")
   const [confirmPassword,setconfirmPassword]=useState("")
@@ -19,6 +19,12 @@ const {register}=useAuth()
 
   
   return (
+
+    <KeyboardAvoidingView
+    
+    behavior={Platform.OS === "ios" ? "padding" : null} 
+  >
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
     <View style={styles.container}>
         <TouchableOpacity style={{bottom:300,right:130}} >
           <Ionicons name="arrow-back-outline" size={45}  onPress={()=>{navigation.goBack()}}/>
@@ -60,7 +66,7 @@ const {register}=useAuth()
          
         </View>
         <View style={styles.submitButtonCvr}>
-          <TouchableOpacity style={{left:100,}} onPress={()=>{register(firstname,lastname,email,password)}} >
+          <TouchableOpacity style={{left:100,}} onPress={()=>{register(firstname,lastname,email,password,role)}} >
           <Ionicons name="arrow-forward-circle-outline" size={45} color={COLORS.green}/>
           </TouchableOpacity>
         </View>
@@ -72,6 +78,8 @@ const {register}=useAuth()
 
       </View>
     </View>
+    </ScrollView >
+    </KeyboardAvoidingView>
   );
 };
 
