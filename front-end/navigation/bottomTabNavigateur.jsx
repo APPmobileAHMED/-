@@ -30,7 +30,8 @@ const BottomTabNav=()=>{
   
       
    
-    console.log(information)
+    
+
 
 
 

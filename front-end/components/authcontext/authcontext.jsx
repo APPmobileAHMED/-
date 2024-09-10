@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
      const navigation=useNavigation()
 
 
-const [token,setToken]=useState("");
+const [token,setToken]=useState({});
 const [information,setinformation]=useState({})
 
 useEffect(() => {
@@ -30,26 +30,42 @@ useEffect(() => {
   });
 }, []);
 
-const login=(password,email)=>{
+const login = (password, email) => {
+  axios.post("http://192.168.43.136:8080/api/login", {
+    password,
+    email,
+  })
+  .then((response) => {
+    // Check the response data to make sure it contains the token
+    console.log(response.data);
+    const tokenn = response.data; // Adjust this based on the actual response structure
 
-  axios.post("http://192.168.1.11:8080/api/login",{
-    password:password,
-    email:email
-  }).then((response)=>{
-   AsyncStorage.setItem("token",response.data.token)
-  navigation.navigate("BottomTabNav")
-  }).catch((err)=>{
-    console.error(err);
-  }) 
+    if (token) {
+      AsyncStorage.setItem("token", tokenn)
+        .then(() => {
+          console.log("Token stored successfully");
+          navigation.navigate("BottomTabNav");
+        })
+        .catch((error) => {
+          console.error("Error storing token:", error);
+        });
+    } else {
+      console.error("Token not found in response");
+    }
+  })
+  .catch((err) => {
+    console.error("Login error:", err);
+  });
+};
 
-}
 
-const register=(firstname,lastname,email,password)=>{
-  axios.post('http://192.168.1.11:8080/api/register',{
+const register=(firstname,lastname,email,password,role)=>{
+  axios.post('http://192.168.43.136:8080/api/register',{
     firstname:firstname,
     lastname:lastname,
     email:email,
-    password:password
+    password:password,
+    role:role
   }).then((res)=>{
     AsyncStorage.setItem("token",res.data.token).then(()=>{
       return  AsyncStorage.setItem("infor",JSON.stringify(res.data))

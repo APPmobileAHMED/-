@@ -13,10 +13,11 @@ register: function(req,res){
             email:req.body.email,
             firstname:req.body.firstname,
             lastname:req.body.lastname,
-            password:hashpass
+            password:hashpass,
+            role:req.body.role
         }).then((response)=>{
-            let token=jwt.sign({email:response.email,id:response.id,firstname:response.firstname,lastname:response.lastname},"my code daezdjzechkjzekl")
-            res.send({token:token,response:response})
+            let token=jwt.sign({email:response.email,id:response.id,firstname:response.firstname,lastname:response.lastname,role:response.role},"my code daezdjzechkjzekl")
+            res.send({token:token,infor:response})
         }).catch((error)=>{
             res.send(error)
         })
@@ -36,7 +37,7 @@ login:(req,res)=>{
         }else{
             bcrypt.compare(req.body.password,response.password).then((samepass)=>{
                 if(samepass){
-                let token=jwt.sign({email:response.email,id:response.id,firstname:response.firstname,lastname:response.lastname},"my code akjdezjekldamzdlid")
+                let token=jwt.sign({email:response.email,id:response.id,firstname:response.firstname,lastname:response.lastname,role:response.role},"my code akjdezjekldamzdlid")
                
                
                 res.send({token:token})
