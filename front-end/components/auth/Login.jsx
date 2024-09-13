@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet,KeyboardAvoidingView,Platform,ScrollView } from 'react-native';
-import { COLORS } from '../../constants';
+import { COLORS } from '../../constants'; 
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../authcontext/authcontext';
 const Login = () => {
 
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
-  const {login}=useAuth()
+  const {login,token}=useAuth()
   const navigation=useNavigation()
 
  
@@ -44,7 +44,7 @@ const Login = () => {
           </View>
         </View>
         <View style={styles.submitButtonCvr}>
-          <TouchableOpacity style={styles.submitButton} onPress={()=>{login(email,password)}}>
+          <TouchableOpacity style={styles.submitButton} onPress={()=>{login(password,email)}}>
             <Text style={styles.submitButtonText}>دخول </Text>
           </TouchableOpacity>
         </View>
