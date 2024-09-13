@@ -1,5 +1,5 @@
 import {View,Text,StyleSheet, TouchableOpacity, ScrollView} from "react-native"
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../constants";
 import { Fontisto, Ionicons } from "@expo/vector-icons";
@@ -9,14 +9,22 @@ import Headings from "../components/home/heading";
 import ProductRow from "../components/products/productRow";
 import { useNavigation } from "@react-navigation/native";
 import Categories from "../components/home/categories";
+import { useAuth } from "../components/authcontext/authcontext";
 
 
 
 const Home=()=>{
 
     const navigation=useNavigation()
+const { tokenDecoded,token}=useAuth()
 
+useEffect(()=>{
+   
+    console.log("token",token)
+console.log("decodedtoken",tokenDecoded)
 
+    
+    },[token])
     return(
         
         <SafeAreaView>

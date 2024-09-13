@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       firstname: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       lastname: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
    
       password: {
@@ -25,7 +25,29 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         type: DataTypes.ENUM('buyer', 'seller'),
         allowNull: false,
-      }
+      },
+      location: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      phoneNumber: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      photoDeprofile: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      instagram: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+
       
       
     });

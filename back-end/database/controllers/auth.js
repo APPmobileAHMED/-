@@ -53,8 +53,68 @@ login:(req,res)=>{
     }).catch((err)=>{
         res.send(err)
     })
+},
+
+
+
+updateprofile: (req, res) => {
+    db.user.findOne({ where: { id: req.params.id } })
+        .then((user) => {
+            if (!user) {
+                return res.send("Invalid user");
+            }
+
+            // If current password is provided, check if it matches the stored password
+            if (req.body.CurrentPassword) {
+                bcrypt.compare(req.body.CurrentPassword, user.dataValues.password)
+                    .then((samePassword) => {
+                        if (samePassword) {
+                            // If new password is provided, hash it and update
+                            if (req.body.newPassword) {
+                                bcrypt.hash(req.body.newPassword, 10)
+                                    .then((passwordHashed) => {
+                                        db.user.update({
+                                            username: req.body.username,
+                                            password: passwordHashed,  // Update 'password' field
+                                            location: req.body.location,
+                                            photoDeprofile: req.body.photo,
+                                            phoneNumber: req.body.phone,
+                                            instagram: req.body.instagram
+                                        }, { where: { id: req.params.id } })
+                                            .then((result) => res.send("Profile updated successfully with new password"))
+                                            .catch((err) => res.status(500).send(err)); // Handle update error
+                                    })
+                                    .catch((err) => res.status(500).send(err)); // Handle hashing error
+                            } else {
+                                // Update user without password change
+                                db.user.update({
+                                    username: req.body.username,
+                                    location: req.body.location,
+                                    photoDeprofile: req.body.photo,
+                                    phoneNumber: req.body.phone,
+                                    instagram: req.body.instagram
+                                }, { where: { id: req.params.id } })
+                                    .then((result) => res.send("Profile updated successfully"))
+                                    .catch((err) => res.status(500).send(err)); // Handle update error
+                            }
+                        } else {
+                            return res.send("Your current password is incorrect");
+                        }
+                    })
+                    .catch(() => res.status(500).send("Error comparing passwords"));
+            } else {
+                // If no password change, just update other fields
+                db.user.update({
+                    username: req.body.username,
+                    location: req.body.location,
+                    photoDeprofile: req.body.photo,
+                    phoneNumber: req.body.phone,
+                    instagram: req.body.instagram
+                }, { where: { id: req.params.id } })
+                    .then((result) => res.send("Profile updated successfully"))
+                    .catch((err) => res.status(500).send(err)); // Handle update error
+            }
+        })
+        .catch((err) => res.status(500).send(err)); // Handle findOne error
 }
-
-
-
 }
