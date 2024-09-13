@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../components/authcontext/authcontext";
 import { COLORS } from "../constants";
+import axios from "axios";
 import * as Location from 'expo-location'; // Import Location
 import MapView, { Marker } from 'react-native-maps'; 
 
@@ -16,18 +17,26 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(null);
+  const [file, setfile] = useState(null);
   const {logout, tokenDecoded, token} = useAuth();
   const [location, setLocation] = useState(null);
   const [mapVisible, setMapVisible] = useState(false); // To toggle the map view
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [placeName, setPlaceName] = useState(''); // New state to store the place name
 
+  useEffect(() => {
+    if (file) {
+      console.log('fileImage', file); // هذا باش يطبع القيمة الجديدة وقت اللي تتغير
+      console.log(image)
+    }
+  }, [image]);
   const getLocationPermission = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permission denied', 'Permission to access location is required.');
       return;
     }
+
 
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
@@ -63,23 +72,57 @@ const Profile = () => {
 
   const navigation = useNavigation();
   const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      Alert.alert("Permission Required", "Permission to access media library is required!");
-      return;
-    }
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: 'Images',
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+      console.log('ImagePicker result:', result);
 
-    if (!result.canceled) {
-      setImage(result.uri); 
+      if (!result.canceled) {
+        const source = { uri: result.assets[0].uri };
+        console.log('Selected image URI:', source.uri);
+        setfile(source.uri)
+      }
+    } catch (error) {
+      console.error('ImagePicker Error: ', error);
     }
   };
+ 
+
+  const uploadImage = () => {
+    const formData = new FormData();
+    formData.append("file", {
+      uri: file,
+      type: "image/jpeg",
+      name: file.split("/").pop(),
+    });
+    formData.append("upload_preset", "ecommer-ce");
+  
+    axios.post("https://api.cloudinary.com/v1_1/dcwa4oceq/image/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log("Upload response:", response);
+  
+        if (response.status === 200) {
+          const imageUrl = response.data.secure_url;
+          setImage(imageUrl); // Update the image URL in state
+        } else {
+          Alert.alert("Error", "Failed to upload image");
+        }
+      })
+      .catch((error) => {
+        console.error("Image upload error:", error);
+        Alert.alert("Error", "An error occurred while uploading the image");
+      });
+  };
+  
 
   return (
     <KeyboardAvoidingView
@@ -100,6 +143,10 @@ const Profile = () => {
           <TouchableOpacity onPress={pickImage}>
             <Image source={image ? { uri: image } : { uri: 'https://via.placeholder.com/100' }} style={styles.profileImage} />
           </TouchableOpacity>
+          <TouchableOpacity onPress={()=>{uploadImage()}}>
+           <Ionicons name="cloud-download" size={28} style={{right:50,bottom:20}} />
+          </TouchableOpacity>
+
         </View>
 
         <View style={styles.detailsContainer}>

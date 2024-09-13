@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   
   const login = (password, email) => {
     axios
-      .post("http://192.168.1.11:8080/api/login", {
+      .post("http://192.168.179.160:8080/api/login", {
         password,
         email,
       })
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (firstname, lastname, email, password, role) => {
     try {
-      const res = await axios.post("http://192.168.1.11:8080/api/register", {
+      const res = await axios.post("http://192.168.179.160:8080/api/register", {
         firstname: firstname,
         lastname: lastname,
         email: email,
