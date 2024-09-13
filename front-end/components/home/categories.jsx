@@ -1,32 +1,44 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image,Dimensions } from "react-native";
 import { COLORS, SIZES } from "../../constants";
-import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons,Ionicons} from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-const categories = [
-  { id: 1, name: "Electronics", image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi8fS9JgkgInLtjhlzgwXotxLtaWkbmbviQA&s"  },
-  { id: 2, name: "Fashion", image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi8fS9JgkgInLtjhlzgwXotxLtaWkbmbviQA&s"  },
-  { id: 3, name: "Home", image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi8fS9JgkgInLtjhlzgwXotxLtaWkbmbviQA&s" },
-  { id: 4, name: "Beauty", image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi8fS9JgkgInLtjhlzgwXotxLtaWkbmbviQA&s"  },
-];
 
+const { width } = Dimensions.get('window');
 const Categories = () => {
+
+  const navigation=useNavigation()
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Categories</Text>
       <View style={styles.categoriesWrapper}>
       
+          <TouchableOpacity  style={styles.categoryCard} onPress={()=>navigation.navigate('CategoriProd')}>
+            <View style={styles.iconWrapper}>
+            <Image source={{uri:"https://cdn-icons-png.flaticon.com/128/1864/1864744.png"}} style={styles.image}/>
+            </View>
+            <Text style={styles.categoryName}> أبوب </Text>
+          </TouchableOpacity>
           <TouchableOpacity  style={styles.categoryCard}>
             <View style={styles.iconWrapper}>
-              <FontAwesome
-                name="fa-door-open"
-                size={50} // Adjust size as needed
-                color={COLORS.primary} // Use your primary color or adjust as needed
-              />
+            <Image source={{uri:"https://cdn-icons-png.flaticon.com/128/3944/3944770.png"}} style={styles.image}/>
             </View>
-            <Text style={styles.categoryName}> hscq</Text>
+            <Text style={styles.categoryName}> نوافذ </Text>
+          </TouchableOpacity>
+          <TouchableOpacity  style={styles.categoryCard}>
+            <View style={styles.iconWrapper}>
+            <Image source={{uri:"https://cdn-icons-png.flaticon.com/128/4314/4314268.png"}} style={styles.image}/>
+            </View>
+            <Text style={styles.categoryName}> ابواب حديدية</Text>
           </TouchableOpacity>
         
+          <TouchableOpacity  style={styles.categoryCard}>
+            <View style={styles.iconWrapper}>
+            <Image source={{uri:"https://cdn-icons-png.flaticon.com/128/2851/2851991.png"}} style={styles.image}/>
+            </View>
+            <Text style={styles.categoryName}>لوازم المطبخ </Text>
+          </TouchableOpacity>
       </View>
     </View>
   );
@@ -69,6 +81,11 @@ const styles = StyleSheet.create({
     fontSize: SIZES.medium,
     color: COLORS.black,
   },
+  image: {
+    width: width * 0.2,  
+    height: 80,        
+    borderRadius: 10,
+  }
 });
 
 export default Categories;
