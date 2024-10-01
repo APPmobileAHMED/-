@@ -1,76 +1,88 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from "react-native";
-import { MaterialCommunityIcons, FontAwesome, Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from 'expo-image-picker';
-import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "../components/authcontext/authcontext";
-import { COLORS } from "../constants";
-import axios from "axios";
-import * as Location from 'expo-location'; // Import Location
-import MapView, { Marker } from 'react-native-maps'; 
+import React, { useEffect, useState } from "react"
+import { View, Text, TextInput,Button, Image, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Ale, Buttonrt } from "react-native"
+import { MaterialCommunityIcons, FontAwesome, Ionicons } from "@expo/vector-icons"
+import * as ImagePicker from 'expo-image-picker'
+import { useNavigation } from "@react-navigation/native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useAuth } from "../components/authcontext/authcontext"
+import { COLORS } from "../constants"
+import axios from "axios"
+import * as Location from 'expo-location'
+import MapView, { Marker } from 'react-native-maps' 
 
 const Profile = () => {
-  const [name, setName] = useState("gcfhgjhk");
-  const [birthday, setBirthday] = useState("");
-  const [phone, setPhone] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [image, setImage] = useState(null);
-  const [file, setfile] = useState(null);
-  const {logout, tokenDecoded, token} = useAuth();
-  const [location, setLocation] = useState(null);
-  const [mapVisible, setMapVisible] = useState(false); // To toggle the map view
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [placeName, setPlaceName] = useState(''); // New state to store the place name
+  const [name, setName] = useState("")
+  const [currentpassword,setcurrentPassword] = useState("")
+  const [phone, setPhone] = useState("")
+  const [instagram, setInstagram] = useState("")
+  const [refresh, setrefresh] = useState(false)
+  const [newpassword, setPassword] = useState("")
+  const [image, setImage] = useState(null)
+  const [file, setfile] = useState(null)
+  const {logout,seller,buyer,infor,setrefreshh,refreshh} = useAuth()
+  const [location, setLocation] = useState(null)
+  const [mapVisible, setMapVisible] = useState(false) 
+  const [selectedLocation, setSelectedLocation] = useState(null)
+  const [placeName, setPlaceName] = useState('') 
+  const [detail,settdet]=useState()
+ 
+  
+
+useEffect(()=>{
+  console.log(infor,"hddd")
+
+},[refresh,refreshh])
 
   useEffect(() => {
     if (file) {
-      console.log('fileImage', file); // هذا باش يطبع القيمة الجديدة وقت اللي تتغير
-      console.log(image)
+      console.log('fileImage', file)
+      console.log(image,"ff")
     }
-  }, [image]);
+  }, [image])
+
+
+  
   const getLocationPermission = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
+    let { status } = await Location.requestForegroundPermissionsAsync()
     if (status !== 'granted') {
-      Alert.alert('Permission denied', 'Permission to access location is required.');
-      return;
+     
+      return
     }
 
 
-    let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
+    let location = await Location.getCurrentPositionAsync({})
+    setLocation(location)
     setSelectedLocation({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
-    });
+    })
 
-    // Reverse geocode the current location to get the place name
+   
     let reverseGeocode = await Location.reverseGeocodeAsync({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
-    });
+    })
     if (reverseGeocode.length > 0) {
-      setPlaceName(`${reverseGeocode[0].city}, ${reverseGeocode[0].region}`); // Set city and region as place name
+      setPlaceName(`${reverseGeocode[0].city}, ${reverseGeocode[0].region}`) 
     }
-  };
+  }
 
   useEffect(() => {
-    getLocationPermission(); // Request permission when the component mounts
-  }, []);
+    getLocationPermission()
+  }, [])
 
   const handleMapPress = async (event) => {
-    const { latitude, longitude } = event.nativeEvent.coordinate;
-    setSelectedLocation({ latitude, longitude });
+    const { latitude, longitude } = event.nativeEvent.coordinate
+    setSelectedLocation({ latitude, longitude })
 
-    // Reverse geocode the selected location
-    let reverseGeocode = await Location.reverseGeocodeAsync({ latitude, longitude });
+   
+    let reverseGeocode = await Location.reverseGeocodeAsync({ latitude, longitude })
     if (reverseGeocode.length > 0) {
-      setPlaceName(`${reverseGeocode[0].city}, ${reverseGeocode[0].region}`); // Set city and region as place name
+      setPlaceName(`${reverseGeocode[0].city}, ${reverseGeocode[0].region}`) 
     }
-  };
+  }
 
-  const navigation = useNavigation();
+  const navigation = useNavigation()
   const pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -78,29 +90,29 @@ const Profile = () => {
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
-      });
+      })
 
-      console.log('ImagePicker result:', result);
+      console.log('ImagePicker result:', result)
 
       if (!result.canceled) {
-        const source = { uri: result.assets[0].uri };
-        console.log('Selected image URI:', source.uri);
+        const source = { uri: result.assets[0].uri }
+        console.log('Selected image URI:', source.uri)
         setfile(source.uri)
       }
     } catch (error) {
-      console.error('ImagePicker Error: ', error);
+      console.error('ImagePicker Error: ', error)
     }
-  };
+  }
  
 
   const uploadImage = () => {
-    const formData = new FormData();
+    const formData = new FormData()
     formData.append("file", {
       uri: file,
       type: "image/jpeg",
       name: file.split("/").pop(),
-    });
-    formData.append("upload_preset", "ecommer-ce");
+    })
+    formData.append("upload_preset", "ecommer-ce")
   
     axios.post("https://api.cloudinary.com/v1_1/dcwa4oceq/image/upload", formData, {
         headers: {
@@ -108,20 +120,49 @@ const Profile = () => {
         },
       })
       .then((response) => {
-        console.log("Upload response:", response);
+        console.log("Upload response:", response)
   
         if (response.status === 200) {
-          const imageUrl = response.data.secure_url;
-          setImage(imageUrl); // Update the image URL in state
+          const imageUrl = response.data.secure_url
+          setImage(imageUrl) 
+          
         } else {
-          Alert.alert("Error", "Failed to upload image");
+          Alert.alert("Error", "Failed to upload image")
         }
       })
       .catch((error) => {
-        console.error("Image upload error:", error);
-        Alert.alert("Error", "An error occurred while uploading the image");
-      });
-  };
+        console.error("Image upload error:", error)
+        Alert.alert("Error", "An error occurred while uploading the image")
+      })
+  }
+
+  const updateProfile= async()=>{
+    try{ 
+      const result =await axios.put(`http://192.168.1.13:8080/api/edit/${infor.id}`,{
+        photoDeprofile:image||infor.photoDeprofile,
+        instagram:instagram,
+        location:placeName,
+        phoneNumber:phone,
+        newPassword:newpassword,
+        username:name,
+        password:currentpassword
+      })
+      if(result.data==="wrong current password"){
+        alert("your current password isnt true please try again")
+      }else{
+        alert("success") 
+        setTimeout(() => {
+          setrefreshh(!refreshh)
+          setrefresh(!refresh)  
+        }, 2000) 
+         
+        }
+    }
+    catch(err){
+      console.log(err)
+    }
+
+  }
   
 
   return (
@@ -133,23 +174,33 @@ const Profile = () => {
         <View style={styles.header}>
           <View style={styles.gradientTop} />
           <View style={styles.gradientBottom} />
-          <TouchableOpacity onPress={() => { navigation.goBack(); }}>
+          <TouchableOpacity onPress={() => { navigation.goBack();setrefresh(!refresh);setImage(infor.photoDeprofile) }}>
             <MaterialCommunityIcons name="arrow-left" size={24} color="white" style={{ right: 150, top: 78 }} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.logoutButton} onPress={() => { logout(); navigation.navigate('Login'); }}>
+          <TouchableOpacity style={styles.logoutButton} onPress={() => { logout();navigation.navigate('Login'); setrefresh(!refresh) }}>
             <MaterialCommunityIcons name="logout" size={24} color="white" style={{ left: 150, top: 50 }} />
           </TouchableOpacity>
-          <Text style={styles.headerText}>{name}</Text>
+          <Text style={styles.headerText}>{infor.firstname+" "+infor.lastname}</Text>
           <TouchableOpacity onPress={pickImage}>
-            <Image source={image ? { uri: image } : { uri: 'https://via.placeholder.com/100' }} style={styles.profileImage} />
+            
+            <Image source={{ uri:image||"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJsAAACUCAMAAACz6atrAAAAG1BMVEXv7/TV1djq6u/y8vfZ2dzk5Ojg4OTd3eDn5+v1tPL8AAAC2UlEQVR4nO2bCXLkIAxFzc79T5y23Zk4DjZIpr9UU/oneKUNIcSymEwmk8lkMplMpv9EYZc0RkM+pRJLySl5aZSjwvLCiu5bMZbkldivFteQAvOFNtlqvuJlbeevyDYVQbLg4x3ay3ZVzHT5nmwLO71oUn69DTVZuCGricCFNIqGj7k6juYcuAx3ioekVwke3bwKLHOehuYiDi0M5+g/w+HgqGhAwxGjbRUsVQdPhKMyKBt63UdLEcVGR0M5lXJcwdkY4eZcVcyGqXCBkQrGptynmtnIJ/0qzG1Qc32j9eNgNtaZhUHTzaa4D6FdsnYVFBujwMFuWgw2TBvSGwhe2A1TQ1jlzUUIHKsNwdxmOBVkFSJTWZXXYa7PxsZk0xxvitk01xAuG+TCwLrKgE5UzWysaxbowsA86xFozOKLYdM8D+GMonHDaHqmAh+ga6K9Z1XoWgGJDTXA30Wbc6EuWW82UgEGv59SCjDwFXCXZjZCwCFfdjcRAg6+NTV+qgosiAxXuAxHG55IYwYhJ+l16XA7IoE2eFHFR9sOp9Wjy1g6yG2E9gpwxHYgR3UNJ1I/jM3YjM3YjM3YjG2a+n2I1N+KOtD4ynyaGSHb6bBcYaEMB0tagMajjS1fcYfa2fasx48MaM85Cxi7ymfpPNWZZ+P5D0Ve8PkZmVs/4s2veGHxozWjq6nGCyHU5yb7UVyLyhQ8XxM7/G+U06PUCEvNx0+vsxUL272XP0un8nEWvCBkG10mtgPTknJIhHYg8Gs/U3F4gsh6u31KN2Q6uNHeGmhVuOtGz9X1qxxadzYsidaBk0W7hxNKgx9dJwRz02iirkpJ4C0azdXVG7VwsO1qPlLzvsFMV9urKszWLsHyifBWw3BKzNZYtlUSbav+Rpwas/1NVe6W+Cd0rnFqMmHVyamKXHrel9Pk0pNTFWXppqNTeWuxn9OvVkkZ2/Hc0tAdHXUMOGXh9mb7Aum9J7qu5UnOAAAAAElFTkSuQmCC" } } style={styles.profileImage} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{uploadImage()}}>
-           <Ionicons name="cloud-download" size={28} style={{right:50,bottom:20}} />
-          </TouchableOpacity>
+         
 
         </View>
+        <TouchableOpacity >
+          <View style={{width:100,left:130,top:5}} >
+          <Button onPress={()=>{uploadImage()}} color={COLORS.green} title="تنزيل الصورة "  >
+            
+            <Ionicons name="cloud-download" size={28} style={{right:50,bottom:20}} />
+            </Button>
+          </View>
+           
+           
+          </TouchableOpacity>
 
         <View style={styles.detailsContainer}>
+          
           <TouchableOpacity style={styles.detailItem}>
             <MaterialCommunityIcons name="account-outline" size={24} color={COLORS.green} />
             <TextInput
@@ -203,9 +254,9 @@ const Profile = () => {
             <MaterialCommunityIcons name="lock-outline" size={24} color={COLORS.green} />
             <TextInput
               style={styles.detailTextInput}
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Password"
+              value={currentpassword}
+              onChangeText={setcurrentPassword}
+              placeholder="Current Password"
               secureTextEntry
             />
           </TouchableOpacity>
@@ -215,9 +266,9 @@ const Profile = () => {
             <MaterialCommunityIcons name="lock-outline" size={24} color={COLORS.green} />
             <TextInput
               style={styles.detailTextInput}
-              value={password}
+              value={newpassword}
               onChangeText={setPassword}
-              placeholder=" Current Password"
+              placeholder="New Password "
               secureTextEntry
             />
           </TouchableOpacity>
@@ -246,26 +297,41 @@ const Profile = () => {
           </MapView>
         )}
 
-        <TouchableOpacity style={styles.editButton}>
-          <View style={styles.buttonGradient}>
+        <TouchableOpacity  >
+          {!mapVisible &&(
+             <TouchableOpacity style={styles.buttonGradient1} onPress={()=>{updateProfile()}}>
+             <Text style={styles.buttonText1}>Edit Profile</Text>
+             </TouchableOpacity>
+          )}
+        
+          {mapVisible && (
+          <View  >
+             <TouchableOpacity style={styles.saveButton} onPress={() => setMapVisible(false)}>
+             <Text style={styles.saveButtonText}>Save Location</Text>
+             </TouchableOpacity>
+           
+            <TouchableOpacity style={styles.buttonGradient} onPress={()=>{updateProfile()}}>
             <Text style={styles.buttonText}>Edit Profile</Text>
+            </TouchableOpacity>
           </View>
+        )}
+         
         </TouchableOpacity>
 
-        {mapVisible && (
-          <TouchableOpacity style={styles.saveButton} onPress={() => setMapVisible(false)}>
-            <Text style={styles.saveButtonText}>Save Location</Text>
-          </TouchableOpacity>
-        )}
+       
       </ScrollView>
     </KeyboardAvoidingView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  buttonimg:{
+ 
+
   },
   header: {
     height: 200,
@@ -295,13 +361,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 20,
+    marginBottom: 15,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginTop: 10,
+    bottom: 4,
   },
   detailsContainer: {
     flex: 1,
@@ -329,10 +395,23 @@ const styles = StyleSheet.create({
   editButton: {
     alignSelf: 'center',
     marginVertical: 20,
+    left:-50
   },
   buttonGradient: {
     paddingVertical: 10,
     paddingHorizontal: 20,
+    left:120,
+    width:130,
+    bottom:180,
+    backgroundColor: COLORS.green,
+    borderRadius: 20,
+  },
+  buttonGradient1:{
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    left:120,
+    width:130,
+    bottom:100,
     backgroundColor: COLORS.green,
     borderRadius: 20,
   },
@@ -341,24 +420,30 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  buttonText1: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   saveButton: {
     alignSelf: 'center',
     marginVertical: 80,
-    bottom:40,
+    bottom:390,
     backgroundColor: COLORS.green,
     padding: 10,
     borderRadius: 20,
+    left:130
 
   },
   saveButtonText: {
-    color: 'white',
-    fontSize: 16,
+    color: 'yellow',
+    fontSize: 10,
     fontWeight: 'bold',
   },
   map: {
     height: 300,
     marginVertical: 20,
   },
-});
+})
 
-export default Profile;
+export default Profile

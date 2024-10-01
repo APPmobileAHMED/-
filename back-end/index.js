@@ -7,6 +7,7 @@ const app = express();
  const routeregister=require("./database/route/routeauth.js")
  const routeLogin=require("./database/route/routeauth.js")
  const routeUpdateProfile=require("./database/route/routeauth.js")
+ const routerGetUser=require("./database/route/routeauth.js")
 app.use(express.json());
 app.use(cors());
 
@@ -14,6 +15,8 @@ app.use(cors());
 app.use("/api",routeregister)
 app.use("/api",routeLogin)
 app.use("/api",routeUpdateProfile)
+app.use("/api",routerGetUser)
+
 
 app.get("/", (req, res) => {
   res.send("Hello from the server!");
