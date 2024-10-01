@@ -2,6 +2,7 @@
 const db=require("../sequelize/index.js")
 const bcrypt=require("bcrypt")
 const jwt=require("jsonwebtoken")
+const { where } = require("sequelize")
 module.exports={
 register: function(req,res){
   db.user.count({where:{email:req.body.email}}).then((response)=>{
@@ -17,7 +18,7 @@ register: function(req,res){
             role:req.body.role
         }).then((response)=>{
             let token=jwt.sign({email:response.email,id:response.id,firstname:response.firstname,lastname:response.lastname,role:response.role},"my code daezdjzechkjzekl")
-            res.send({token:token,infor:response})
+            res.send({token:token,role:response.role})
         }).catch((error)=>{
             res.send(error)
         })
@@ -40,7 +41,7 @@ login:(req,res)=>{
                 let token=jwt.sign({email:response.email,id:response.id,firstname:response.firstname,lastname:response.lastname,role:response.role},"my code akjdezjekldamzdlid")
                
                
-                res.send({token:token})
+                res.send({token:token,role:response.role})
                
             
             }else{
@@ -61,60 +62,72 @@ updateprofile: (req, res) => {
     db.user.findOne({ where: { id: req.params.id } })
         .then((user) => {
             if (!user) {
-                return res.send("Invalid user");
+                return res.send("Invalid user")
             }
 
-            // If current password is provided, check if it matches the stored password
-            if (req.body.CurrentPassword) {
-                bcrypt.compare(req.body.CurrentPassword, user.dataValues.password)
-                    .then((samePassword) => {
-                        if (samePassword) {
-                            // If new password is provided, hash it and update
-                            if (req.body.newPassword) {
-                                bcrypt.hash(req.body.newPassword, 10)
-                                    .then((passwordHashed) => {
-                                        db.user.update({
-                                            username: req.body.username,
-                                            password: passwordHashed,  // Update 'password' field
-                                            location: req.body.location,
-                                            photoDeprofile: req.body.photo,
-                                            phoneNumber: req.body.phone,
-                                            instagram: req.body.instagram
-                                        }, { where: { id: req.params.id } })
-                                            .then((result) => res.send("Profile updated successfully with new password"))
-                                            .catch((err) => res.status(500).send(err)); // Handle update error
-                                    })
-                                    .catch((err) => res.status(500).send(err)); // Handle hashing error
-                            } else {
-                                // Update user without password change
-                                db.user.update({
-                                    username: req.body.username,
-                                    location: req.body.location,
-                                    photoDeprofile: req.body.photo,
-                                    phoneNumber: req.body.phone,
-                                    instagram: req.body.instagram
-                                }, { where: { id: req.params.id } })
-                                    .then((result) => res.send("Profile updated successfully"))
-                                    .catch((err) => res.status(500).send(err)); // Handle update error
-                            }
+            if(req.body.password){
+                
+                bcrypt.compare(req.body.password,user.dataValues.password)
+                .then((samePassword) => {
+                    if (samePassword) {
+                        
+                        if (req.body.newPassword) {
+                            bcrypt.hash(req.body.newPassword, 10)
+                                .then((passwordHashed) => {
+                                    db.user.update({
+                                        username: req.body.username,
+                                        password: passwordHashed,  
+                                        location: req.body.location,
+                                        photoDeprofile: req.body.photoDeprofile,
+                                        phoneNumber: req.body.phoneNumber,
+                                        instagram: req.body.instagram
+                                    }, { where: { id: req.params.id } })
+                                        .then((result) => res.send("Profile updated successfully with new password"))
+                                        .catch((err) => res.status(500).send(err)) 
+                                })
+                                .catch((err) => res.status(500).send(err)) 
                         } else {
-                            return res.send("Your current password is incorrect");
+                            
+                            db.user.update({
+                                username: req.body.username,
+                                location: req.body.location,
+                                photoDeprofile: req.body.photoDeprofile,
+                                phoneNumber: req.body.phoneNumber,
+                                instagram: req.body.instagram
+                            }, { where: { id: req.params.id } })
+                                .then((result) => res.send("Profile updated successfully"))
+                                .catch((err) => res.status(500).send(err))
                         }
-                    })
-                    .catch(() => res.status(500).send("Error comparing passwords"));
-            } else {
-                // If no password change, just update other fields
+                    } else {
+                        return res.send("wrong current password")
+                    }
+                })
+                .catch(() => res.status(500).send("Error comparing passwords"))
+            }else{
                 db.user.update({
                     username: req.body.username,
                     location: req.body.location,
-                    photoDeprofile: req.body.photo,
-                    phoneNumber: req.body.phone,
+                    photoDeprofile: req.body.photoDeprofile,
+                    phoneNumber: req.body.phoneNumber,
                     instagram: req.body.instagram
                 }, { where: { id: req.params.id } })
-                    .then((result) => res.send("Profile updated successfully"))
-                    .catch((err) => res.status(500).send(err)); // Handle update error
+                    .then((result) => res.send("Profile updated with successfull"))
+                    .catch((err) => res.status(500).send(err))
+
+
             }
+
+     
+               
         })
-        .catch((err) => res.status(500).send(err)); // Handle findOne error
+        .catch((err) => res.status(500).send(err)) 
+},
+
+getUser:(req,res)=>{
+    db.user.findOne({where:{id:req.params.id}}).then((result)=>{
+        res.send(result)
+    }).catch((err)=>{console.log(err)})
+
 }
+
 }
