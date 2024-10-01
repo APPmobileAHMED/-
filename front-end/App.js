@@ -46,7 +46,7 @@ const onLayoutRootView= useCallback(async()=>{
    
    <NavigationContainer>
      <AuthProvider>
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="BottomTabNav">
     <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
     <Stack.Screen name='SignUp' component={SignUp} options={{headerShown:false}}/>
     <Stack.Screen name='SignUp2' component={SignUp2} options={{headerShown:false}}/>
