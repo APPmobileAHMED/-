@@ -1,11 +1,12 @@
 import {View,Text} from "react-native"
 import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import {Home,Search,Profile} from "../screens/index.js"
+import {Home,Search,Profile,AddProduct, Cart, ProductDetails} from "../screens/index.js"
 import {Ionicons} from "@expo/vector-icons" 
 import {COLORS} from "../constants/index"
 import { useAuth } from "../components/authcontext/authcontext.jsx"
-
+import Whishlist from "../screens/wishlist.jsx"
+import ProductWithCategorie from "../components/home/productCategories.jsx";
 
 const Tab =createBottomTabNavigator()
 
@@ -25,10 +26,10 @@ const screenOptions = {
     }
 }
 const BottomTabNav=()=>{
-    const {token,information}=useAuth()
+    const {infor}=useAuth()
 
   
-      
+    
    
     
 
@@ -37,6 +38,7 @@ const BottomTabNav=()=>{
 
     return(
         <Tab.Navigator screenOptions={screenOptions} >
+
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
                     return <Ionicons name={focused ? "home" : "home-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
@@ -50,8 +52,51 @@ const BottomTabNav=()=>{
                 }
             }} name="Search" component={Search}/>
           
+          <Tab.Screen
+                name="ProductWithCategorie"
+                component={ProductWithCategorie}
+                options={{
+                    tabBarButton: (props) => (
+                        <View style={{ display: 'none' }} /> 
+                    ),
+                }}
+            />
+           <Tab.Screen
+                name="Cart"
+                component={Cart}
+                options={{
+                    tabBarButton: (props) => (
+                        <View style={{ display: 'none' }} /> 
+                    ),
+                }}
+            />
+             <Tab.Screen
+                name="ProductDetails"
+                component={ProductDetails}
+                options={{
+                    tabBarButton: (props) => (
+                        <View style={{ display: 'none' }} /> 
+                    ),
+                }}
+            />
 
-          <Tab.Screen options={{
+
+           {infor.role==="buyer" &&(
+            <Tab.Screen options={{
+                tabBarIcon:({focused})=>{
+                    return <Ionicons name={"add-circle-sharp"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
+                }
+            }} name="AddProduct" component={AddProduct}/>
+           )}
+            {infor.role==="buyer" &&(
+            <Tab.Screen options={{
+                tabBarIcon:({focused})=>{
+                    return <Ionicons name={"heart-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
+                }
+            }} name="Whishlist" component={Whishlist}/>
+           )}
+            
+            <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
                     return <Ionicons name={focused ? "person" : "person-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
                 }

@@ -13,10 +13,10 @@ import { useAuth } from "../authcontext/authcontext";
 
 const Welcome=()=>{
     const navigation=useNavigation()
-const {token}=useAuth()
 
 
-console.log(token)
+
+
     return(
 
         <View>

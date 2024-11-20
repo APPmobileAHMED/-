@@ -1,39 +1,79 @@
-import { TouchableOpacity, Text, View, Image,StyleSheet ,ScrollView} from "react-native";
-import React from "react";
-
+import { TouchableOpacity, Text, View, Image, StyleSheet, ScrollView } from "react-native";
+import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
-
-
-const ProductCardView = () => {
+import { useAuth } from "../authcontext/authcontext";
+import axios from "axios";
+import {AdresseIPPP_} from '@env'
+const ProductCardView = ({ product }) => {
   const navigation = useNavigation();
+  
+ 
+ 
+const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
+
+
+
+  const addtocart=(product)=>{
+    axios.post(`${AdresseIPPP_}cart/addtocart/${infor.id}`,{
+      productId: product
+}).then((res)=>{
+      console.log(res.data)
+      
+      setrefreshh(!refreshh)
+      alert("added to cart")
+    }).catch((error)=>{console.log("kkjf")})
+  }
+  const deleteItem=(product)=>{
+    axios.delete(`${AdresseIPPP_}cart/deleteitems/${infor.id}`,{
+      data:{productId: product}
+}).then((res)=>{
+      console.log(res.data)
+      alert("deleted ")
+      setrefreshh(!refreshh)
+    }).catch((error)=>{console.log(error)})
+  }
+  
+ 
+
   return (
     <ScrollView>
-    <TouchableOpacity onPress={() => navigation.navigate("ProductDetails")}>
-      <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: "https://axio-menuiseries.fr/wp-content/uploads/2019/11/fenetre_aluminium.png"
-            }}
-            style={styles.image}
-          />
-        </View>
-        <View style={styles.details}>
-          <Text style={styles.title} numberOfLines={1}>
-            Product
-          </Text>
-          <Text style={styles.supplier} numberOfLines={1}>
-            Product
-          </Text>
-          <Text style={styles.price}>$2335</Text>
-          <TouchableOpacity style={styles.addBtn}>
-            <Ionicons name="add-circle" size={35} color={COLORS.primary} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <TouchableOpacity key={product.id} onPress={() => navigation.navigate("ProductDetails", { productId: product.id, sellerId: product.userId })}>
+        <View style={styles.container}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={
+                product.img1
+                  ? { uri: product.img1 }
+                  : "https://www.shutterstock.com/image-vector/loading-bar-icons-website-load-600nw-2508563717.jpg" 
+              }
+              style={styles.image}
+            />
+          </View>
+          <View style={styles.details}>
+            <Text style={styles.title} numberOfLines={1}>
+              {product.name}
+            </Text>
+            <Text style={styles.supplier} numberOfLines={1}>
+            مقاس: الطول {product.length} <Text style={{ fontWeight: 'bold',fontSize: 18}}>/</Text> العرض {product.width}
+            </Text>
+            <Text style={styles.price}>{product.price}</Text>
+            
+            <TouchableOpacity style={styles.addBtn}>
+      {isProductInCart(product.id) ? (
+        <TouchableOpacity onPress={() => deleteItem(product.id)}>
+          <Ionicons name="bag-check-outline" size={35} color={COLORS.primary} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={() => addtocart(product.id)}>
+          <Ionicons name="bag-add-outline" size={35} color={COLORS.primary} />
+        </TouchableOpacity>
+      )}
     </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -41,54 +81,50 @@ const ProductCardView = () => {
 export default ProductCardView;
 
 const styles = StyleSheet.create({
-    container: {
-      width: 182,
-      height: 280,
-      marginEnd: 22,
-      marginBottom:120,
-      borderRadius: SIZES.medium,
-      backgroundColor: COLORS.secondary,
-    },
-    imageContainer: {
-      flex: 1,
-      width: 170,
-      marginLeft: SIZES.small / 2,
-      marginTop: SIZES.small / 2,
-      borderRadius: SIZES.small,
-      overflow: "hidden",
-    },
-    image: {
-      aspectRatio: 1,
-      resizeMode: "cover",
-      height:160,
-      width:160
-    },
-    details: {
-      padding: SIZES.small,
-    },
-    title: {
-      fontFamily: "bold",
-      fontSize: SIZES.large,
-      marginBottom: 2,
-    },
-    supplier: {
-      fontFamily: "regular",
-      fontSize: SIZES.large,
-      color:COLORS.gray ,
-      marginBottom: 2,
-    },
-    price: {
-      fontFamily: "bold",
-      fontSize: SIZES.large,
-      marginBottom: 2,
-   
-    },
-    addBtn:{
-    position:"absolute",
-    bottom:SIZES.xSmall,
-    right:SIZES.xSmall
-    }
-
-    
-  });
-  
+  container: {
+    width: 182,
+    height: 280,
+    marginEnd: 22,
+    marginBottom: 120,
+    borderRadius: SIZES.medium,
+    backgroundColor: COLORS.secondary,
+  },
+  imageContainer: {
+    flex: 1,
+    width: 170,
+    marginLeft: SIZES.small / 2,
+    marginTop: SIZES.small / 2,
+    borderRadius: SIZES.small,
+    overflow: "hidden",
+  },
+  image: {
+    aspectRatio: 1,
+    resizeMode: "cover",
+    height: 160,
+    width: 160,
+  },
+  details: {
+    padding: SIZES.small,
+  },
+  title: {
+    fontFamily: "bold",
+    fontSize: SIZES.large,
+    marginBottom: 2,
+  },
+  supplier: {
+    fontFamily: "regular",
+    fontSize: 13,
+    color: COLORS.gray,
+    marginBottom: 2,
+  },
+  price: {
+    fontFamily: "bold",
+    fontSize: SIZES.large,
+    marginBottom: 2,
+  },
+  addBtn: {
+    position: "absolute",
+    bottom: SIZES.xSmall,
+    right: SIZES.xSmall,
+  },
+});

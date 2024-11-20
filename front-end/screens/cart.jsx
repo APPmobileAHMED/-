@@ -1,74 +1,129 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, SafeAreaView } from 'react-native';
-
+import { useAuth } from '../components/authcontext/authcontext';
+import {Ionicons,MaterialCommunityIcons } from "@expo/vector-icons"
+import { COLORS } from '../constants';
+import {AdresseIPPP_} from '@env'
+import { useNavigation } from "@react-navigation/native"
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([
-    { id: '1', name: 'TMA-2 Comfort Wireless', price: 270, quantity: 1, image: 'https://via.placeholder.com/60' },
-    { id: '2', name: 'CO2 - Cable', price: 25, quantity: 1, image: 'https://via.placeholder.com/60' },
-  ]);
+const navigation=useNavigation()
+  const {infor,refreshh,setrefreshh} = useAuth()
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [cartItems, setCartItems] = useState([])
 
-  const updateQuantity = (id) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: type === 'increase' ? item.quantity + 1 : Math.max(1, item.quantity - 1),
-            }
-          : item
-      )
-    );
-  };
 
-  const deleteItem = (id) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
+  useEffect(() => {
+    axios.get(`${AdresseIPPP_}cart/cartitems/${infor.id}`)
+      .then((res) => {
+        
+        setCartItems(Array.isArray(res.data) ? res.data : []);
+        console.log(res.data, "rf");
+      })
+      .catch((error) => {
+        console.log(error);
+        setCartItems([]); 
+      });
+  }, [refreshh, infor.id]);
+ 
 
-  const getTotal = () => {
-    return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  };
+useEffect(() => {
+  calculateTotalPrice(cartItems);
+}, [cartItems]);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.cartItem}>
-      <Image source={{ uri: item.image }} style={styles.itemImage} />
-      <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemPrice}>USD {item.price}</Text>
-        <View style={styles.quantityContainer}>
-          <TouchableOpacity onPress={() => updateQuantity(item.id, 'decrease')}>
-            <Text style={styles.quantityButton}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.quantityText}>{item.quantity}</Text>
-          <TouchableOpacity onPress={() => updateQuantity(item.id, 'increase')}>
-            <Text style={styles.quantityButton}>+</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <TouchableOpacity onPress={() => deleteItem(item.id)}>
-        <Text style={styles.deleteButton}>🗑️</Text>
-      </TouchableOpacity>
-    </View>
+const calculateTotalPrice = (items) => {
+  let total = 0;
+  items.forEach(item => {
+    total += item.product.price * item.quantity; // Multiply price by quantity
+  });
+  setTotalPrice(total); // Set the total price
+};
+
+const increment = (productId) => {
+  setCartItems(prevItems =>
+    prevItems.map(item =>
+      item.productId === productId ? { ...item, quantity: item.quantity + 1 } : item
+    )
   );
+  calculateTotalPrice(cartItems); // Recalculate total price after increment
+};
+
+const decrement = (productId) => {
+  setCartItems(prevItems =>
+    prevItems.map(item =>
+      item.productId === productId && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
+    )
+  );
+  calculateTotalPrice(cartItems); 
+};
+
+
+  const deleteItem=(product)=>{
+    axios.delete(`${AdresseIPPP_}cart/deleteitems/${infor.id}`,{
+      data:{productId: product}
+}).then((res)=>{
+      console.log(res.data)
+      alert("success")
+      setrefreshh(!refreshh)
+    }).catch((error)=>{console.log(error)})
+  }
+
+
+
 
   return (
-  
+    
     <View style={styles.container}>
-      <Text style={styles.header}>Shopping Cart</Text>
-      <FlatList
-        data={cartItems}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        style={styles.cartList}
-      />
-      <View style={styles.footer}>
-        <Text style={styles.totalText}>Total {cartItems.length} Items</Text>
-        <Text style={styles.totalPrice}>USD {getTotal()}</Text>
-        <TouchableOpacity style={styles.checkoutButton}>
-          <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
+     
+      <TouchableOpacity onPress={() => { navigation.goBack() }}>
+        <MaterialCommunityIcons name="arrow-left" size={30} color={COLORS.black} style={{ marginTop: 3 }} />
+      </TouchableOpacity>
+      <Text style={styles.header}>المشتريات</Text>
+
+      {cartItems.length > 0 ? (
+
+       cartItems.map((item,index)=>(
+        <View key={index} style={styles.cartItem}  >
+      
+        <TouchableOpacity  onPress={() => navigation.navigate("ProductDetails", { productId: item.productId, sellerId: item.product.userId })} >
+        <Image source={{ uri: item.product.img1 }} style={styles.itemImage} />
+        </TouchableOpacity>
+      
+        <View style={styles.itemDetails}>
+          <Text style={styles.itemName}>{item.product.name}</Text>
+          <Text style={styles.itemPrice}>DT {item.product.price}</Text>
+          <View style={styles.quantityContainer}>
+          <TouchableOpacity onPress={() => decrement(item.productId)} >
+    <Text style={styles.quantityButton}>-</Text>
+  </TouchableOpacity>
+  <Text style={styles.quantityText}>{item.quantity}</Text>
+  <TouchableOpacity onPress={() => increment(item.productId)} >
+    <Text style={styles.quantityButton}>+</Text>
+  </TouchableOpacity>
+  
+          </View>
+        </View>
+        <TouchableOpacity onPress={() =>{ deleteItem(item.product.id)}}>
+          <Text style={styles.deleteButton}>🗑️</Text>
         </TouchableOpacity>
       </View>
+       )) 
+      ) : (
+        <Text style={{ fontFamily: 'bold', fontSize: 40, top: 250, left: -65 }}>
+          السلة فارغة
+        </Text>
+      )}
+
+      {cartItems.length > 0 && (
+        <View style={styles.footer}>
+          <Text style={styles.totalText}>Total {cartItems.length} Items</Text>
+          <Text style={styles.totalPrice} > {totalPrice} DT</Text>
+          <TouchableOpacity style={styles.checkoutButton}>
+            <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
-    
   );
 };
 

@@ -16,15 +16,9 @@ import { useAuth } from "../components/authcontext/authcontext";
 const Home=()=>{
 
     const navigation=useNavigation()
-const { tokenDecoded,token}=useAuth()
 
-useEffect(()=>{
-   
-    console.log("token",token)
-console.log("decodedtoken",tokenDecoded)
 
-    
-    },[token])
+
     return(
         
         <SafeAreaView>

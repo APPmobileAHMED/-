@@ -5,10 +5,19 @@ import * as ImagePicker from 'expo-image-picker'
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useAuth } from "../components/authcontext/authcontext"
-import { COLORS } from "../constants"
+import {AdresseIPPP_} from '@env'
 import axios from "axios"
 import * as Location from 'expo-location'
 import MapView, { Marker } from 'react-native-maps' 
+
+const COLORS = {
+  green: '#4CAF50',
+  lightGreen: '#81C784',
+  darkGreen: '#388E3C',
+  white: '#FFFFFF',
+  lightGray: '#E0E0E0',
+  darkGray: '#757575',
+};
 
 const Profile = () => {
   const [name, setName] = useState("")
@@ -24,7 +33,7 @@ const Profile = () => {
   const [mapVisible, setMapVisible] = useState(false) 
   const [selectedLocation, setSelectedLocation] = useState(null)
   const [placeName, setPlaceName] = useState('') 
-  const [detail,settdet]=useState()
+  const navigation = useNavigation()
  
   
 
@@ -82,7 +91,8 @@ useEffect(()=>{
     }
   }
 
-  const navigation = useNavigation()
+ 
+
   const pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -138,7 +148,7 @@ useEffect(()=>{
 
   const updateProfile= async()=>{
     try{ 
-      const result =await axios.put(`http://192.168.1.13:8080/api/edit/${infor.id}`,{
+      const result =await axios.put(`${AdresseIPPP_}edit/${infor.id}`,{
         photoDeprofile:image||infor.photoDeprofile,
         instagram:instagram,
         location:placeName,
@@ -166,38 +176,27 @@ useEffect(()=>{
   
 
   return (
-    <KeyboardAvoidingView
+     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : null}
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.header}>
-          <View style={styles.gradientTop} />
-          <View style={styles.gradientBottom} />
-          <TouchableOpacity onPress={() => { navigation.goBack();setrefresh(!refresh);setImage(infor.photoDeprofile) }}>
-            <MaterialCommunityIcons name="arrow-left" size={24} color="white" style={{ right: 150, top: 78 }} />
+          <TouchableOpacity onPress={() => { navigation.goBack(); setrefresh(!refresh); setImage(infor.photoDeprofile) }}>
+            <MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.white} style={styles.backIcon} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.logoutButton} onPress={() => { logout();navigation.navigate('Login'); setrefresh(!refresh) }}>
-            <MaterialCommunityIcons name="logout" size={24} color="white" style={{ left: 150, top: 50 }} />
+          <TouchableOpacity style={styles.logoutButton} onPress={() => { logout(); navigation.navigate('Login'); setrefresh(!refresh) }}>
+            <MaterialCommunityIcons name="logout" size={24} color={COLORS.white} style={styles.logoutIcon} />
           </TouchableOpacity>
-          <Text style={styles.headerText}>{infor.firstname+" "+infor.lastname}</Text>
+          <Text style={styles.headerText}>{infor.firstname + " " + infor.lastname}</Text>
           <TouchableOpacity onPress={pickImage}>
-            
-            <Image source={{ uri:image||"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJsAAACUCAMAAACz6atrAAAAG1BMVEXv7/TV1djq6u/y8vfZ2dzk5Ojg4OTd3eDn5+v1tPL8AAAC2UlEQVR4nO2bCXLkIAxFzc79T5y23Zk4DjZIpr9UU/oneKUNIcSymEwmk8lkMplMpv9EYZc0RkM+pRJLySl5aZSjwvLCiu5bMZbkldivFteQAvOFNtlqvuJlbeevyDYVQbLg4x3ay3ZVzHT5nmwLO71oUn69DTVZuCGricCFNIqGj7k6juYcuAx3ioekVwke3bwKLHOehuYiDi0M5+g/w+HgqGhAwxGjbRUsVQdPhKMyKBt63UdLEcVGR0M5lXJcwdkY4eZcVcyGqXCBkQrGptynmtnIJ/0qzG1Qc32j9eNgNtaZhUHTzaa4D6FdsnYVFBujwMFuWgw2TBvSGwhe2A1TQ1jlzUUIHKsNwdxmOBVkFSJTWZXXYa7PxsZk0xxvitk01xAuG+TCwLrKgE5UzWysaxbowsA86xFozOKLYdM8D+GMonHDaHqmAh+ga6K9Z1XoWgGJDTXA30Wbc6EuWW82UgEGv59SCjDwFXCXZjZCwCFfdjcRAg6+NTV+qgosiAxXuAxHG55IYwYhJ+l16XA7IoE2eFHFR9sOp9Wjy1g6yG2E9gpwxHYgR3UNJ1I/jM3YjM3YjM3YjG2a+n2I1N+KOtD4ynyaGSHb6bBcYaEMB0tagMajjS1fcYfa2fasx48MaM85Cxi7ymfpPNWZZ+P5D0Ve8PkZmVs/4s2veGHxozWjq6nGCyHU5yb7UVyLyhQ8XxM7/G+U06PUCEvNx0+vsxUL272XP0un8nEWvCBkG10mtgPTknJIhHYg8Gs/U3F4gsh6u31KN2Q6uNHeGmhVuOtGz9X1qxxadzYsidaBk0W7hxNKgx9dJwRz02iirkpJ4C0azdXVG7VwsO1qPlLzvsFMV9urKszWLsHyifBWw3BKzNZYtlUSbav+Rpwas/1NVe6W+Cd0rnFqMmHVyamKXHrel9Pk0pNTFWXppqNTeWuxn9OvVkkZ2/Hc0tAdHXUMOGXh9mb7Aum9J7qu5UnOAAAAAElFTkSuQmCC" } } style={styles.profileImage} />
+            <Image source={{ uri: image || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJsAAACUCAMAAACz6atrAAAAG1BMVEXv7/TV1djq6u/y8vfZ2dzk5Ojg4OTd3eDn5+v1tPL8AAAC2UlEQVR4nO2bCXLkIAxFzc79T5y23Zk4DjZIpr9UU/oneKUNIcSymEwmk8lkMplMpv9EYZc0RkM+pRJLySl5aZSjwvLCiu5bMZbkldivFteQAvOFNtlqvuJlbeevyDYVQbLg4x3ay3ZVzHT5nmwLO71oUn69DTVZuCGricCFNIqGj7k6juYcuAx3ioekVwke3bwKLHOehuYiDi0M5+g/w+HgqGhAwxGjbRUsVQdPhKMyKBt63UdLEcVGR0M5lXJcwdkY4eZcVcyGqXCBkQrGptynmtnIJ/0qzG1Qc32j9eNgNtaZhUHTzaa4D6FdsnYVFBujwMFuWgw2TBvSGwhe2A1TQ1jlzUUIHKsNwdxmOBVkFSJTWZXXYa7PxsZk0xxvitk01xAuG+TCwLrKgE5UzWysaxbowsA86xFozOKLYdM8D+GMonHDaHqmAh+ga6K9Z1XoWgGJDTXA30Wbc6EuWW82UgEGv59SCjDwFXCXZjZCwCFfdjcRAg6+NTV+qgosiAxXuAxHG55IYwYhJ+l16XA7IoE2eFHFR9sOp9Wjy1g6yG2E9gpwxHYgR3UNJ1I/jM3YjM3YjM3YjG2a+n2I1N+KOtD4ynyaGSHb6bBcYaEMB0tagMajjS1fcYfa2fasx48MaM85Cxi7ymfpPNWZZ+P5D0Ve8PkZmVs/4s2veGHxozWjq6nGCyHU5yb7UVyLyhQ8XxM7/G+U06PUCEvNx0+vsxUL272XP0un8nEWvCBkG10mtgPTknJIhHYg8Gs/U3F4gsh6u31KN2Q6uNHeGmhVuOtGz9X1qxxadzYsidaBk0W7hxNKgx9dJwRz02iirkpJ4C0azdXVG7VwsO1qPlLzvsFMV9urKszWLsHyifBWw3BKzNZYtlUSbav+Rpwas/1NVe6W+Cd0rnFqMmHVyamKXHrel9Pk0pNTFWXppqNTeWuxn9OvVkkZ2/Hc0tAdHXUMOGXh9mb7Aum9J7qu5UnOAAAAAElFTkSuQmCC" }} style={styles.profileImage} />
           </TouchableOpacity>
-         
-
         </View>
-        <TouchableOpacity >
-          <View style={{width:100,left:130,top:5}} >
-          <Button onPress={()=>{uploadImage()}} color={COLORS.green} title="تنزيل الصورة "  >
-            
-            <Ionicons name="cloud-download" size={28} style={{right:50,bottom:20}} />
-            </Button>
-          </View>
-           
-           
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.uploadButton} onPress={() => { uploadImage() }}>
+          <Ionicons name="cloud-upload-outline" size={24} color={COLORS.white} />
+          <Text style={styles.uploadButtonText}>تنزيل الصورة</Text>
+        </TouchableOpacity>
 
         <View style={styles.detailsContainer}>
           
@@ -274,7 +273,7 @@ useEffect(()=>{
           </TouchableOpacity>
           <View style={styles.underline} />
 
-        </View>
+        
 
         {mapVisible && (
           <MapView
@@ -297,86 +296,92 @@ useEffect(()=>{
           </MapView>
         )}
 
-        <TouchableOpacity  >
-          {!mapVisible &&(
-             <TouchableOpacity style={styles.buttonGradient1} onPress={()=>{updateProfile()}}>
-             <Text style={styles.buttonText1}>Edit Profile</Text>
-             </TouchableOpacity>
-          )}
-        
-          {mapVisible && (
-          <View  >
-             <TouchableOpacity style={styles.saveButton} onPress={() => setMapVisible(false)}>
-             <Text style={styles.saveButtonText}>Save Location</Text>
-             </TouchableOpacity>
-           
-            <TouchableOpacity style={styles.buttonGradient} onPress={()=>{updateProfile()}}>
-            <Text style={styles.buttonText}>Edit Profile</Text>
+        {!mapVisible && (
+          <TouchableOpacity style={styles.editButton} onPress={() => { updateProfile() }}>
+            <Text style={styles.editButtonText}>تعديل الملف الشخصي</Text>
+          </TouchableOpacity>
+        )}
+
+        {mapVisible && (
+          <View>
+            <TouchableOpacity style={styles.saveLocationButton} onPress={() => setMapVisible(false)}>
+              <Text style={styles.saveLocationButtonText}>حفظ الموقع</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.editButton} onPress={() => { updateProfile() }}>
+              <Text style={styles.editButtonText}>تعديل الملف الشخصي</Text>
             </TouchableOpacity>
           </View>
         )}
-         
-        </TouchableOpacity>
-
-       
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  buttonimg:{
- 
-
+    backgroundColor: COLORS.lightGreen,
   },
   header: {
     height: 200,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
-    overflow: 'hidden',
-  },
-  gradientTop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '50%',
     backgroundColor: COLORS.green,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
-  gradientBottom: {
+  backIcon: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '50%',
-    backgroundColor: COLORS.green,
+    top: 40,
+    right: 120,
+  },
+  logoutIcon: {
+    position: 'absolute',
+    top: 40,
+    left: 120,
   },
   headerText: {
-    color: 'white',
+    color: COLORS.white,
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 15,
+    bottom: -10,
   },
   profileImage: {
     width: 100,
     height: 100,
-    borderRadius: 50,
-    bottom: 4,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: COLORS.white,
+    bottom:-15
+  },
+  uploadButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.darkGreen,
+    paddingVertical: 10,
+    marginTop: 10,
+    borderRadius: 20,
+    marginHorizontal: 20,
+  },
+  uploadButtonText: {
+    color: COLORS.white,
+    marginLeft: 10,
+    fontSize: 16,
   },
   detailsContainer: {
     flex: 1,
     padding: 20,
+    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    marginTop: 20,
   },
   detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   detailTextInput: {
     flex: 1,
@@ -387,63 +392,40 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.darkGray,
   },
-  underline: {
-    height: 1,
-    backgroundColor: COLORS.lightGray,
-    marginVertical: 5,
+  map: {
+    height: 320,
+    marginVertical: 2,
+    marginHorizontal:-20,
+    borderRadius: 15,
+    overflow: 'hidden',
   },
   editButton: {
-    alignSelf: 'center',
-    marginVertical: 20,
-    left:-50
-  },
-  buttonGradient: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    left:120,
-    width:130,
-    bottom:180,
     backgroundColor: COLORS.green,
-    borderRadius: 20,
+    paddingVertical: 8,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginHorizontal: 80,
+    top: 10,
   },
-  buttonGradient1:{
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    left:120,
-    width:130,
-    bottom:100,
-    backgroundColor: COLORS.green,
-    borderRadius: 20,
-  },
-  buttonText: {
-    color: 'white',
+  editButtonText: {
+    color: COLORS.white,
     fontSize: 18,
     fontWeight: 'bold',
   },
-  buttonText1: {
-    color: 'white',
-    fontSize: 18,
+  saveLocationButton: {
+    backgroundColor: COLORS.darkGreen,
+    paddingVertical: 1,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginHorizontal: 120,
+     top: -315,
+     left:132,
+  },
+  saveLocationButtonText: {
+    color: "yellow",
+    fontSize: 16,
     fontWeight: 'bold',
   },
-  saveButton: {
-    alignSelf: 'center',
-    marginVertical: 80,
-    bottom:390,
-    backgroundColor: COLORS.green,
-    padding: 10,
-    borderRadius: 20,
-    left:130
-
-  },
-  saveButtonText: {
-    color: 'yellow',
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-  map: {
-    height: 300,
-    marginVertical: 20,
-  },
-})
+});
 
 export default Profile

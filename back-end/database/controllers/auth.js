@@ -2,15 +2,15 @@
 const db=require("../sequelize/index.js")
 const bcrypt=require("bcrypt")
 const jwt=require("jsonwebtoken")
-const { where } = require("sequelize")
+
 module.exports={
 register: function(req,res){
-  db.user.count({where:{email:req.body.email}}).then((response)=>{
+  db.users.count({where:{email:req.body.email}}).then((response)=>{
     if(response!==0){
         res.status(400).send("email deja exist")
     }else{
     bcrypt.hash(req.body.password,10).then((hashpass)=>{
-        db.user.create({
+        db.users.create({
             email:req.body.email,
             firstname:req.body.firstname,
             lastname:req.body.lastname,
@@ -32,7 +32,7 @@ register: function(req,res){
 },
 
 login:(req,res)=>{
-    db.user.findOne({where:{email:req.body.email}}).then((response)=>{
+    db.users.findOne({where:{email:req.body.email}}).then((response)=>{
         if(!response){
             res.send("email is not valid")
         }else{
@@ -59,7 +59,7 @@ login:(req,res)=>{
 
 
 updateprofile: (req, res) => {
-    db.user.findOne({ where: { id: req.params.id } })
+    db.users.findOne({ where: { id: req.params.id } })
         .then((user) => {
             if (!user) {
                 return res.send("Invalid user")
@@ -74,7 +74,7 @@ updateprofile: (req, res) => {
                         if (req.body.newPassword) {
                             bcrypt.hash(req.body.newPassword, 10)
                                 .then((passwordHashed) => {
-                                    db.user.update({
+                                    db.users.update({
                                         username: req.body.username,
                                         password: passwordHashed,  
                                         location: req.body.location,
@@ -88,7 +88,7 @@ updateprofile: (req, res) => {
                                 .catch((err) => res.status(500).send(err)) 
                         } else {
                             
-                            db.user.update({
+                            db.users.update({
                                 username: req.body.username,
                                 location: req.body.location,
                                 photoDeprofile: req.body.photoDeprofile,
@@ -104,7 +104,7 @@ updateprofile: (req, res) => {
                 })
                 .catch(() => res.status(500).send("Error comparing passwords"))
             }else{
-                db.user.update({
+                db.users.update({
                     username: req.body.username,
                     location: req.body.location,
                     photoDeprofile: req.body.photoDeprofile,
@@ -124,10 +124,15 @@ updateprofile: (req, res) => {
 },
 
 getUser:(req,res)=>{
-    db.user.findOne({where:{id:req.params.id}}).then((result)=>{
+    db.users.findOne({where:{id:req.params.id}}).then((result)=>{
         res.send(result)
     }).catch((err)=>{console.log(err)})
 
+},
+deleteuser:(req,res)=>{
+    db.users.destroy({where:{email:req.params.email}}).then((result)=>{
+        res.sendStatus(200);
+    }).catch((err)=>{console.log(err)})
 }
 
 }
