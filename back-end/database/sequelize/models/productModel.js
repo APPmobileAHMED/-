@@ -5,8 +5,6 @@ module.exports = (sequelize, DataTypes) => {
       name:
       { type : DataTypes.STRING,
       allowNull : false },
-      
-  
       img1: {
         type: DataTypes.STRING,
         allowNull : false 
@@ -23,25 +21,26 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull : false 
       },
-  
-      category:{
-        type: DataTypes.STRING,
-        allowNull : false 
-      },
-      price:{
-        type: DataTypes.STRING,
-        allowNull : false 
-      },
-      description:{
-        type: DataTypes.STRING,
-        allowNull : false 
-      },
-      quantity: {
-        type: DataTypes.INTEGER,
+      length: { // طول
+        type: DataTypes.FLOAT,
         allowNull: false,
-        defaultValue: 1
+        comment: "طول المنتج",
     },
-      condition: DataTypes.STRING,
+    width: { // عرض
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        comment: "عرض المنتج",
+    },
+      price: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      stock: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+    
+            
     });
     return Product;
   };

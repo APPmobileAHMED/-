@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet,KeyboardAvoidingView,Platform,ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet,KeyboardAvoidingView,Platform,ScrollView, Image } from 'react-native';
 import { COLORS } from '../../constants'; 
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../authcontext/authcontext';
+import { Ionicons } from '@expo/vector-icons';
 const Login = () => {
 
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
-  const {login,token}=useAuth()
+  const {login,token,PromptAsync}=useAuth()
+  
   const navigation=useNavigation()
-
+ 
  
   return (
     <KeyboardAvoidingView
@@ -55,6 +57,12 @@ const Login = () => {
         </View>
         <Text style={{padding:20, color:COLORS.white, left:20}} > إذا كان ماعندكش حساب تنجم تدخل لنا وتصنع حساب جديد </Text>
         <TouchableOpacity style={{right:120, top:-37,}}><Text  onPress={()=>{navigation.navigate("SignUp")}} style={{color: '#00FF7F'}} >إضغط  هنا</Text></TouchableOpacity>
+        <View style={styles.submitButtonCvrr}>
+          <TouchableOpacity style={styles.submitButton} onPress={()=>{PromptAsync()}}>
+            <Text style={styles.submitButtonText}>الدخول عبر جوجل</Text>
+            <Image source={require('../.././assets/images/0-6167_google-app-icon-png-transparent-png-removebg-preview.png')} style={{height:30,width:30,right:70,marginTop:-25}} ></Image>
+          </TouchableOpacity>
+        </View>
         <View style={styles.bar}></View>
 
       </View>
@@ -122,6 +130,9 @@ const styles = StyleSheet.create({
   },
   submitButtonCvr: {
     marginTop: 20,
+  },
+  submitButtonCvrr: {
+    marginTop: -13,
   },
   submitButton: {
     width: '100%',
