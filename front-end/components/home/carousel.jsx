@@ -39,7 +39,7 @@ const Carousel = () => {
       <Image source={{ uri: item.title }} style={styles.image} />
     </View>
   );
-
+ 
   return (
     <View style={styles.container}>
       <FlatList

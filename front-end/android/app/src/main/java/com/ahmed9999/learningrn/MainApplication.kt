@@ -1,4 +1,4 @@
-package com.learningrn
+package com.ahmed9999.learningrn
 
 import android.app.Application
 import android.content.res.Configuration

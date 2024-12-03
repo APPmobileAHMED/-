@@ -1,5 +1,5 @@
 import {View,Text,StyleSheet, TouchableOpacity, ScrollView} from "react-native"
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../constants";
 import { Fontisto, Ionicons } from "@expo/vector-icons";
@@ -10,21 +10,30 @@ import ProductRow from "../components/products/productRow";
 import { useNavigation } from "@react-navigation/native";
 import Categories from "../components/home/categories";
 import { useAuth } from "../components/authcontext/authcontext";
-
+import axios from 'axios';
+import {AdresseIPPP_} from '@env'
 
 
 const Home=()=>{
+    const {infor,refreshh,setrefreshh} = useAuth()
+    const [cartItems, setCartItems] = useState([])
+    useEffect(() => {
+        axios.get(`${AdresseIPPP_}cart/cartitems/${infor.id}`)
+          .then((res) => {
+            
+            setCartItems(Array.isArray(res.data) ? res.data : []);
+            console.log(res.data, "rf");
+          })
+          .catch((error) => {
+            console.log(error);
+            setCartItems([]); 
+          });
+      }, [refreshh, infor.id]);
 
     const navigation=useNavigation()
-const { tokenDecoded,token}=useAuth()
 
-useEffect(()=>{
-   
-    console.log("token",token)
-console.log("decodedtoken",tokenDecoded)
 
-    
-    },[token])
+
     return(
         
         <SafeAreaView>
@@ -38,7 +47,7 @@ console.log("decodedtoken",tokenDecoded)
 <View  style={{alignItems:"flex-end"}} >
 
 <View style={styles.cartCount}>
-    <Text style={styles.cartnumber}>8</Text>
+    <Text style={styles.cartnumber}>{cartItems.length}</Text>
 
 </View>
 <TouchableOpacity onPress={()=>{navigation.navigate("Cart")}} >
@@ -52,7 +61,7 @@ console.log("decodedtoken",tokenDecoded)
             <ScrollView>
                 <Welcome/>
                 <Carousel/>
-                <Categories/>
+                <Categories/> 
                 <Headings/>
                 <ProductRow/>
             </ScrollView>
@@ -94,7 +103,7 @@ const  styles=StyleSheet.create({
         backgroundColor:"green",
         justifyContent:"center",
         zIndex:9999
-    },
+    }, 
     cartnumber:{
         fontFamily:"regular",
         fontWeight:"600",

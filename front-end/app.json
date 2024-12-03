@@ -2,8 +2,13 @@
   "expo": {
     "name": "learningrn",
     "slug": "learningrn",
+    "scheme": "learningrn",
+    "newArchEnabled": true,
     "version": "1.0.0",
     "plugins": [
+      [
+        "@react-native-google-signin/google-signin"
+      ],
       "expo-font"
     ],
     "android": {
@@ -11,7 +16,17 @@
         "INTERNET",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
-      ]
+      ],
+      "package": "com.ahmed9999.learningrn"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ahmed9999.learningrn"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b774e4a4-c720-425e-ae4c-29d0a86e49fc"
+      }
     }
   }
 }

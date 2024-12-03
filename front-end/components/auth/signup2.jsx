@@ -17,7 +17,7 @@ const SignUp2 = ({route}) => {
 const {register}=useAuth()
    
 
-  
+   
   return (
 
     <KeyboardAvoidingView

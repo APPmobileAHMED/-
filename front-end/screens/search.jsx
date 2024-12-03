@@ -3,14 +3,14 @@ import React from "react"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constants";
-
+  
 const Search=()=>{
 
 
 
 
     return(
-        <SafeAreaView>
+        <SafeAreaView> 
         <View style={styles.searchcont}>
 <TouchableOpacity>
     <Ionicons name="camera-outline" size={SIZES.xLarge} style={styles.searchhIco} />

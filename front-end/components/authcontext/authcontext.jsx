@@ -3,21 +3,61 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {jwtDecode} from "jwt-decode"; 
+import {AdresseIPPP_,ID_CLIENT,CLIENT_SECRET,GOOGLE_REDIRECT_URI} from '@env'
+
+
+
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigation = useNavigation();
   const [refreshh, setrefreshh] = useState(false)
+  const [userInfo,setUserInfo]=useState([]);
   const [buyer, setbuyer] = useState({});
   const [seller, setseller] = useState({});
   const [tokenn, setToken] = useState("");
+  const [image, setImage] = useState(null)
   const [infor, setinfor] = useState({});
+  const [category, setcategory] = useState([]);
+  const [cartProducts, setCartProducts] = useState([]);
+ 
+
+
+
+  const isProductInCart = (productId) => {
+    return cartProducts.some(item => item.productId === productId);
+  };
+
   
+  
+
+  const fetchCartItems = async (userId) => {
+    if (!userId) return
+    try {
+      const response = await axios.get(`${AdresseIPPP_}cart/cartitems/${userId}`);
+      setCartProducts(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.log(error);
+      setCartProducts([]);
+    }
+  };
+
  
   
+  useEffect(() => {
+    if (infor.id) {
+      fetchCartItems(infor.id);
+    }
+  }, [infor.id, refreshh]);
   
   useEffect(() => {
+  console.log(AdresseIPPP_,"ippppp")
+    axios.get(`${AdresseIPPP_}category/showall`).then((res)=>{
+      setcategory(res.data)
+      
+    }).catch((err)=>console.log(err))
+
     const getTokenFromStorage = async () => {
       try {
         const storedToken = await AsyncStorage.getItem('token');
@@ -57,8 +97,9 @@ export const AuthProvider = ({ children }) => {
 
   const getuser=async(id)=>{
     try{
-      const result=await axios.get(`http://192.168.1.13:8080/api/get/${id}`)
+      const result=await axios.get(`${AdresseIPPP_}get/${id}`)
        setinfor(result.data)
+       setImage(result.data.photoDeprofile)
     }catch(err){
       console.log(err)
     }
@@ -68,7 +109,7 @@ export const AuthProvider = ({ children }) => {
   const login =async (password, email) => {
    try{ 
     
-    const res= await axios.post("http://192.168.1.13:8080/api/login", {
+    const res= await axios.post(`${AdresseIPPP_}login`, {
         password:password,
         email:email,
       })   
@@ -76,7 +117,7 @@ export const AuthProvider = ({ children }) => {
          await AsyncStorage.setItem("token",res.data.token)
           
               setToken(res.data.token); 
-              navigation.navigate("BottomTabNav");
+              navigation.navigate('Main')
           
     }
       catch(err) {
@@ -86,7 +127,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (firstname, lastname, email, password, role) => {
     try {
-      const res = await axios.post("http://192.168.1.13:8080/api/register", {
+      const res = await axios.post(`${AdresseIPPP_}register`, {
         firstname: firstname,
         lastname: lastname,
         email: email,
@@ -105,7 +146,7 @@ export const AuthProvider = ({ children }) => {
      
       setToken(res.data.token); 
       
-      navigation.navigate("Profile");
+      navigation.navigate('Main');
     } catch (err) {
       console.error(err);
     }
@@ -137,7 +178,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ logout, login, tokenn, register,infor,buyer,seller,setrefreshh,refreshh}}>
+    <AuthContext.Provider value={{ logout, login, tokenn,
+       register,
+      infor,buyer,seller,setrefreshh,
+      refreshh,category,cartProducts,
+      isProductInCart,
+      image, setImage,
+    
+      fetchCartItems}}>
       {children}
     </AuthContext.Provider>
   );
