@@ -13,7 +13,7 @@ const DATA = [
     description:"hdccjiefji"
   },
   // أضف المزيد من العناصر بنفس الطريقة
-];
+]; 
 
 const Item = ({ title, description, price, rating, sizes, image }) => (
     <View style={styles.item}>
@@ -40,10 +40,10 @@ const Whishlist = () => {
       <TouchableOpacity>
             <Ionicons name="search" size={30} color="black" />
           </TouchableOpacity>
-        <Text style={styles.headerTitle}>Open Fashion</Text>
+        <Text style={styles.headerTitle}>favoris</Text>
         <View style={styles.headerIcons}>
          
-          <TouchableOpacity>
+          <TouchableOpacity >
             <Ionicons name="cart" size={30} color="black" />
           </TouchableOpacity>
         </View>

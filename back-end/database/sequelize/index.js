@@ -22,6 +22,7 @@ db.categories=require("../sequelize/models/categories.js")(sequelize, DataTypes)
 db.orders=require("../sequelize/models/orders.js")(sequelize, DataTypes)
 db.orderitems=require("../sequelize/models/orderItems.js")(sequelize, DataTypes)
 db.review=require("../sequelize/models/review.js")(sequelize, DataTypes)
+db.payment=require("../sequelize/models/payment.js")(sequelize, DataTypes)
 
 db.products.belongsTo(db.users, { foreignKey: 'userId' });
 db.users.hasMany(db.products, { foreignKey: 'userId' });
@@ -54,9 +55,11 @@ db.users.hasMany(db.review, { foreignKey: 'userId' });
 db.review.belongsTo(db.products, { foreignKey: 'productId' }); 
 db.products.hasMany(db.review, { foreignKey: 'productId' });  
 
+db.orders.hasOne(db.payment, { foreignKey: 'orderId' });
+db.payment.belongsTo(db.orders, { foreignKey: 'orderId' });
 
-
-
+db.payment.belongsTo(db.users, { foreignKey: 'userId' });
+db.users.hasMany(db.payment, { foreignKey: 'userId' });
 
 sequelize.authenticate().then((res)=>{
   console.log("all good")

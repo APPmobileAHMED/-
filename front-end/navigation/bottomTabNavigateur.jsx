@@ -7,6 +7,8 @@ import {COLORS} from "../constants/index"
 import { useAuth } from "../components/authcontext/authcontext.jsx"
 import Whishlist from "../screens/wishlist.jsx"
 import ProductWithCategorie from "../components/home/productCategories.jsx";
+import PaymentScreen from "../components/Cart/payment.jsx"
+import PaymentScreenTunisie from "../components/Cart/paymentTunis.jsx"
 
 const Tab =createBottomTabNavigator()
 
@@ -79,16 +81,33 @@ const BottomTabNav=()=>{
                     ),
                 }}
             />
+                   <Tab.Screen
+                name="PaymentScreen"
+                component={PaymentScreen}
+                options={{
+                    tabBarButton: (props) => (
+                        <View style={{ display: 'none' }} /> 
+                    ),
+                }}
+            />
+                <Tab.Screen
+                name="PaymentScreenTunisie"
+                component={PaymentScreenTunisie}
+                options={{
+                    tabBarButton: (props) => (
+                        <View style={{ display: 'none' }} /> 
+                    ),
+                }}
+            />
 
-
-           {infor.role==="buyer" &&(
+           {infor.role==="seller" &&(
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
                     return <Ionicons name={"add-circle-sharp"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
                 }
             }} name="AddProduct" component={AddProduct}/>
            )}
-            {infor.role==="buyer" &&(
+            {infor.role==="seller" &&(
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
                     return <Ionicons name={"heart-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
@@ -101,6 +120,8 @@ const BottomTabNav=()=>{
                     return <Ionicons name={focused ? "person" : "person-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
                 }
             }} name="Profile" component={Profile}/>
+      
+            
 
         </Tab.Navigator>
     )

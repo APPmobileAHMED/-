@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 
 const { width } = Dimensions.get('window');
-const Categories = () => {
+const Categories = () => { 
 
   const navigation=useNavigation()
   return (

@@ -26,9 +26,9 @@ const Profile = () => {
   const [instagram, setInstagram] = useState("")
   const [refresh, setrefresh] = useState(false)
   const [newpassword, setPassword] = useState("")
-  const [image, setImage] = useState(null)
+  
   const [file, setfile] = useState(null)
-  const {logout,seller,buyer,infor,setrefreshh,refreshh} = useAuth()
+  const {logout,seller,buyer,infor,setrefreshh,refreshh,image, setImage} = useAuth()
   const [location, setLocation] = useState(null)
   const [mapVisible, setMapVisible] = useState(false) 
   const [selectedLocation, setSelectedLocation] = useState(null)
@@ -114,39 +114,53 @@ useEffect(()=>{
     }
   }
  
-
+   
   const uploadImage = () => {
     const formData = new FormData()
-    formData.append("file", {
-      uri: file,
-      type: "image/jpeg",
-      name: file.split("/").pop(),
-    })
-    formData.append("upload_preset", "ecommer-ce")
+
+    if(!file){
+      alert("please enter image")
+    }else{
+      formData.append("file", {
+        uri: file,
+        type: "image/jpeg",
+        name: file.split("/").pop() ,
+      })
+      formData.append("upload_preset", "ecommer-ce")
+    
+      axios.post("https://api.cloudinary.com/v1_1/dcwa4oceq/image/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
   
-    axios.post("https://api.cloudinary.com/v1_1/dcwa4oceq/image/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log("Upload response:", response)
-  
-        if (response.status === 200) {
-          const imageUrl = response.data.secure_url
-          setImage(imageUrl) 
-          
-        } else {
-          Alert.alert("Error", "Failed to upload image")
-        }
-      })
-      .catch((error) => {
-        console.error("Image upload error:", error)
-        Alert.alert("Error", "An error occurred while uploading the image")
-      })
+          console.log("Upload response:", response)
+    
+          if (response.status === 200) {
+            const imageUrl = response.data.secure_url
+            setImage(imageUrl) 
+            
+          } else {
+            Alert.alert("Error", "Failed to upload image")
+          }
+        })
+        .catch((error) => {
+          console.error("Image upload error:", error)
+          Alert.alert("Error", "An error occurred while uploading the image")
+        })
+
+    }
+    
   }
 
   const updateProfile= async()=>{
+  if(name==="" || placeName==="" || phone==="" || image===null ){
+    alert("you must put the information")
+  }else{
+
+  
+
     try{ 
       const result =await axios.put(`${AdresseIPPP_}edit/${infor.id}`,{
         photoDeprofile:image||infor.photoDeprofile,
@@ -157,6 +171,7 @@ useEffect(()=>{
         username:name,
         password:currentpassword
       })
+      
       if(result.data==="wrong current password"){
         alert("your current password isnt true please try again")
       }else{
@@ -171,7 +186,7 @@ useEffect(()=>{
     catch(err){
       console.log(err)
     }
-
+  }
   }
   
 
@@ -206,7 +221,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={name}
               onChangeText={setName}
-              placeholder="Name"
+              placeholder={`${infor.username}`||'name'}
             />
           </TouchableOpacity>
           <View style={styles.underline} />
@@ -215,7 +230,7 @@ useEffect(()=>{
             <FontAwesome name="map-marker" size={24} color="green" />
             <TextInput
               style={styles.detailTextInput}
-              placeholder="Location"
+              placeholder={`${infor.location}`||'location'}
               value={placeName ? placeName : selectedLocation ? `Lat: ${selectedLocation.latitude}, Lon: ${selectedLocation.longitude}` : ''}
             />
             <TouchableOpacity onPress={() => setMapVisible(true)}>
@@ -231,7 +246,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={phone}
               onChangeText={setPhone}
-              placeholder="Phone Number"
+              placeholder={`${infor.phoneNumber}`||'Phone Number'}
               keyboardType="phone-pad"
 
             />
@@ -242,9 +257,9 @@ useEffect(()=>{
             <MaterialCommunityIcons name="instagram" size={24} color={COLORS.green} />
             <TextInput
               style={styles.detailTextInput}
-              value={instagram}
+               value={instagram}
               onChangeText={setInstagram}
-              placeholder="Instagram"
+              placeholder={`${infor.instagram}`||'instagram'}
             />
           </TouchableOpacity>
           <View style={styles.underline} />
@@ -324,6 +339,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGreen,
   },
   header: {
+    fontFamily:"bold",
     height: 200,
     justifyContent: 'center',
     alignItems: 'center',
@@ -344,7 +360,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: COLORS.white,
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily:"bold",
     bottom: -10,
   },
   profileImage: {
@@ -368,6 +384,7 @@ const styles = StyleSheet.create({
   uploadButtonText: {
     color: COLORS.white,
     marginLeft: 10,
+    fontFamily:"bold",
     fontSize: 16,
   },
   detailsContainer: {
@@ -376,20 +393,24 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    fontFamily:"bold",
     marginTop: 20,
   },
   detailItem: {
     flexDirection: 'row',
+    fontFamily:"bold",
     alignItems: 'center',
     marginBottom: 15,
   },
   detailTextInput: {
     flex: 1,
+
+    fontFamily:"bold",
     marginLeft: 10,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.lightGray,
     paddingVertical: 5,
-    fontSize: 16,
+    fontSize: 20,
     color: COLORS.darkGray,
   },
   map: {
@@ -410,7 +431,7 @@ const styles = StyleSheet.create({
   editButtonText: {
     color: COLORS.white,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:"bold",
   },
   saveLocationButton: {
     backgroundColor: COLORS.darkGreen,
