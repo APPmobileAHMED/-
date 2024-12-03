@@ -55,62 +55,58 @@ const specifiqueproduct=(selectcategory)=>{
     };
 
     return (
-      <Animated.View style={[styles.card, { transform: [{ scale: scaleValue }] }]}>
-        <TouchableOpacity
-        onPress={() => navigation.navigate("ProductDetails", { productId: item.id, sellerId: item.userId })}
-          onPressIn={onPressIn}
-          onPressOut={onPressOut}
-        >
-          <Image source={{ uri: item.img1 }} style={styles.image} />
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>{item.name}</Text>
-            <Text style={styles.supplier} numberOfLines={1}>
-            مقاس: الطول {item.length} <Text style={{ fontWeight: 'bold',fontSize: 18}}>/</Text> العرض {item.width}
-            </Text>
-            <Text style={styles.price}>{item.price}</Text>
-          </View>
-          
-        </TouchableOpacity>
-        
-      </Animated.View>
+      <View style={styles.item}>
+      <Image source={{ uri: item.img1 }} style={styles.image} />
+      <View style={styles.textContainer}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.description}>{item.description}</Text>
+        <Text style={styles.price}>{item.price}</Text>
+        <Text style={styles.rating}>Rating: {item.rating}</Text>
+        <Text style={styles.sizes}>Sizes: {item.width}</Text>
+      </View>
+      <TouchableOpacity style={styles.heartIcon}>
+        <Ionicons name="heart-dislike-outline" size={24} color="black" />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.cartticon}>
+        <Ionicons name="cart-outline" size={28} color="black" />
+      </TouchableOpacity>
+    </View>
     );
   };
 
   return (
    
+    
     <View style={styles.container}>
-      <TouchableOpacity style={{ left: 10,top:20 }}>
-        <Ionicons name="arrow-back-outline" size={35} color={COLORS.black} onPress={() => { navigation.goBack() }} />
-      </TouchableOpacity>
+    
+    <TouchableOpacity style={{ left: 10,marginTop:25 }}>
+         <Ionicons name="arrow-back-outline" size={35} color={COLORS.black} onPress={() => { navigation.goBack() }} />
+       </TouchableOpacity>
+       <View style={styles.filterContainer}>
+         <TouchableOpacity onPress={() => {setSelectedCategory('خشب') ;specifiqueproduct("خشب")}}>
+           <Text style={[styles.filterButton, selectedCategory === 'خشب' && styles.selectedFilter]}>خشب</Text>
+         </TouchableOpacity>
+         <TouchableOpacity onPress={() => {setSelectedCategory('ألومنيوم');specifiqueproduct("ألومنيوم")}}>
+           <Text style={[styles.filterButton, selectedCategory === 'ألومنيوم' && styles.selectedFilter]}>ألومنيوم</Text>
+         </TouchableOpacity>
+         <TouchableOpacity onPress={() => {setSelectedCategory('حديد');specifiqueproduct("حديدية")}}>
+           <Text style={[styles.filterButton, selectedCategory === 'حديد' && styles.selectedFilter]}>حديد</Text>
+         </TouchableOpacity>
+         <TouchableOpacity onPress={() => {setSelectedCategory('');setrefresh(!refresh)}}>
+           <Text style={styles.filterButton}>كل الأنواع</Text>
+         </TouchableOpacity>
+       </View>
 
-      <View style={styles.filterContainer}>
-        <TouchableOpacity onPress={() => {setSelectedCategory('خشب') ;specifiqueproduct("خشب")}}>
-          <Text style={[styles.filterButton, selectedCategory === 'خشب' && styles.selectedFilter]}>خشب</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {setSelectedCategory('ألومنيوم');specifiqueproduct("ألومنيوم")}}>
-          <Text style={[styles.filterButton, selectedCategory === 'ألومنيوم' && styles.selectedFilter]}>ألومنيوم</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {setSelectedCategory('حديد');specifiqueproduct("حديدية")}}>
-          <Text style={[styles.filterButton, selectedCategory === 'حديد' && styles.selectedFilter]}>حديد</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {setSelectedCategory('');setrefresh(!refresh)}}>
-          <Text style={styles.filterButton}>كل الأنواع</Text>
-        </TouchableOpacity>
-      </View>
- 
-      <FlatList
-        data={allproductBycategories}
-        keyExtractor={item => item.id}
-        renderItem={renderCard}
-        numColumns={2}
-        contentContainerStyle={{ paddingBottom: 90 }} 
+    
+    <FlatList
+         data={allproductBycategories}
+         keyExtractor={item => item.id}
+         renderItem={renderCard}
+         contentContainerStyle={{ paddingBottom: 90 }} 
+         
  
       />
-      
-   
-      
-      
-    </View>
+  </View>
    
   );
 };
@@ -120,68 +116,97 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
     paddingTop: 20,
-  },
-  card: {
-    flex: 1,
-    margin: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-    padding: 10,
-    
-    transition: 'transform 0.2s ease-in-out',
-  },
-  image: {
-    width: '100%',
-    height: 150,
-    borderRadius: 10,
-  },
-  supplier: {
-    fontFamily: "regular",
-    fontSize: 10,
-    color: COLORS.gray,
-    marginBottom: 2,
-  },
-  textContainer: {
-    marginTop: 10,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.black,
-    textAlign: 'center',
-  },
-  price: {
-    fontSize: 16,
-    color: COLORS.primary,
-    textAlign: 'center',
-    marginTop: 5,
-  },
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-    top: 20,
-    
-  },
-  filterButton: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    padding: 10,
-    backgroundColor: COLORS.lightGray,
-    borderRadius: 20,
-    marginHorizontal: 5,
-    transition: 'background-color 0.2s ease',
-  },
-  selectedFilter: {
-    backgroundColor: COLORS.primary,
-    color: COLORS.white,
-  },
+   
+  flex: 1,
+  backgroundColor: 'white',
+},
+header: {
+    marginTop:4,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: 10,
+},
+headerTitle: {
+  fontSize: 20,
+  fontFamily:"bold",
+},
+headerIcons: {
+  flexDirection: 'row',
+},
+
+item: {
+flexDirection: 'row',
+padding: 5,
+marginVertical: 8,
+marginHorizontal: 16,
+backgroundColor: '#f9f9f9',
+borderRadius: 10,
+alignItems: 'center', // تركز المحتوى عموديا
+},
+image: {
+width: 100,
+height: 100,
+borderRadius: 10,
+marginRight: 10,
+},
+textContainer: {
+flex: 1,
+fontFamily:"bold",
+justifyContent: 'center',
+},
+cartticon:{
+top:50
+},
+title: {
+fontSize: 16,
+fontFamily:"bold",
+marginVertical: 5,
+},
+description: {
+fontSize: 14,
+fontFamily:"bold",
+color: '#333',
+marginBottom: 5,
+},
+price: {
+fontSize: 18,
+fontFamily:"bold",
+color: 'green',
+},
+rating: {
+fontSize: 16,
+fontFamily:"bold",
+},
+sizes: {
+fontSize: 14,
+},
+heartIcon: {
+alignSelf: 'center',
+marginLeft: 10,
+bottom:50,
+left:25
+},
+filterContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  marginBottom: 20,
+  top: 15,
+  
+},
+filterButton: {
+  fontSize: 16,
+  fontFamily:"bold",
+  padding: 10,
+  backgroundColor: COLORS.lightGray,
+  borderRadius: 20,
+  marginHorizontal: 5,
+  transition: 'background-color 0.2s ease',
+},
+selectedFilter: {
+  backgroundColor: COLORS.primary,
+  color: COLORS.white,
+},
 });
 
 

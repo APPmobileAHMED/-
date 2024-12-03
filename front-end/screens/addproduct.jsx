@@ -106,7 +106,7 @@ const navigation = useNavigation()
       });
       formData.append("upload_preset", "ecommer-ce");
   
-      try {
+      try { 
         const response = await axios.post(
           "https://api.cloudinary.com/v1_1/dcwa4oceq/image/upload",
           formData,
@@ -336,9 +336,11 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
   title: {
+    fontFamily:"bold",
     top:10,
     fontSize: 28,
-    fontWeight: 'bold',
+
+   
     marginBottom: 30,
     color: '#E8F5E9',
     textAlign: 'center',
@@ -347,11 +349,12 @@ const styles = StyleSheet.create({
     textShadowRadius: 3,
   },
   inputContainer: {
+    fontFamily:"bold",
     marginBottom: 10,
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:"bold",
     color: '#E8F5E9',
     marginBottom: 1,
   },
@@ -363,6 +366,7 @@ const styles = StyleSheet.create({
   },
   
   input: {
+    fontFamily:"bold",
     backgroundColor: 'rgba(232, 245, 233, 0.9)',
     borderRadius: 12,
     padding: 5,
@@ -415,6 +419,7 @@ const styles = StyleSheet.create({
     color: '#4CAF50',
   },
   picker:{
+    fontFamily:"bold",
     backgroundColor: 'rgba(232, 245, 233, 0.9)',
     borderRadius: 12,
     padding: 15,
@@ -440,7 +445,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#1B5E20',
     fontSize: 18,
-    fontWeight: 'bold',
+  
+    fontFamily:"bold",
   },
   checkboxContainer: {
     flexDirection: 'row',

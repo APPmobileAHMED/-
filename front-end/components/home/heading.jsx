@@ -21,7 +21,7 @@ const Headings = () => {
 export default Headings
 
 
-
+ 
 const styles=StyleSheet.create({
     container:{
         marginTop:SIZES.medium,

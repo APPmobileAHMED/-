@@ -6,10 +6,11 @@ import axios from "axios";
 import { useAuth } from "../authcontext/authcontext";
 import {AdresseIPPP_} from '@env'
 const ProductRow = () => {
-  const [finStock,setFinStock]=useState([])
+  const [finStock,setFinStock]=useState([]) 
 
   const {category,setrefreshh,refreshh,infor,fetchCartItems} =useAuth()
   const fetchFinStockProducts = async () => {
+
     try {
       const result = await axios.get(`${AdresseIPPP_}product/finstock`);
       setFinStock(result.data);
@@ -20,6 +21,7 @@ const ProductRow = () => {
   };
 
     useEffect(() => {
+
       const fetchData = async () => {
         await fetchFinStockProducts();
         if (infor.id) {

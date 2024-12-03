@@ -21,7 +21,7 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
 }).then((res)=>{
       console.log(res.data)
       
-      setrefreshh(!refreshh)
+      setrefreshh(!refreshh) 
       alert("added to cart")
     }).catch((error)=>{console.log("kkjf")})
   }

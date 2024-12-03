@@ -5,10 +5,10 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../authcontext/authcontext';
 import { Ionicons } from '@expo/vector-icons';
 const Login = () => {
-
+ 
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
-  const {login,token,PromptAsync}=useAuth()
+  const {login,token,}=useAuth()
   
   const navigation=useNavigation()
  
@@ -57,12 +57,12 @@ const Login = () => {
         </View>
         <Text style={{padding:20, color:COLORS.white, left:20}} > إذا كان ماعندكش حساب تنجم تدخل لنا وتصنع حساب جديد </Text>
         <TouchableOpacity style={{right:120, top:-37,}}><Text  onPress={()=>{navigation.navigate("SignUp")}} style={{color: '#00FF7F'}} >إضغط  هنا</Text></TouchableOpacity>
-        <View style={styles.submitButtonCvrr}>
-          <TouchableOpacity style={styles.submitButton} onPress={()=>{PromptAsync()}}>
+        {/* <View style={styles.submitButtonCvrr}>
+          <TouchableOpacity style={styles.submitButton} onPress={()=>{}}>
             <Text style={styles.submitButtonText}>الدخول عبر جوجل</Text>
             <Image source={require('../.././assets/images/0-6167_google-app-icon-png-transparent-png-removebg-preview.png')} style={{height:30,width:30,right:70,marginTop:-25}} ></Image>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={styles.bar}></View>
 
       </View>

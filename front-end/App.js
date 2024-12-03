@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from "expo-splash-screen";
@@ -9,9 +9,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import BottomTabNav from './navigation/bottomTabNavigateur';
 import Login from './components/auth/Login';
 import SignUp from './components/auth/signup';
+import { StripeProvider } from '@stripe/stripe-react-native';
 import SignUp2 from './components/auth/signup2';
 import { Profile } from './screens';
 import { AuthProvider } from './components/authcontext/authcontext';
+import {PUBLISH_KEY_STRIPE} from "@env"
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 
@@ -28,6 +30,8 @@ const linking = {
 };
 export default function App() {
  
+
+
   const [fontsLoaded] = useFonts({
     regular: require('./assets/fonts/Zain-Regular.ttf'),
     bold: require('./assets/fonts/Zain-Bold.ttf'),
@@ -50,6 +54,7 @@ export default function App() {
   }
 
   return (
+    <StripeProvider publishableKey={PUBLISH_KEY_STRIPE} >
     <NavigationContainer linking={linking}>
       <AuthProvider>
         <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Main">
@@ -63,6 +68,7 @@ export default function App() {
         </Stack.Navigator>
       </AuthProvider>
     </NavigationContainer>
+    </StripeProvider>
   );
 }
 

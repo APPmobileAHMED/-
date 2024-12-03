@@ -2,7 +2,7 @@
   "expo": {
     "name": "learningrn",
     "slug": "learningrn",
-    "scheme": "myapp",
+    "scheme": "learningrn",
     "newArchEnabled": true,
     "version": "1.0.0",
     "plugins": [
@@ -18,6 +18,10 @@
         "WRITE_EXTERNAL_STORAGE"
       ],
       "package": "com.ahmed9999.learningrn"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ahmed9999.learningrn"
     },
     "extra": {
       "eas": {

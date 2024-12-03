@@ -29,7 +29,7 @@ const ProductDetails = ({ navigation }) => {
         comment:newComment,
         productId:productId
       }).then((res)=>{
-        console.log(res)
+        console.log(res) 
         setNewComment("")
         alert("success")
         setrefresh(!refresh)
@@ -149,7 +149,7 @@ const ProductDetails = ({ navigation }) => {
             </View>
 
           <View style={styles.details}>
-          <View style={{top:-13}}>
+          <View style={{marginBottom:40}}>
             <View style={styles.titleRow}>
                 <Text style={styles.title}>{oneproduct.title}</Text>
                 
@@ -301,21 +301,7 @@ const ProductDetails = ({ navigation }) => {
                 </View>
             </Modal>
 
-            <View style={{ marginBottom: SIZES.small}}>
-                <View style={styles.location}>
-                  <View style={{ flexDirection: 'row', }}>
-                      <Ionicons name="location-outline" size={20} />
-                      <Text>  {oneproduct.product_location}</Text>
-                  </View>   
-                  
-                  
-    
-                  <View style={{ flexDirection: 'row', }}>
-                      <MaterialCommunityIcons name="truck-delivery-outline" size={20}  />
-                      <Text>  Delivery  </Text>
-                  </View>   
-                </View>
-            </View>
+            
     
             <View style={styles.cartRow}>
                 <TouchableOpacity onPress={() => {}} style={styles.cartBtn}>
