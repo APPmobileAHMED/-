@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: true }));
+app.use(session({ secret: 'process.env.SECRET', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 

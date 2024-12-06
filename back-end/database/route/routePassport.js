@@ -13,12 +13,11 @@ router.get('/auth/google', (req, res, next) => {
 router.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/' }), 
   (req, res) => {
-    // استرجاع الدور من الـ state
-    const role = req.query.state ? JSON.parse(req.query.state).role : 'buyer'; // استخدام 'buyer' كدور افتراضي
+    const role = req.query.state ? JSON.parse(req.query.state).role : 'buyer'; // الدور الافتراضي
+    const token = req.user.token; // التوكن الذي تم توليده في Passport.js
 
-    // يمكنك تخزين هذا الدور في الـ session أو إرساله مع الـ token إذا كنت تحتاجه.
-    // هنا كود إعادة التوجيه مع الـ role:
-    res.redirect(`exp://192.168.43.160:8081?role=${role}`); // توجيه المستخدم إلى التطبيق مع الدور
+    // توجيه المستخدم إلى التطبيق مع التوكن والدور
+    res.redirect(`exp://192.168.139.160:8081?role=${role}&token=${token}`); 
   }
 );
 

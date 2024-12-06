@@ -28,8 +28,8 @@ export const AuthProvider = ({ children }) => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const authUrl = `http://192.168.43.160:8080/auth/google?redirect_uri=${encodeURIComponent("https://66b9-196-233-246-102.ngrok-free.app/auth/google/callback")}&role=${role}`;
-      const result = await WebBrowser.openAuthSessionAsync(authUrl, "https://66b9-196-233-246-102.ngrok-free.app/auth/google/callback");
+      const authUrl = `http://192.168.139.160:8080/auth/google?redirect_uri=${encodeURIComponent("https://10fd-160-156-40-44.ngrok-free.app/auth/google/callback")}&role=${role}`;
+      const result = await WebBrowser.openAuthSessionAsync(authUrl, "exp://192.168.139.160:8081");
   console.log(result,"efklkzlefkzkfkezfkzek")
       if (result.type === 'success') {
         const params = Linking.parse(result.url);
@@ -48,18 +48,18 @@ export const AuthProvider = ({ children }) => {
             getuser(decodedToken.id);
           } else if (decodedToken.role === "seller") {
             setseller(decodedToken);
-            getuser(decodedToken.id);
+            getuser(decodedToken.id); 
           }
   
-          navigation.navigate('SignUp');
+          navigation.navigate('Main', {
+            screen: 'Profile',
+          });
         } else {
           console.log('Token not found in URL parameters');
         }
       } else {
         console.log('Google Sign-In failed:', result);
-        navigation.navigate('Main', {
-          screen: 'Profile',
-        });
+       
       } 
     } catch (error) {
       console.error('Error during Google Sign-In:', error);
