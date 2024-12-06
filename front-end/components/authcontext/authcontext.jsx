@@ -5,7 +5,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {jwtDecode} from "jwt-decode"; 
 import {AdresseIPPP_,ID_CLIENT,CLIENT_SECRET,GOOGLE_REDIRECT_URI} from '@env'
 
-
+import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
+import * as Google from 'expo-auth-session/providers/google';
+import * as Linking from 'expo-linking';
 
 
 const AuthContext = createContext();
@@ -21,10 +24,49 @@ export const AuthProvider = ({ children }) => {
   const [infor, setinfor] = useState({});
   const [category, setcategory] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
- 
+  const [role, setRole] = useState("buyer");
 
+  const handleGoogleSignIn = async () => {
+    try {
+      const authUrl = `http://192.168.43.160:8080/auth/google?redirect_uri=${encodeURIComponent("https://66b9-196-233-246-102.ngrok-free.app/auth/google/callback")}&role=${role}`;
+      const result = await WebBrowser.openAuthSessionAsync(authUrl, "https://66b9-196-233-246-102.ngrok-free.app/auth/google/callback");
+  console.log(result,"efklkzlefkzkfkezfkzek")
+      if (result.type === 'success') {
+        const params = Linking.parse(result.url);
+        const { token } = params.queryParams;
+  
+        if (token) {
+          // Save token to AsyncStorage
+          await AsyncStorage.setItem('token', token);
+  
+          // Decode token and update state
+          const decodedToken = jwtDecode(token);
+          setToken(token);
+  
+          if (decodedToken.role === "buyer") {
+            setbuyer(decodedToken);
+            getuser(decodedToken.id);
+          } else if (decodedToken.role === "seller") {
+            setseller(decodedToken);
+            getuser(decodedToken.id);
+          }
+  
+          navigation.navigate('SignUp');
+        } else {
+          console.log('Token not found in URL parameters');
+        }
+      } else {
+        console.log('Google Sign-In failed:', result);
+        navigation.navigate('Main', {
+          screen: 'Profile',
+        });
+      } 
+    } catch (error) {
+      console.error('Error during Google Sign-In:', error);
+    }
+  };
 
-
+  
   const isProductInCart = (productId) => {
     return cartProducts.some(item => item.productId === productId);
   };
@@ -146,7 +188,9 @@ export const AuthProvider = ({ children }) => {
      
       setToken(res.data.token); 
       
-      navigation.navigate('Main');
+      navigation.navigate('Main', {
+        screen: 'Profile',
+      });
     } catch (err) {
       console.error(err);
     }
@@ -184,7 +228,8 @@ export const AuthProvider = ({ children }) => {
       refreshh,category,cartProducts,
       isProductInCart,
       image, setImage,
-    
+      handleGoogleSignIn,
+      role, setRole,
       fetchCartItems}}>
       {children}
     </AuthContext.Provider>

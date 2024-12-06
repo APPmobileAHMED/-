@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../authcontext/authcontext";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { Camera } from 'expo-camera';
 
 import * as FileSystem from 'expo-file-system'; 
 
@@ -17,11 +18,10 @@ const Welcome=()=>{
     const [image, setImage] = useState(null);
     const [url, setUrl] = useState("")
     const [modalVisible, setModalVisible] = useState(false);
-    const [analysisResult, setAnalysisResult] = useState("");
-    const [label, setLabel] = useState([])
+  
 
     const openCamera = async () => {
-        // Demander la permission pour accéder à la caméra
+        
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== "granted") {
           alert("Permission to access camera is required!");
@@ -36,7 +36,7 @@ const Welcome=()=>{
     
         if (!result.canceled) {
           setImage(result.assets[0].uri);
-
+          setModalVisible(true)
           console.log(result.assets[0].uri)
         //   setModalVisible(true)
           
@@ -68,7 +68,7 @@ const Welcome=()=>{
               if (response.status === 200) {
                 const imageUrl = response.data.secure_url
                 setUrl(imageUrl) 
-                analyzeImage(imageUrl);
+                
                 console.log(imageUrl)
                 
               } else {
@@ -84,40 +84,7 @@ const Welcome=()=>{
         
       }
 
-      const analyzeImage = async (imageUrl) => {
-      
-       try{
-        if(!imageUrl){
-            alert("select image please")
-        }
-
-        const apiKey= "AIzaSyBV6zRZHtpiLvXKK8QI3fn16BLKlKqOpTI"
-        const apiUrl= `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`
-        const base64ImageData=await FileSystem.readAsStringAsync(imageUrl,{
-            encoding:FileSystem.EncodingType.Base64
-        })
-
-        const requestData={
-            requests:[
-                {
-                    image:{
-                        content:base64ImageData,
-                    },
-                    features: [{type:'LABEL_DETECTION',maxResults:5} ],
-                },
-            ],
-        }
-
-        const apiResponse=await axios.post(apiUrl,requestData)
-        setLabel(apiResponse.data.responses[0].labelAnnotations)
-       }catch (error){
-        console.error("errroeoorr",error)
-        alert("errror")
-       }
-       
-      };
-
-      const handleNext = () => {
+            const handleNext = () => {
         uploadImage()
         setModalVisible(false);
         console.log("Next clicked, image URL:", image);
@@ -181,23 +148,7 @@ Luxurious furniture
           </View>
         </View>
       </Modal>
-     {
-        label.length > 0 && (
-            <View>
-                <Text>
-                    labels:
-                </Text>
-                {
-                    label.map((label)=>(
-                   <Text key={label.mid}>
-                       {label.description}
-                   </Text>
-                    )
-                    )
-                }
-                </View>
-        )
-     }
+    
 
        </View>
 

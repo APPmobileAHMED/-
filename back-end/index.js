@@ -19,14 +19,10 @@ const app = express();
   const routerPassport=require("./database/route/routePassport.js")
 app.use(express.json());
 app.use(cors());
-// app.use(session({
-//   secret:"secret",
-//   resave:false,
-//   saveUninitialized:true
-// }))
 
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 
@@ -37,7 +33,7 @@ app.use("/api/cart",routercart)
 app.use("/api/review",routerreview)
 
 app.use("/api/payment",routerPayment)
-// app.use("/",routerPassport)
+app.use("/",routerPassport)
 
 
 
