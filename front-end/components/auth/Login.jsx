@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet,KeyboardAvoidingView,Platform,ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet,KeyboardAvoidingView,Platform,ScrollView, Image ,Modal} from 'react-native';
 import { COLORS } from '../../constants'; 
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../authcontext/authcontext';
@@ -8,11 +8,32 @@ const Login = () => {
  
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
-  const {login,token,}=useAuth()
-  
+  const {login,token,handleGoogleSignIn,role, setRole}=useAuth()
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isBuyerSelected, setIsBuyerSelected] = useState(false); 
+  const [isSellerSelected, setIsSellerSelected] = useState(false); 
   const navigation=useNavigation()
  
- 
+  const handleBuyerSelection = () => {
+    setRole("buyer")
+    setIsBuyerSelected(true);
+    setIsSellerSelected(false); // إلغاء تحديد الـ seller عند تحديد الـ buyer
+  };
+
+  // التعامل مع تغيير اختيار الـ seller
+  const handleSellerSelection = () => {
+    setRole("seller")
+    setIsSellerSelected(true);
+    setIsBuyerSelected(false); // إلغاء تحديد الـ buyer عند تحديد الـ seller
+  };
+
+  const handleNext = () => {
+    
+    setModalVisible(false);
+    handleGoogleSignIn()
+    
+    // أضف الكود هنا حسب الإجراء اللي تحب تعملو بعد الضغط على "Next"
+  };
   return (
     <KeyboardAvoidingView
     
@@ -57,15 +78,58 @@ const Login = () => {
         </View>
         <Text style={{padding:20, color:COLORS.white, left:20}} > إذا كان ماعندكش حساب تنجم تدخل لنا وتصنع حساب جديد </Text>
         <TouchableOpacity style={{right:120, top:-37,}}><Text  onPress={()=>{navigation.navigate("SignUp")}} style={{color: '#00FF7F'}} >إضغط  هنا</Text></TouchableOpacity>
-        {/* <View style={styles.submitButtonCvrr}>
-          <TouchableOpacity style={styles.submitButton} onPress={()=>{}}>
+        <View style={styles.submitButtonCvrr}>
+          <TouchableOpacity style={styles.submitButton} onPress={()=>{setModalVisible(true)}}>
             <Text style={styles.submitButtonText}>الدخول عبر جوجل</Text>
             <Image source={require('../.././assets/images/0-6167_google-app-icon-png-transparent-png-removebg-preview.png')} style={{height:30,width:30,right:70,marginTop:-25}} ></Image>
           </TouchableOpacity>
-        </View> */}
+        </View>
         <View style={styles.bar}></View>
 
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>Are you sure?</Text>
+            <View style={styles.checkboxContainer}>
+            <TouchableOpacity
+              style={[styles.checkbox, isBuyerSelected && styles.checked]}
+              onPress={handleBuyerSelection}
+            >
+              {isBuyerSelected && <Text style={styles.checkmark}>✔</Text>}
+            </TouchableOpacity>
+            <Text style={styles.checkboxLabel}>Buyer</Text>
+          </View>
+
+          <View style={styles.checkboxContainer}>
+            <TouchableOpacity
+              style={[styles.checkbox, isSellerSelected && styles.checked]}
+              onPress={handleSellerSelection}
+            >
+              {isSellerSelected && <Text style={styles.checkmark}>✔</Text>}
+            </TouchableOpacity>
+            <Text style={styles.checkboxLabel}>Seller</Text>
+          </View>
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.nextButton} onPress={()=>{handleNext()}}>
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
     </ScrollView >
     </KeyboardAvoidingView>
@@ -186,6 +250,67 @@ const styles = StyleSheet.create({
     backgroundColor: '#ececec',
     borderRadius: '50%',
     right: -38,
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  cancelButton: {
+    backgroundColor: COLORS.gray,
+    padding: 10,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  nextButton: {
+    backgroundColor: COLORS.primary,
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: 'gray',
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checked: {
+    backgroundColor: '#4CAF50', // اللون عندما يتم تحديد الـ checkbox
+  },
+  checkmark: {
+    color: 'white',
+    fontSize: 14,
+  },
+  checkboxLabel: {
+    fontSize: 14,
   },
 });
 
