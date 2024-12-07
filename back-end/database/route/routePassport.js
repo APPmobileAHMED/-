@@ -17,7 +17,7 @@ router.get('/auth/google/callback',
     const token = req.user.token; // التوكن الذي تم توليده في Passport.js
 
     // توجيه المستخدم إلى التطبيق مع التوكن والدور
-    res.redirect(`exp://192.168.139.160:8081?role=${role}&token=${token}`); 
+    res.redirect(`exp://192.168.100.4:8081?role=${role}&token=${token}`); 
   }
 );
 

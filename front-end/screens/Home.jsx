@@ -18,7 +18,7 @@ const Home=()=>{
     const {infor,refreshh,setrefreshh} = useAuth()
     const [cartItems, setCartItems] = useState([])
     useEffect(() => {
-        axios.get(`${AdresseIPPP_}cart/cartitems/${infor.id}`)
+        axios.get(`${AdresseIPPP_}/api/cart/cartitems/${infor.id}`)
           .then((res) => {
             
             setCartItems(Array.isArray(res.data) ? res.data : []);

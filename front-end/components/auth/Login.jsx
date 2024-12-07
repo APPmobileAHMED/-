@@ -79,8 +79,14 @@ const Login = () => {
         <Text style={{padding:20, color:COLORS.white, left:20}} > إذا كان ماعندكش حساب تنجم تدخل لنا وتصنع حساب جديد </Text>
         <TouchableOpacity style={{right:120, top:-37,}}><Text  onPress={()=>{navigation.navigate("SignUp")}} style={{color: '#00FF7F'}} >إضغط  هنا</Text></TouchableOpacity>
         <View style={styles.submitButtonCvrr}>
-          <TouchableOpacity style={styles.submitButton} onPress={()=>{setModalVisible(true)}}>
+          <TouchableOpacity style={styles.submitButton} onPress={()=>{handleGoogleSignIn()}}>
             <Text style={styles.submitButtonText}>الدخول عبر جوجل</Text>
+            <Image source={require('../.././assets/images/0-6167_google-app-icon-png-transparent-png-removebg-preview.png')} style={{height:30,width:30,right:70,marginTop:-25}} ></Image>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.submitButtonCvrrr}>
+          <TouchableOpacity style={styles.submitButton} onPress={()=>{setModalVisible(true)}}>
+            <Text style={styles.submitButtonTextt}>يمكن التسجيل عبر جوجل</Text>
             <Image source={require('../.././assets/images/0-6167_google-app-icon-png-transparent-png-removebg-preview.png')} style={{height:30,width:30,right:70,marginTop:-25}} ></Image>
           </TouchableOpacity>
         </View>
@@ -154,7 +160,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
     width: 230,
-    marginTop: -156,
+    marginTop: -225,
     marginHorizontal: 25,
   },
   welcomeLines: {
@@ -196,7 +202,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   submitButtonCvrr: {
-    marginTop: -13,
+    marginTop: -15,
+  },
+  submitButtonCvrrr: {
+    marginTop: 15,
   },
   submitButton: {
     width: '100%',
@@ -213,6 +222,10 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: '#00FF7F',
+  },
+  submitButtonTextt: {
+    color: '#00FF7F',
+    left:10,
   },
   forgotPass: {
     textAlign: 'center',

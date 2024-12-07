@@ -16,7 +16,7 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
 
 
   const addtocart=(product)=>{
-    axios.post(`${AdresseIPPP_}cart/addtocart/${infor.id}`,{
+    axios.post(`${AdresseIPPP_}/api/cart/addtocart/${infor.id}`,{
       productId: product
 }).then((res)=>{
       console.log(res.data)
@@ -26,7 +26,7 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
     }).catch((error)=>{console.log("kkjf")})
   }
   const deleteItem=(product)=>{
-    axios.delete(`${AdresseIPPP_}cart/deleteitems/${infor.id}`,{
+    axios.delete(`${AdresseIPPP_}/api/cart/deleteitems/${infor.id}`,{
       data:{productId: product}
 }).then((res)=>{
       console.log(res.data)
