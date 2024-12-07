@@ -28,8 +28,8 @@ export const AuthProvider = ({ children }) => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const authUrl = `http://192.168.139.160:8080/auth/google?redirect_uri=${encodeURIComponent("https://10fd-160-156-40-44.ngrok-free.app/auth/google/callback")}&role=${role}`;
-      const result = await WebBrowser.openAuthSessionAsync(authUrl, "exp://192.168.139.160:8081");
+      const authUrl = `${AdresseIPPP_}/auth/google?redirect_uri=${encodeURIComponent("https://59d4-2c0f-4280-3000-5b55-dcd0-fe70-7ab4-6621.ngrok-free.app/auth/google/callback")}&role=${role}`;
+      const result = await WebBrowser.openAuthSessionAsync(authUrl, "exp://192.168.100.4:8081");
   console.log(result,"efklkzlefkzkfkezfkzek")
       if (result.type === 'success') {
         const params = Linking.parse(result.url);
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
   const fetchCartItems = async (userId) => {
     if (!userId) return
     try {
-      const response = await axios.get(`${AdresseIPPP_}cart/cartitems/${userId}`);
+      const response = await axios.get(`${AdresseIPPP_}/api/cart/cartitems/${userId}`);
       setCartProducts(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.log(error);
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
   
   useEffect(() => {
   console.log(AdresseIPPP_,"ippppp")
-    axios.get(`${AdresseIPPP_}category/showall`).then((res)=>{
+    axios.get(`${AdresseIPPP_}/api/category/showall`).then((res)=>{
       setcategory(res.data)
       
     }).catch((err)=>console.log(err))
@@ -139,7 +139,7 @@ export const AuthProvider = ({ children }) => {
 
   const getuser=async(id)=>{
     try{
-      const result=await axios.get(`${AdresseIPPP_}get/${id}`)
+      const result=await axios.get(`${AdresseIPPP_}/api/get/${id}`)
        setinfor(result.data)
        setImage(result.data.photoDeprofile)
     }catch(err){
@@ -151,7 +151,7 @@ export const AuthProvider = ({ children }) => {
   const login =async (password, email) => {
    try{ 
     
-    const res= await axios.post(`${AdresseIPPP_}login`, {
+    const res= await axios.post(`${AdresseIPPP_}/api/login`, {
         password:password,
         email:email,
       })   
@@ -169,7 +169,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (firstname, lastname, email, password, role) => {
     try {
-      const res = await axios.post(`${AdresseIPPP_}register`, {
+      const res = await axios.post(`${AdresseIPPP_}/api/register`, {
         firstname: firstname,
         lastname: lastname,
         email: email,

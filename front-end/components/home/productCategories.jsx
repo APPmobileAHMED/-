@@ -18,14 +18,14 @@ const ProductWithCategorie = () => {
  const{name}=route.params
  useEffect(()=>{
   console.log(name)
-  axios.get(`${AdresseIPPP_}category/${name}`).then((res)=>{
+  axios.get(`${AdresseIPPP_}/api/category/${name}`).then((res)=>{
      setall(res.data) 
     console.log(res.data)
    })
   .catch((error)=>console.log(error))
  },[refresh])
 const specifiqueproduct=(selectcategory)=>{
-  axios.get(`${AdresseIPPP_}category/${name}/${selectcategory}`).then((res)=>{
+  axios.get(`${AdresseIPPP_}/api/category/${name}/${selectcategory}`).then((res)=>{
     setall(res.data) 
    console.log(res.data)
   })

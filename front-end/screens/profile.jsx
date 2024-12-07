@@ -162,7 +162,7 @@ useEffect(()=>{
   
 
     try{ 
-      const result =await axios.put(`${AdresseIPPP_}edit/${infor.id}`,{
+      const result =await axios.put(`${AdresseIPPP_}/api/edit/${infor.id}`,{
         photoDeprofile:image||infor.photoDeprofile,
         instagram:instagram,
         location:placeName,

@@ -14,7 +14,7 @@ const app = express();
  const routerproduct=require("./database/route/routeProduct.js")
  const routercart=require("./database/route/routeCart.js")
  const routerreview=require("./database/route/routeReview.js")
-
+ const routerwishlist=require("./database/route/routeWishlist.js")
  const routerPayment=require("./database/route/routePayment.js")
   const routerPassport=require("./database/route/routePassport.js")
 app.use(express.json());
@@ -31,7 +31,7 @@ app.use("/api/category",routercategories)
 app.use("/api/product",routerproduct)
 app.use("/api/cart",routercart)
 app.use("/api/review",routerreview)
-
+app.use("/api/wishlist",routerwishlist)
 app.use("/api/payment",routerPayment)
 app.use("/",routerPassport)
 

@@ -39,7 +39,7 @@ else if(selected==="Flouci"){
 }
    
   useEffect(() => {
-    axios.get(`${AdresseIPPP_}cart/cartitems/${infor.id}`)
+    axios.get(`${AdresseIPPP_}/api/cart/cartitems/${infor.id}`)
       .then((res) => {
         
         setCartItems(Array.isArray(res.data) ? res.data : []);
@@ -84,7 +84,7 @@ const decrement = (productId) => {
 
 
   const deleteItem=(product)=>{
-    axios.delete(`${AdresseIPPP_}cart/deleteitems/${infor.id}`,{
+    axios.delete(`${AdresseIPPP_}/api/cart/deleteitems/${infor.id}`,{
       data:{productId: product}
 }).then((res)=>{
       console.log(res.data)
