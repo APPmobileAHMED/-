@@ -153,7 +153,7 @@ const navigation = useNavigation()
 
   const addproduct= async ()=>{
     try{
-  const result=await axios.post(`${AdresseIPP}product/add`,{
+  const result=await axios.post(`${AdresseIPP}/api/product/add`,{
     name:name,
     price:price,
     width:width,

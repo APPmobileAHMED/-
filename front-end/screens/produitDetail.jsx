@@ -25,7 +25,7 @@ const ProductDetails = ({ navigation }) => {
       if(newComment===""){
         alert("please enter text")
       }else{
-      axios.post(`${AdresseIPPP_}review/add/${infor.id}`,{
+      axios.post(`${AdresseIPPP_}/api/review/add/${infor.id}`,{
         comment:newComment,
         productId:productId
       }).then((res)=>{
@@ -49,19 +49,19 @@ const ProductDetails = ({ navigation }) => {
     const images = [oneproduct.img1, oneproduct.img2, oneproduct.img3, oneproduct.img4];
 
     useEffect(() => {
-    axios.get(`${AdresseIPPP_}review/getall/${productId}`).then((ress)=>{
+    axios.get(`${AdresseIPPP_}/api/review/getall/${productId}`).then((ress)=>{
     setallcomment(ress.data)
     }).catch((err)=>console.log(err))
 
 
 
-        axios.get(`${AdresseIPPP_}product/${productId}`).then((res) => {
+        axios.get(`${AdresseIPPP_}/api/product/${productId}`).then((res) => {
             setOneproduct(res.data);
         })
         .catch((err) => {
             console.log(err);
         });
-        axios.get(`${AdresseIPPP_}get/${sellerId}`).then((res)=>{
+        axios.get(`${AdresseIPPP_}/api/get/${sellerId}`).then((res)=>{
           setseller(res.data)
           console.log(res.data,"choch")
         })

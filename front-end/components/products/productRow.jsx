@@ -12,7 +12,7 @@ const ProductRow = () => {
   const fetchFinStockProducts = async () => {
 
     try {
-      const result = await axios.get(`${AdresseIPPP_}product/finstock`);
+      const result = await axios.get(`${AdresseIPPP_}/api/product/finstock`);
       setFinStock(result.data);
     } catch (err) {
       console.log('Error fetching fin stock products:', err);
