@@ -1,7 +1,12 @@
 
 
 const router = require("express").Router();
-const {addTofavor,getFavoritProduct,deleteFavoritProduct}=require("../controllers/wishlist")
+
+const {
+    addTofavor,
+    getFavoritProduct,
+    deleteFavoritProduct
+}=require("../controllers/wishlist")
 
 
 

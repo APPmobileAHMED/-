@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity,KeyboardAvoidingView,ScrollView, StyleSheet, Animated } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons,Fontisto } from "@expo/vector-icons";
 import { COLORS } from '../../constants';
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
 import axios from 'axios';
 import {AdresseIPPP_} from '@env'
+import { useAuth } from '../authcontext/authcontext';
 
 
 const ProductWithCategorie = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const[allproductBycategories,setall]=useState([])
+  const {infor,isProductInWishlist,setrefreshh,refreshh,isProductInCart}=useAuth()
   const[refresh,setrefresh]=useState(false)
   const navigation = useNavigation();
   
@@ -20,7 +22,7 @@ const ProductWithCategorie = () => {
   console.log(name)
   axios.get(`${AdresseIPPP_}/api/category/${name}`).then((res)=>{
      setall(res.data) 
-    console.log(res.data)
+    console.log(res.data,"hhhhhsssssssssssss")
    })
   .catch((error)=>console.log(error))
  },[refresh])
@@ -31,29 +33,51 @@ const specifiqueproduct=(selectcategory)=>{
   })
  .catch((error)=>console.log(error))
 }
+const addtoWishlist=(product)=>{
+  axios.post(`${AdresseIPPP_}/api/wishlist/add/${infor.id}`,{
+    productId: product
+}).then((res)=>{
+    console.log(res.data)
+    
+    setrefreshh(!refreshh) 
+    alert("added to cart")
+  }).catch((error)=>{console.log("kkjf")})
+}
 
-  
+deleteFavoriteItem=(id)=>{
+  axios.delete(`${AdresseIPPP_}/api/wishlist/delete/${id}`)
+  .then((res) => {
+       alert("item deleted")
+   setrefreshh(!refreshh)
+ })
+ .catch((error) => {
+   console.log("oops");
+     
+ });
+}
 
-  
+const addtocart=(product)=>{
+  axios.post(`${AdresseIPPP_}/api/cart/addtocart/${infor.id}`,{
+    productId: product
+}).then((res)=>{
+    console.log(res.data)
+    
+    setrefreshh(!refreshh) 
+    alert("added to cart")
+  }).catch((error)=>{console.log("kkjf")})
+}
+const deleteItem=(product)=>{
+  axios.delete(`${AdresseIPPP_}/api/cart/deleteitems/${infor.id}`,{
+    data:{productId: product}
+}).then((res)=>{
+    console.log(res.data)
+    alert("deleted ")
+    setrefreshh(!refreshh)
+  }).catch((error)=>{console.log(error)})
+}
+
   const renderCard = ({ item }) => {
     const scaleValue = new Animated.Value(1);
-
-    const onPressIn = () => {
-      Animated.spring(scaleValue, {
-        toValue: 0.95,
-        friction: 7,
-        useNativeDriver: true,
-      }).start();
-    };
-
-    const onPressOut = () => {
-      Animated.spring(scaleValue, {
-        toValue: 1,
-        friction: 7,
-        useNativeDriver: true,
-      }).start();
-    };
-
     return (
       <View style={styles.item}>
       <Image source={{ uri: item.img1 }} style={styles.image} />
@@ -64,15 +88,44 @@ const specifiqueproduct=(selectcategory)=>{
         <Text style={styles.rating}>Rating: {item.rating}</Text>
         <Text style={styles.sizes}>Sizes: {item.width}</Text>
       </View>
-      <TouchableOpacity style={styles.heartIcon}>
-        <Ionicons name="heart-dislike-outline" size={24} color="black" />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.cartticon}>
-        <Ionicons name="cart-outline" size={28} color="black" />
-      </TouchableOpacity>
+      {isProductInWishlist(item.id) ? (
+        <TouchableOpacity style={styles.heartIcon} onPress={() => deleteFavoriteItem(item.id)}>
+          <Ionicons 
+                        name="heart-dislike" 
+                        size={25}
+                        style={{top:1}}
+                        color={"#f95151"} 
+                    />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.heartIcon} onPress={() => addtoWishlist(item.id)}>
+          <Ionicons 
+                        name="heart-circle" 
+                        size={33}
+                        style={{top:1}}
+                        color={"black"} 
+                    />
+        </TouchableOpacity>
+      )}
+
+      {isProductInCart(item.id) ? (
+        <TouchableOpacity style={styles.cartticon} onPress={() => deleteItem(item.id)}>
+          <Fontisto name="shopping-basket-remove" size={25} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity  style={styles.cartticon} onPress={() => addtocart(item.id)}>
+          <Fontisto name="shopping-basket-add" size={25}  />
+        </TouchableOpacity>
+      )}
+      
     </View>
     );
   };
+
+
+
+
+
 
   return (
    
