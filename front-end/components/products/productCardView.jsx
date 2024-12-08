@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text, View, Image, StyleSheet, ScrollView } from "react-native";
 import React, { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Fontisto, Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../authcontext/authcontext";
@@ -63,11 +63,11 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
             <TouchableOpacity style={styles.addBtn}>
       {isProductInCart(product.id) ? (
         <TouchableOpacity onPress={() => deleteItem(product.id)}>
-          <Ionicons name="bag-check-outline" size={35} color={COLORS.primary} />
+          <Fontisto name="shopping-basket-remove" size={25} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity onPress={() => addtocart(product.id)}>
-          <Ionicons name="bag-add-outline" size={35} color={COLORS.primary} />
+          <Fontisto name="shopping-basket-add" size={25}  />
         </TouchableOpacity>
       )}
     </TouchableOpacity>

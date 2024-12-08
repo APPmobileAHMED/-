@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
   const [category, setcategory] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
   const [role, setRole] = useState("buyer");
+  const [wishlist, setwishlist] = useState([]);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -36,10 +37,10 @@ export const AuthProvider = ({ children }) => {
         const { token } = params.queryParams;
   
         if (token) {
-          // Save token to AsyncStorage
+          
           await AsyncStorage.setItem('token', token);
   
-          // Decode token and update state
+          
           const decodedToken = jwtDecode(token);
           setToken(token);
   
@@ -67,12 +68,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   
+  const isProductInWishlist = (productId) => {
+    return wishlist.some(item => item.productId === productId);
+  };
+
+  
   const isProductInCart = (productId) => {
     return cartProducts.some(item => item.productId === productId);
   };
 
-  
-  
+
+  const fetchWishlist = async (userId) => {
+    if (!userId) return
+    try {
+      const response = await axios.get(`${AdresseIPPP_}/api/wishlist/get/${userId}`);
+      setwishlist(Array.isArray(response.data) ? response.data : []);
+      
+    } catch (error) {
+      console.log(error);
+      setwishlist([]);
+    }
+  };
 
   const fetchCartItems = async (userId) => {
     if (!userId) return
@@ -90,6 +106,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (infor.id) {
       fetchCartItems(infor.id);
+      fetchWishlist(infor.id)
     }
   }, [infor.id, refreshh]);
   
@@ -227,8 +244,10 @@ export const AuthProvider = ({ children }) => {
       infor,buyer,seller,setrefreshh,
       refreshh,category,cartProducts,
       isProductInCart,
+      isProductInWishlist,
       image, setImage,
       handleGoogleSignIn,
+      wishlist,
       role, setRole,
       fetchCartItems}}>
       {children}
