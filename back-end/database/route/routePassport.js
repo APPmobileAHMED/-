@@ -3,21 +3,21 @@ const passport = require('../controllers/passport.js');
 const router = express.Router();
 
 router.get('/auth/google', (req, res, next) => {
-  const { role } = req.query; // ناخذ الدور اللي بعثه المستخدم
+  const { role } = req.query; 
   passport.authenticate('google', {
     scope: ['profile', 'email'],
-    state: JSON.stringify({ role }) // نمرر الدور للـ callback عبر state
+    state: JSON.stringify({ role }) 
   })(req, res, next);
 });
 
 router.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/' }), 
   (req, res) => {
-    const role = req.query.state ? JSON.parse(req.query.state).role : 'buyer'; // الدور الافتراضي
-    const token = req.user.token; // التوكن الذي تم توليده في Passport.js
+    const role = req.query.state ? JSON.parse(req.query.state).role : 'buyer'; 
+    const token = req.user.token; 
 
-    // توجيه المستخدم إلى التطبيق مع التوكن والدور
-    res.redirect(`exp://192.168.100.4:8081?role=${role}&token=${token}`); 
+    
+    res.redirect(`exp://192.168.139.160:8081?role=${role}&token=${token}`); 
   }
 );
 

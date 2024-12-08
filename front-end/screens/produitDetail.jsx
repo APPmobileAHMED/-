@@ -18,8 +18,12 @@ const ProductDetails = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false); 
     const [visibleComment, setsVisibleComment] = useState(false); 
     const [allcomments, setallcomment] = useState([]);
+    const [isFavorite, setIsFavorite] = useState(false);
     const [refresh, setrefresh] = useState(false)
-    const {infor}=useAuth()
+    const {infor,isProductInWishlist,setrefreshh,refreshh}=useAuth()
+
+
+
 
     const postComment=()=>{
       if(newComment===""){
@@ -70,7 +74,30 @@ const ProductDetails = ({ navigation }) => {
 
 
     }, [productId,refresh]);
-    const [isFavorite, setIsFavorite] = useState(false);
+    
+
+    const addtoWishlist=(product)=>{
+      axios.post(`${AdresseIPPP_}/api/wishlist/add/${infor.id}`,{
+        productId: product
+  }).then((res)=>{
+        console.log(res.data)
+        
+        setrefreshh(!refreshh) 
+        alert("added to cart")
+      }).catch((error)=>{console.log("kkjf")})
+    }
+
+    deleteFavoriteItem=(id)=>{
+      axios.delete(`${AdresseIPPP_}/api/wishlist/delete/${id}`)
+      .then((res) => {
+           alert("item deleted")
+       setrefreshh(!refreshh)
+     })
+     .catch((error) => {
+       console.log("oops");
+         
+     });
+    }
 
     const toggleFavorite = () => {
         setIsFavorite(!isFavorite);
@@ -106,18 +133,31 @@ const ProductDetails = ({ navigation }) => {
                   top:10,
                     width: 35,
                     height: 35,
-                    borderRadius: 20,
-                    borderWidth: 2,
-                    borderColor: "black", 
                     alignItems: "center",
                     justifyContent: "center",
                 }}>
-                    <Ionicons 
-                        name="heart" 
+                    
+
+ {isProductInWishlist(productId) ? (
+        <TouchableOpacity onPress={() => deleteFavoriteItem(productId)}>
+          <Ionicons 
+                        name="heart-dislike" 
                         size={25}
                         style={{top:1}}
-                        color={isFavorite ? "#f95151" : "black"} 
+                        color={"#f95151"} 
                     />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={() => addtoWishlist(productId)}>
+          <Ionicons 
+                        name="heart-circle" 
+                        size={33}
+                        style={{top:1}}
+                        color={"black"} 
+                    />
+        </TouchableOpacity>
+      )}
+
                 </View>
             </TouchableOpacity>
             </View>
@@ -523,9 +563,9 @@ const ProductDetails = ({ navigation }) => {
           marginTop:30,    
           height: "13%",        
           padding: 5,        
-          fontSize: 14,      // size kbir kifaya besh tal9a text bech wa7da m4 barchaa
-          borderColor: '#ccc',  // border 5fifa bel 7keya chwaya bech telmaha
-          borderWidth: 2,     // border na3tiha chwaya 5fifa bch talma
+          fontSize: 14, 
+          borderColor: '#ccc',  
+          borderWidth: 2,     
           borderRadius: 5, },
         submitButton: { backgroundColor: '#0891b2', padding: 10, borderRadius: 5,top:10, },
         submitButtonText: { color: 'white', fontWeight: 'bold',left: '30%' },

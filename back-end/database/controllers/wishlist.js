@@ -15,7 +15,7 @@ getFavoritProduct:(req,res)=>{
 
     db.wishlist.findAll({where:{userId:req.params.id}, include: {
         model: db.products, // تأكد من أن اسم النموذج المستخدم صحيح
-        attributes: ['name', 'img1', 'length','width','price','stock'], // اختر الأعمدة التي تريدها من جدول المستخدمين
+        attributes: ['name', 'img1','img2','img3','img4', 'length','width','price','stock','userId'], // اختر الأعمدة التي تريدها من جدول المستخدمين
     }})
     .then((response)=>res.send(response))
     .catch((error)=>res.send(error))
