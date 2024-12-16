@@ -4573,6 +4573,13 @@ hermes-parser@0.23.1:
   dependencies:
     hermes-estree "0.23.1"
 
+
+hex-color-regex@~1.0.2:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/hex-color-regex/-/hex-color-regex-1.0.3.tgz"
+  integrity sha512-YJCMR6n7Gqrxp7HVggtxJF5XatzSrT3jX39hpLtEFQNf6x+xhlC07vI6omqDkjBtJrw8uCsCHYhppCsU+Y2m/w==
+
+
 hoist-non-react-statics@^3.3.0:
   version "3.3.2"
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
@@ -4861,6 +4868,15 @@ is-glob@^4.0.1:
   integrity sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==
   dependencies:
     is-extglob "^2.1.1"
+
+
+is-hexcolor@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/is-hexcolor/-/is-hexcolor-1.0.0.tgz"
+  integrity sha512-exeAJKlQsEjg3Sc5604FLXt59MQXkUIVKdJTRLAdLwJM42zCngVyLbEt2gQtb9TSRVzCIbaWbzgDKjbJIBzBFQ==
+  dependencies:
+    hex-color-regex "~1.0.2"
+
 
 is-interactive@^1.0.0:
   version "1.0.0"
@@ -6688,6 +6704,14 @@ react-native-svg@^15.7.1:
     css-select "^5.1.0"
     css-tree "^1.1.3"
     warn-once "0.1.1"
+
+react-native-sweet-alert@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.npmjs.org/react-native-sweet-alert/-/react-native-sweet-alert-3.5.0.tgz"
+  integrity sha512-h2W7zM+s7C/Ub4dvHK1mSSB3lQbwpYhbwkS3JOPKTY+w23t8rNTOFxUBNeA9K5F98fzz0fPqj6VX2gsuPD1h1A==
+  dependencies:
+    is-hexcolor "^1.0.0"
+
 
 react-native-web@*, "react-native-web@>= 0.11", react-native-web@~0.19.10:
   version "0.19.13"

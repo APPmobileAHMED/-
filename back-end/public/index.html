@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Success</title>
+</head>
+<body>
+  <h1>Payment Successful!</h1>
+  <p>Redirecting to the app...</p>
+
+  <script>
+    // استخراج الـ payment_id من الـ URL
+    const params = new URLSearchParams(window.location.search);
+    const paymentId = params.get('payment_id');  // نأخذ الـ payment_id من الـ URL
+
+    if (paymentId) {
+      // إعادة التوجيه إلى التطبيق باستخدام deep link
+      window.location.href = `learningrn://cart?id=${paymentId}`;
+    } else {
+      console.error("Payment ID not found in URL");
+    }
+  </script>
+</body>
+</html>

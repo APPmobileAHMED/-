@@ -33,4 +33,8 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
 .env
+# Ignore .exe files
+*.exe
+
