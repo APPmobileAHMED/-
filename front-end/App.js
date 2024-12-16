@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
+import React, { createRef, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
+import { useNavigation } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
@@ -14,22 +15,27 @@ import SignUp2 from './components/auth/signup2';
 import { Profile } from './screens';
 import { AuthProvider } from './components/authcontext/authcontext';
 import {PUBLISH_KEY_STRIPE} from "@env"
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 
-import { Linking } from 'react-native';
+import * as Linking from 'expo-linking';
 
 const Stack = createNativeStackNavigator();
 const linking = {
-  prefixes: ['myapp://'],  // This should match the scheme you set in app.json
+  prefixes: ["learningrn://"], // تأكد أن البادئة تتطابق مع البادئة في الـ app.json
   config: {
     screens: {
-      Profile: 'profile',  // This maps 'myapp://profile' to ProfileScreen
+      Main: {
+        screens: {
+          Profile: "profile",
+          Cart: "cart",
+        },
+      },
     },
   },
 };
 export default function App() {
  
+  
 
 
   const [fontsLoaded] = useFonts({
@@ -55,7 +61,7 @@ export default function App() {
 
   return (
     <StripeProvider publishableKey={PUBLISH_KEY_STRIPE} >
-    <NavigationContainer linking={linking}>
+    <NavigationContainer  >
       <AuthProvider>
         <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Main">
          

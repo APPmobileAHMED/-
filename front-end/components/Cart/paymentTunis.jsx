@@ -4,12 +4,7 @@ import Svg, { Circle, Rect } from 'react-native-svg';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Ionicons,MaterialCommunityIcons } from "@expo/vector-icons"
 import { useRoute } from "@react-navigation/native";
-import { useStripe, CardField,
-  
-  CardFieldInput,
-  PaymentMethod,
-  CardForm,
-  PaymentIntent, } from '@stripe/stripe-react-native';
+
 import {AdresseIPPP_} from '@env'
 import { useAuth } from '../authcontext/authcontext';
 import axios from 'axios';
@@ -17,176 +12,20 @@ import axios from 'axios';
 const PaymentScreenTunisie = () => {
   const {infor,refreshh,setrefreshh,cartProducts} = useAuth()
   const route = useRoute();
-  const {methodpayment,totalPrice}=route.params
-  const { confirmPayment, createPaymentMethod } = useStripe();
-  const [cardDetails, setCardDetails] = useState(null);
-  const [cardNumber, setCardNumber] = useState('');
-  const [mounth, setmounth] = useState("");
-  const [methode, setmethode] = useState("");
-  const [year, setyear] = useState("");
-  const [loading, setLoading] = useState(false);
+  const {paymentId}=route.params
 
+  useEffect(()=>{
+    axios.get(`${AdresseIPPP_}/api/flouci/buy/${paymentId}`)
+    .then((res)=>{
 
-  
-
-
-
-const handlePayment = async () => {
-  console.log(cardDetails)
-  if (!cardDetails?.complete) {
-    Alert.alert('Error', 'Please complete the card details.');
-    return;
-  }
-
-  setLoading(true);
- 
-  try {
- 
-    const response = await axios.post(`${AdresseIPPP_}payment/buy`, {
-      userId: infor.id,
-      cartItems: cartProducts,
-      totalAmount: parseFloat(totalPrice), 
-      username: `${infor.firstname} ${infor.lastname}`,
-    });
-
-    const { clientSecret } = response.data;
-
-    if (!clientSecret) {
-      Alert.alert('Error', 'Failed to fetch PaymentIntent.');
-      return;
-    }
-
-    
-    const { error } = await confirmPayment(clientSecret, {
-      paymentMethodType: 'Card',
-      paymentMethodData: {
-        billingDetails: {
-          email: infor.email,
-          name: `${infor.firstname} ${infor.lastname}`,
-        },
-      },
-    });
-
-    if (error) {
-      Alert.alert('Payment failed', error.message);
-    } else {
-      Alert.alert('Success', 'Payment successful!');
-    }
-  } catch (err) {
-    console.error('Axios Error:', err.response?.data || err.message);
-    Alert.alert('Error', err.response?.data?.message || 'Something went wrong.');
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-
-
-  
+    })
+    .catch((error)=>console.log(error))
+  },[])
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Payment</Text>
-      <View style={styles.cardContainer}>
-      <View style={styles.card}>
-      <Text style={styles.visaText}>{methode==="MasterCard"&&(
-<Text>MasterCard </Text> ) || methode==="Visa" && ( <Text>Visa </Text> ) ||
- methode==="Visa"&& (<Text>Visa</Text>)||
- 
- methode==="Discover"&& (<Text>Discover</Text>)||
-
- methode==="AmericanExpress"&& (<Text>American Express</Text>)||
-
- methode==="DinersClub"&& (<Text>Diners Club</Text>)||
- methode==="UnionPay"&& (<Text>UnionPay</Text>)
-}
-</Text>
-      <Text style={styles.cardNumber}>{cardNumber? `**** **** **** ${cardNumber}` :"**** **** **** ****"}</Text>
-      <Text style={styles.label}>CARD HOLDER NAME</Text>
-      <Text style={styles.cardHolder}>{infor.firstname+" "+infor.lastname}</Text>
-      <Text style={styles.validLabel}>VALID THRU</Text>
-      <Text style={styles.expiry}> {mounth}/{year} </Text>
-      <Svg height="100%" width="100%" style={styles.decorations}>
-      <Image
-       source={
-    methode === "Discover"
-      ? require("../../assets/images/discover.png")
-      : methode === "Visa"
-      ? require("../../assets/images/visa circle.png")
-      : methode === "UnionPay"
-      ? require("../../assets/images/unionpay.png")
-      : methode === "DinersClub"
-      ? require("../../assets/images/dinerss.png")
-      : methode === "AmericanExpress"
-      ? require("../../assets/images/american_express-512.webp")
-      : methode === "MasterCard"
-      ? require("../../assets/images/creditcard circl.png")
-      
-       :require("../../assets/images/visa.png")
-  }
-  style={{
-    width: 90,
-    height: 60,
-    right: 5,
-    top: 11,
-    left: 10,
-    borderRadius: 30,
-  }}
-  />
-        
-        <Rect x="250" y="50" width="60" height="60" fill="#666" />
-      </Svg>
-    </View>
-          </View>
-      <View style={styles.cardContainer}>
-
-
-      
-        <Text style={{fontFamily:"bold",fontSize:25}}> card details </Text>
-<View style={styles.cardFieldRow}> 
-  
-
-<CardField
-      postalCodeEnabled={true}   
-      placeholders={{
-        number: '4242 4242 4242 4242',
-            
-      }}
-      
-      cardStyle={{
-        backgroundColor: '#FFFFFF',
-        textColor: '#000000',
-        
-      }}
-     style={styles.cardFieldStyle}
-      onCardChange={(cardDetails) => {  
-        setCardDetails(cardDetails)
-        setmounth(cardDetails.expiryMonth)
-        setyear(cardDetails.expiryYear)
-        setCardNumber(cardDetails.last4)
-        setmethode(cardDetails.brand || methodpayment)
-      }}
-      onFocus={(focusedField) => {
-        console.log('focusField', focusedField);
-      }}
-      />
-</View>
-        
-        
-      </View>
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: loading ? '#ccc' : 'white' }]}
-        onPress={handlePayment}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Pay Now</Text>
-        )}
-      </TouchableOpacity>              
-    </View>
+ <View>
+   <Text>{paymentId}</Text>
+ </View>
   );
 };
 

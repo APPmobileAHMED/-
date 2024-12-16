@@ -6,6 +6,8 @@ import {Ionicons,MaterialCommunityIcons } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from '../constants';
 import {AdresseIPPP_} from '@env'
+import * as Linking from 'expo-linking';
+import * as WebBrowser from 'expo-web-browser';
 
 
 const Cart = () => {
@@ -14,8 +16,43 @@ const navigation=useNavigation()
   const {infor,refreshh,setrefreshh} = useAuth()
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartItems, setCartItems] = useState([])
+  const [idpay, setidpay] = useState("")
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
+  
+  useEffect(() => {
+      const handleOpenURL = ({ url }) => {
+        const urlParams = new URL(url);
+       
+        const paymentId = urlParams.searchParams.get('payment_id');
+        const target = urlParams.searchParams.get('target') || 'home';
+     
+       
+        console.log('Payment ID:', paymentId);
+        console.log('Target Page:', target);
+   
+        // نروح للصفحة المحددة
+        if (target === 'PaymentScreenTunisie') {
+          navigation.navigate('Main', {
+            screen: 'PaymentScreenTunisie',
+            params: { paymentId: paymentId },
+          });
+        } else {
+          navigation.navigate('Main', {
+            screen: 'PaymentScreenTunisie',
+            params: { paymentId: paymentId },
+          });
+        }
+      };
+  
+      Linking.addEventListener('url', handleOpenURL);
+  
+      return () => {
+        Linking.removeEventListener('url', handleOpenURL);
+      };
+    }, []);
+
+  
 
 
   const handlePaymentOptionSelect = (option) => {
@@ -32,9 +69,25 @@ if(selected==="Visa"){
 
 }else if(selected==="MasterCard"){
   navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:totalPrice})
+
 }
 else if(selected==="Flouci"){
-  navigation.navigate('PaymentScreenTunisie',{methodpayment:selectedPayment,totalPrice:totalPrice})
+  axios.post(`${AdresseIPPP_}/api/flouci/buy`,{
+    amount:totalPrice
+  })
+  .then((res)=>{
+    const {result}=res.data
+    if(result){
+      console.log(result.link)
+
+        WebBrowser.openBrowserAsync(result.link);
+         setIsModalVisible(false)
+        
+    }
+     
+
+  })
+  .catch((err)=>console.log(err))
 }
 }
    
