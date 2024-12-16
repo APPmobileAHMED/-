@@ -12,6 +12,7 @@ import axios from 'axios';
 const PaymentScreenTunisie = () => {
   const {infor,refreshh,setrefreshh,cartProducts} = useAuth()
   const route = useRoute();
+
   const {paymentId}=route.params
 
   useEffect(()=>{
@@ -26,6 +27,7 @@ const PaymentScreenTunisie = () => {
  <View>
    <Text>{paymentId}</Text>
  </View>
+
   );
 };
 

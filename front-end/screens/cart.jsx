@@ -6,8 +6,10 @@ import {Ionicons,MaterialCommunityIcons } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from '../constants';
 import {AdresseIPPP_} from '@env'
+
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
+
 
 
 const Cart = () => {
@@ -16,6 +18,7 @@ const navigation=useNavigation()
   const {infor,refreshh,setrefreshh} = useAuth()
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartItems, setCartItems] = useState([])
+
   const [idpay, setidpay] = useState("")
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
@@ -55,6 +58,7 @@ const navigation=useNavigation()
   
 
 
+
   const handlePaymentOptionSelect = (option) => {
     setSelectedPayment(option);
   };
@@ -69,6 +73,7 @@ if(selected==="Visa"){
 
 }else if(selected==="MasterCard"){
   navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:totalPrice})
+
 
 }
 else if(selected==="Flouci"){
@@ -88,7 +93,9 @@ else if(selected==="Flouci"){
 
   })
   .catch((err)=>console.log(err))
+
 }
+
 }
    
   useEffect(() => {
