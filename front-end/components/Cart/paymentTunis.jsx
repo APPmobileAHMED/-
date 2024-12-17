@@ -8,7 +8,8 @@ import { useRoute } from "@react-navigation/native";
 import {AdresseIPPP_} from '@env'
 import { useAuth } from '../authcontext/authcontext';
 import axios from 'axios';
-
+import SweetAlert from 'react-native-sweet-alert';
+ 
 const PaymentScreenTunisie = () => {
   const {infor,refreshh,setrefreshh,cartProducts} = useAuth()
   const route = useRoute();
@@ -17,7 +18,38 @@ const PaymentScreenTunisie = () => {
   useEffect(()=>{
     axios.get(`${AdresseIPPP_}/api/flouci/buy/${paymentId}`)
     .then((res)=>{
-
+      if(res){
+        SweetAlert.showAlertWithOptions(
+          {
+            title: 'مرحبا',
+            subTitle: 'هذي رسالة تنبيه',
+            confirmButtonTitle: 'تمام',
+            confirmButtonColor: '#000',
+            otherButtonTitle: 'إلغاء',
+            otherButtonColor: '#d9534f',
+            style: 'success', // success, warning, error, none
+          },
+          (callback) => {
+            console.log('Button pressed:', callback);
+          }
+        );
+      }else{
+        SweetAlert.showAlertWithOptions(
+          {
+            title: ' oooo مرحبا',
+            subTitle: 'هذي رسالة تنبيه',
+            confirmButtonTitle: 'تمام',
+            confirmButtonColor: '#000',
+            otherButtonTitle: 'إلغاء',
+            otherButtonColor: '#d9534f',
+            style: 'error', // success, warning, error, none
+          },
+          (callback) => {
+            console.log('Button pressed:', callback);
+          }
+        );
+      }
+      
     })
     .catch((error)=>console.log(error))
   },[])

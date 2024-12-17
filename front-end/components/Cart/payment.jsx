@@ -39,10 +39,10 @@ const handlePayment = async () => {
   }
 
   setLoading(true);
- 
+  
   try {
  
-    const response = await axios.post(`${AdresseIPPP_}payment/buy`, {
+    const response = await axios.post(`${AdresseIPPP_}/api/payment/buy`, {
       userId: infor.id,
       cartItems: cartProducts,
       totalAmount: parseFloat(totalPrice), 
