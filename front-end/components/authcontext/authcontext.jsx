@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
   const [cartProducts, setCartProducts] = useState([]);
   const [role, setRole] = useState("buyer");
   const [wishlist, setwishlist] = useState([]);
+   const [totalPriceTunisie, setTotalPriceTunisie] = useState(0);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -249,6 +250,7 @@ export const AuthProvider = ({ children }) => {
       image, setImage,
       handleGoogleSignIn,
       wishlist,
+      totalPriceTunisie, setTotalPriceTunisie,
       role, setRole,
       fetchCartItems}}>
       {children}

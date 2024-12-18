@@ -13,13 +13,13 @@ import * as WebBrowser from 'expo-web-browser';
 const Cart = () => {
 
 const navigation=useNavigation()
-  const {infor,refreshh,setrefreshh} = useAuth()
+
+  const {infor,refreshh,setrefreshh, setTotalPriceTunisie} = useAuth()
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartItems, setCartItems] = useState([])
-  const [idpay, setidpay] = useState("")
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
-  
+ 
   useEffect(() => {
       const handleOpenURL = ({ url }) => {
         const urlParams = new URL(url);
@@ -45,10 +45,10 @@ const navigation=useNavigation()
         }
       };
   
-      Linking.addEventListener('url', handleOpenURL);
+      const subscription = Linking.addEventListener('url', handleOpenURL);
   
       return () => {
-        Linking.removeEventListener('url', handleOpenURL);
+        subscription.remove();
       };
     }, []);
 
@@ -66,9 +66,11 @@ const navigation=useNavigation()
 const nextPage=( selected )=>{
 if(selected==="Visa"){
   navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:totalPrice})
-
+  setIsModalVisible(false)
 }else if(selected==="MasterCard"){
+
   navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:totalPrice})
+  setIsModalVisible(false)
 
 }
 else if(selected==="Flouci"){
@@ -114,7 +116,8 @@ const calculateTotalPrice = (items) => {
   items.forEach(item => {
     total += item.product.price * item.quantity; // Multiply price by quantity
   });
-  setTotalPrice(total); // Set the total price
+  setTotalPrice(total);
+  setTotalPriceTunisie(total)
 };
 
 const increment = (productId) => {
@@ -135,6 +138,18 @@ const decrement = (productId) => {
   calculateTotalPrice(cartItems); 
 };
 
+const updateQuantity=(product,quantity)=>{
+ if(quantity===0){
+
+ }else{
+
+  axios.put(`${AdresseIPPP_}/api/cart/updatequantity/${infor.id}`,{productId: product,quantity:quantity})
+  .then((res)=>{
+    console.log(res.data)
+    setrefreshh(!refreshh)
+   
+  }).catch((error)=>{console.log(error)})}
+}
 
   const deleteItem=(product)=>{
     axios.delete(`${AdresseIPPP_}/api/cart/deleteitems/${infor.id}`,{
@@ -145,6 +160,8 @@ const decrement = (productId) => {
       setrefreshh(!refreshh)
     }).catch((error)=>{console.log(error)})
   }
+
+  
 
 
 
@@ -179,11 +196,11 @@ const decrement = (productId) => {
           <Text style={styles.itemName}>{item.product.name}</Text>
           <Text style={styles.itemPrice}>DT {item.product.price}</Text>
           <View style={styles.quantityContainer}>
-            <TouchableOpacity onPress={() => decrement(item.productId)}>
+            <TouchableOpacity onPress={() => {decrement(item.productId);updateQuantity(item.productId,item.quantity-1)}}>
               <Ionicons name='remove-circle-outline' size={23} style={{marginLeft:10}}/>
             </TouchableOpacity>
             <Text style={styles.quantityText}>{item.quantity}</Text>
-            <TouchableOpacity onPress={() => increment(item.productId)}>
+            <TouchableOpacity onPress={() => {increment(item.productId);updateQuantity(item.productId,item.quantity+1)}}>
             <Ionicons name='add-circle-outline'size={23} style={{left:10}}/>
             </TouchableOpacity>
           </View>

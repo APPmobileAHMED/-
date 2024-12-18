@@ -90,7 +90,9 @@ const handlePayment = async () => {
       <Text style={styles.title}>Payment</Text>
       <View style={styles.cardContainer}>
       <View style={styles.card}>
-      <Text style={styles.visaText}>{methode==="MasterCard"&&(
+      <Text style={styles.visaText}>
+        
+        {methode==="MasterCard"&&(
 <Text>MasterCard </Text> ) || methode==="Visa" && ( <Text>Visa </Text> ) ||
  methode==="Visa"&& (<Text>Visa</Text>)||
  
