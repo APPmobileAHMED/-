@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from "@react-navigation/native"
 import axios from 'axios';
-import {AdresseIPP} from '@env'
+import {AdresseIPPP_} from '@env'
 import { useAuth } from '../components/authcontext/authcontext';
 const COLORS = {
   green: '#4CAF50',
@@ -153,7 +153,8 @@ const navigation = useNavigation()
 
   const addproduct= async ()=>{
     try{
-  const result=await axios.post(`${AdresseIPP}/api/product/add`,{
+     
+  const result=await axios.post(`${AdresseIPPP_}/api/product/add`,{
     name:name,
     price:price,
     width:width,
