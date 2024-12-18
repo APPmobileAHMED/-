@@ -2,13 +2,17 @@
 
 
 const router = require("express").Router();
-const {paymentWalletFlouci,verify}=require("../controllers/paymentWalletFlouci")
+const {paymentWalletFlouci,verify,savePayment}=require("../controllers/paymentWalletFlouci")
 
 
 
 
-router.post("/buy",paymentWalletFlouci)   
+ 
 router.get("/buy/:id",verify)
+router.post("/buy",paymentWalletFlouci)  
+router.post("/save",savePayment)
+
+
 
 
 

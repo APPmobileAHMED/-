@@ -1,186 +1,151 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet,Button,ActivityIndicator, Image ,Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet,Button,ActivityIndicator, Image,Modal ,Alert} from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Ionicons,MaterialCommunityIcons } from "@expo/vector-icons"
 import { useRoute } from "@react-navigation/native";
-
+import { useNavigation } from "@react-navigation/native";
 import {AdresseIPPP_} from '@env'
 import { useAuth } from '../authcontext/authcontext';
 import axios from 'axios';
-import SweetAlert from 'react-native-sweet-alert';
+
  
 const PaymentScreenTunisie = () => {
-  const {infor,refreshh,setrefreshh,cartProducts} = useAuth()
+  const {infor,refreshh,setrefreshh,cartProducts,totalPriceTunisie, setTotalPriceTunisie} = useAuth()
+  const [isModalVisible, setModalVisible] = useState(true);
   const route = useRoute();
+  const [infoPayment, setinfoPayment] = useState([])
+  const [StatusPayment, setStatusPayment] = useState([])
 
   const {paymentId}=route.params
+   const navigation=useNavigation()
+
+   const deleteAllItem=()=>{
+    axios.delete(`${AdresseIPPP_}/api/cart/deleteAllitems/${infor.id}`).then((res)=>{
+      console.log(res.data)
+      
+      setrefreshh(!refreshh)
+    }).catch((error)=>{console.log(error)})
+  }
 
   useEffect(()=>{
-    axios.get(`${AdresseIPPP_}/api/flouci/buy/${paymentId}`)
-    .then((res)=>{
-      if(res){
-        SweetAlert.showAlertWithOptions(
-          {
-            title: 'مرحبا',
-            subTitle: 'هذي رسالة تنبيه',
-            confirmButtonTitle: 'تمام',
-            confirmButtonColor: '#000',
-            otherButtonTitle: 'إلغاء',
-            otherButtonColor: '#d9534f',
-            style: 'success', // success, warning, error, none
-          },
-          (callback) => {
-            console.log('Button pressed:', callback);
-          }
-        );
-      }else{
-        SweetAlert.showAlertWithOptions(
-          {
-            title: ' oooo مرحبا',
-            subTitle: 'هذي رسالة تنبيه',
-            confirmButtonTitle: 'تمام',
-            confirmButtonColor: '#000',
-            otherButtonTitle: 'إلغاء',
-            otherButtonColor: '#d9534f',
-            style: 'error', // success, warning, error, none
-          },
-          (callback) => {
-            console.log('Button pressed:', callback);
-          }
-        );
-      }
-      
+   
+    axios.get(`${AdresseIPPP_}/api/flouci/buy/${paymentId}`,{
+      userId: infor.id,
+      cartItems: cartProducts,
+      totalAmount: parseFloat(totalPriceTunisie), 
+      username: `${infor.firstname} ${infor.lastname}`,
     })
+    .then((res)=>{ 
+      if(res.data.result.status==="SUCCESS"){
+      setinfoPayment(res.data.result.details)
+setStatusPayment(res.data.result.status)
+axios.post(`${AdresseIPPP_}/api/flouci/save`,{
+  userId: infor.id,
+  totalAmount: parseFloat(totalPriceTunisie),
+  username: `${infor.firstname} ${infor.lastname}`,
+  cartItems: cartProducts,
+})   
+
+}else{
+  setStatusPayment("FAILURE")   
+}
+
+    }) 
     .catch((error)=>console.log(error))
-  },[])
+  },[paymentId])
+
+
+
+  const onClose=()=>{
+    setModalVisible(false)
+    deleteAllItem()
+    navigation.navigate('Main', {
+      screen: 'Home',   
+    });
+  }
 
   return (
- <View>
-   <Text>{paymentId}</Text>
- </View>
+
+    <View >
+
+   
+    <Modal isVisible={isModalVisible} animationIn="zoomIn" animationOut="zoomOut">
+    <View style={styles.modalContent}>
+      {/* Success Icon */}
+      {StatusPayment==="SUCCESS" &&(<Ionicons name="checkmark-circle" size={80} color="#4CAF50" style={styles.icon} />) ||
+       StatusPayment==="FAILURE" &&(<Ionicons name="close-circle" size={80} color="#FF0000" style={styles.icon} />)
+      }
+      
+
+      {/* Success Message */}
+      <Text style={styles.title}>Payment Successful!</Text>
+      <Text style={styles.subtitle}>Thank you for your payment</Text>
+  
+      {/* User Info */}
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoText}>📧 Email: {infoPayment.email}</Text>
+        <Text style={styles.infoText}>👤 Name: {infoPayment.name}</Text>
+        <Text style={styles.infoText}>📞 Phone: {infoPayment.phone_number}</Text>
+        {StatusPayment==="SUCCESS"?(<Text  style={{color:"#4CAF50",fontSize: 16,marginVertical: 3}}>✅ Status: {StatusPayment}</Text>):
+        <Text  style={{color:"#FF0000",fontSize: 16,marginVertical: 3}}>❌ Status: {StatusPayment}</Text>
+        }
+        
+      </View>
+
+      {/* Close Button */}
+      <TouchableOpacity style={styles.closeButton} onPress={()=>onClose()}>
+        <Text style={styles.buttonText}>Close</Text>
+      </TouchableOpacity>
+    </View>
+  </Modal>
+  </View>
 
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    top:"5%",
-    flex: 1,
-    backgroundColor: '#fff',
+ modalContent: {
+    backgroundColor: 'white',
     padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    marginBottom: 10,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  cardContainer: {
-   
-    marginBottom: 20,
-  },
-  cardFieldRow: {
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    width: '100%', 
-  },
-  cardFieldStyle: {
-    flex: 1, 
-    marginRight: 10, 
-    height: 50, 
-  }, 
-  cardImage: {
-    width: 300,
-    height: 180,
-    resizeMode: 'contain',
-  },
-  formContainer: {
-    marginTop:"10%",
-    
-  },
-  input: {
+    fontSize: 22,
     fontFamily:"bold",
-    fontSize:20,
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
+    color: '#4CAF50',
+  },
+  subtitle: {
+    fontFamily:"bold",
+    fontSize: 26,
     marginBottom: 15,
-    paddingLeft: 10,
+    color: '#555',
   },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  infoContainer: {
+    alignItems: 'flex-start',
+    marginBottom: 20,
   },
-  cancelButton: {
-    backgroundColor: '#ccc',
+  infoText: {
+    
+    fontFamily:"bold",
+    fontSize: 19,
+    marginVertical: 3,
+    color: '#333',
+  },
+  closeButton: {
+    backgroundColor: '#4CAF50',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  confirmButton: {
-    backgroundColor: 'black',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    borderRadius: 5,
   },
   buttonText: {
-    color: 'black',
+    color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
-  },
-  card: {
-    width: 300,
-    height: 180,
-    borderRadius: 15,
-    backgroundColor: '#111',
-    padding: 20,
-    justifyContent: 'space-between',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  visaText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'right',
-  },
-  cardNumber: {
-    top:15,
-    color: 'white',
-    fontSize: 18,
-    letterSpacing: 2,
-  },
-  label: {
-    color: 'gray',
-    fontSize: 12,
-    marginTop: 10,
-  },
-  cardHolder: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  validLabel: {
-    color: 'gray',
-    fontSize: 12,
-    position: 'absolute',
-    bottom: 20,
-    right: 70,
-  },
-  expiry: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    position: 'absolute',
-    bottom: 18,
-    right: 5,
-  },
-  decorations: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
   },
 });
 

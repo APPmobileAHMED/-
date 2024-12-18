@@ -35,11 +35,46 @@ await axios.get(`https://developers.flouci.com/api/verify_payment/${req.params.i
     'apppublic': "6423e894-688e-4005-9eab-1fa8dfd1ea21",
     'appsecret': process.env.FLOUCI_SECRET
   }})
-    .then((response)=>res.send(response.data))
+    .then((response)=>{res.send(response.data)})
 
     .catch((err)=>console.log(err))
 
 
-}
+},
+savePayment : async (req,res) => {
+    const{totalAmount,userId,cartItems,username}=req.body
+    try {
+     
+      const order = await db.orders.create({
+        totalAmount: totalAmount,
+        userId: userId,
+        status: 'shipped', // الافتراضي
+      });
+  
+      // إضافة العناصر للطلب
+      for (const item of cartItems) {
+        await db.orderitems.create({
+          orderId: order.id,
+          productId: item.productId,
+          quantity: item.quantity,
+          price: item.product.price,
+        });
+      }
+  
+      // حفظ معلومات الدفع
+      await db.payment.create({
+        totalAmount: totalAmount,
+        username: username,
+        userId: userId,
+        orderId: order.id,
+      });
+  
+      return { success: true, message: "Payment and order information saved successfully." };
+    } catch (err) {
+      console.error("Error in savePayment:", err);
+      return { success: false, message: "Failed to save payment or order information." };
+    }
+  }
+  
    
 } 

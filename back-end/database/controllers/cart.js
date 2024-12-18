@@ -105,6 +105,36 @@ module.exports={
           }).catch((err)=>res.send(err))
         }
       }).catch((err)=>res.json(err))
-    }       
+    },
+    
+    deleteAllItems: (req, res) => {
+      db.carts.findOne({ where: { userId: req.params.idd } })
+        .then((cart) => {
+          if (!cart) {
+            res.json("this user doesn't have a cart");
+          } else {
+            // Delete all items in the cart
+            db.cartitems.destroy({ where: { cartId: cart.id } })
+              .then(() => {
+                res.send("All products have been deleted from the cart");
+              })
+              .catch((err) => res.status(500).send(err));
+          }
+        })
+        .catch((err) => res.status(500).json(err));
+    }, 
+    updateCart:(req,res)=>{
+      db.carts.findOne({where:{userId:req.params.idd}}).then((cart)=>{
+        if(!cart){
+           res.json("this user dosent have a cart")
+        }else{
+          db.cartitems.update({quantity:req.body.quantity},{where:{cartId:cart.id,productId:req.body.productId}}).then(()=>{
+            res.send("this quantity updated")
+          
+          }).catch((err)=>res.send(err))
+        }
+      }).catch((err)=>res.json(err))
+    
+    }
     
 }
