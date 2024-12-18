@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
+
 import React, { createRef, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useNavigation } from "@react-navigation/native";
+
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
@@ -17,9 +19,10 @@ import { AuthProvider } from './components/authcontext/authcontext';
 import {PUBLISH_KEY_STRIPE} from "@env"
 
 
+
 import * as Linking from 'expo-linking';
 
-const Stack = createNativeStackNavigator();
+
 const linking = {
   prefixes: ["learningrn://"], // تأكد أن البادئة تتطابق مع البادئة في الـ app.json
   config: {
@@ -30,14 +33,16 @@ const linking = {
           Cart: "cart",
         },
       },
-    },
-  },
-};
+
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+
+
+import { Linking } from 'react-native';
+
+const Stack = createNativeStackNavigator();
+
 export default function App() {
  
-  
-
-
   const [fontsLoaded] = useFonts({
     regular: require('./assets/fonts/Zain-Regular.ttf'),
     bold: require('./assets/fonts/Zain-Bold.ttf'),
@@ -61,7 +66,9 @@ export default function App() {
 
   return (
     <StripeProvider publishableKey={PUBLISH_KEY_STRIPE} >
+
     <NavigationContainer  >
+
       <AuthProvider>
         <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Main">
          
