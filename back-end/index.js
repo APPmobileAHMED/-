@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const session =require('express-session')
+
 const path = require('path');
 
 const passport=require("passport")
@@ -19,7 +20,9 @@ const app = express();
  const routerwishlist=require("./database/route/routeWishlist.js")
  const routerSearch=require("./database/route/routeSearch.js")
  const routerPayment=require("./database/route/routePayment.js")
+
  const routerflouci=require("./database/route/routeWalletFlouci.js")
+
   const routerPassport=require("./database/route/routePassport.js")
 app.use(express.json());
 app.use(cors());
@@ -27,6 +30,7 @@ app.use(cors());
 app.use(session({ secret: 'process.env.SECRET', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -43,6 +47,7 @@ app.get('/api/redirect', (req, res) => {
 });
 
 
+
 app.use("/api",routeruser)
 app.use("/api/category",routercategories)
 app.use("/api/product",routerproduct)
@@ -50,8 +55,11 @@ app.use("/api/cart",routercart)
 app.use("/api/review",routerreview)
 app.use("/api/wishlist",routerwishlist)
 app.use("/api/payment",routerPayment)
+
 app.use("/api/flouci",routerflouci)
+
 app.use("/api/search",routerSearch)
+
 app.use("/",routerPassport)
 
 
