@@ -14,7 +14,7 @@ const SignUp2 = ({route}) => {
   const [password,setpassword]=useState("")
   const [confirmPassword,setconfirmPassword]=useState("")
 
-const {register}=useAuth()
+const {register}=useAuth() 
    
 
    

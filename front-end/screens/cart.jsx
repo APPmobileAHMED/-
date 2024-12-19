@@ -8,7 +8,7 @@ import { COLORS } from '../constants';
 import {AdresseIPPP_} from '@env'
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
-
+import styles from "../style/styleCart.js"
 
 const Cart = () => {
 
@@ -31,7 +31,7 @@ const navigation=useNavigation()
         console.log('Payment ID:', paymentId);
         console.log('Target Page:', target);
    
-        // نروح للصفحة المحددة
+       
         if (target === 'PaymentScreenTunisie') {
           navigation.navigate('Main', {
             screen: 'PaymentScreenTunisie',
@@ -114,7 +114,7 @@ useEffect(() => {
 const calculateTotalPrice = (items) => {
   let total = 0;
   items.forEach(item => {
-    total += item.product.price * item.quantity; // Multiply price by quantity
+    total += item.product.price * item.quantity; 
   });
   setTotalPrice(total);
   setTotalPriceTunisie(total)
@@ -126,7 +126,7 @@ const increment = (productId) => {
       item.productId === productId ? { ...item, quantity: item.quantity + 1 } : item
     )
   );
-  calculateTotalPrice(cartItems); // Recalculate total price after increment
+  calculateTotalPrice(cartItems)
 };
 
 const decrement = (productId) => {
@@ -247,11 +247,11 @@ const updateQuantity=(product,quantity)=>{
               <Ionicons name={selectedPayment === 'MasterCard' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'MasterCard' ? "#fff" : "#000"} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("Paypal")}} style={[styles.paymentOption, selectedPayment === 'Paypal' && styles.selectedPaymentOption]}>
+            {/* <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("Paypal")}} style={[styles.paymentOption, selectedPayment === 'Paypal' && styles.selectedPaymentOption]}>
               <Image source={require('../assets/images/paypal.webp')} style={styles.paymentIcon} />
               <Text style={[styles.paymentText, selectedPayment === 'Paypal' && styles.selectedPaymentText]}>Paypal</Text>
               <Ionicons name={selectedPayment === 'Paypal' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'Paypal' ? "#fff" : "#000"} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("Visa")}} style={[styles.paymentOption, selectedPayment === 'Visa' && styles.selectedPaymentOption]}>
               <Image source={require('../assets/images/visa.png')} style={{ width: 68, height: 22, right: 5 }} />
@@ -281,179 +281,6 @@ const updateQuantity=(product,quantity)=>{
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    top:36,
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  header: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  cartList: {
-    marginBottom: 20,
-  },
-  cartItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  itemImage: {
-    width: 60,
-    height: 60,
-    marginRight: 10,
-  },
-  itemDetails: {
-    flex: 1,
-  },
-  itemName: {
-    fontWeight:"bold",
-    fontSize: 18,
-   left:20
-    
-  },
-  itemPrice: {
-    fontWeight:"bold",
-    fontSize: 14,
-    color: '#888',
-    marginBottom: 10,
-    left:15
-  },
-  quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center', 
-  },
-  quantityButton: {
-    fontSize: 20,
-    padding: 10,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 5,
-    marginHorizontal: 5,
-  },
-  quantityText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft:8
-  },
-  deleteButton: {
-    fontSize: 24,
-    color: '#ff3b30',
-  },
- 
-  totalText: {
-    fontWeight: 'bold',
-    fontSize: 12,
-    color: '#888',
-  },
-  totalPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginVertical: 2,
-  },
-  checkoutButton: {
-    
-    backgroundColor: '#32CD32',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 10,
-  },
-  checkoutButtonText: {
-    fontSize: 15,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  footer: {
-    position: 'absolute', 
-    bottom: 100,
-    left: 0,
-    right: 0,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-    paddingVertical: 10,
-    
-    alignItems: 'center',
-  },
-  modalOverlay: {
- 
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-   top:165,
-    width: '100%',
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  paymentOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#f9f9f9',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    width: '100%',
-  },
-  selectedPaymentOption: {
-    backgroundColor: 'black',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  selectedPaymentText: {
-    color: 'white',
-  },
-  selectedPaymentTextt: {
-    color: 'white',
-  },
-  paymentIcon: {
-    width: 30,
-    height: 30,
-    marginRight: 10,
-  },
-  paymentTextt: {
-    flex: 1,
-    right:10,
-    fontSize: 16,
-    color: '#000',
-  },
-  paymentText: {
-    flex: 1,
-    fontSize: 16,
-    color: '#000',
-  },
-  selectedPaymentText: {
-    color: '#fff',
-  },
-  closeButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#f00',
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  
-  
-});
+
 
 export default Cart;

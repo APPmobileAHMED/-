@@ -9,6 +9,7 @@ import Whishlist from "../screens/wishlist.jsx"
 import ProductWithCategorie from "../components/home/productCategories.jsx";
 import PaymentScreen from "../components/Cart/payment.jsx"
 import PaymentScreenTunisie from "../components/Cart/paymentTunis.jsx"
+import SuccessPaymentStripe from "../components/Cart/successPaymentStripe.jsx"
 
 const Tab =createBottomTabNavigator()
 
@@ -28,7 +29,7 @@ const screenOptions = {
     }
 }
 const BottomTabNav=()=>{
-    const {infor}=useAuth()
+    const {infor,setSearchInput}=useAuth()
 
   
     
@@ -43,6 +44,7 @@ const BottomTabNav=()=>{
 
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
+                    
                     return <Ionicons name={focused ? "home" : "home-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
                 }
             }} name="Home" component={Home}/>
@@ -99,15 +101,24 @@ const BottomTabNav=()=>{
                     ),
                 }}
             />
+              <Tab.Screen
+                name="SuccessPaymentStripe"
+                component={SuccessPaymentStripe}
+                options={{
+                    tabBarButton: (props) => (
+                        <View style={{ display: 'none' }} /> 
+                    ),
+                }}
+            />
 
-           {infor.role==="seller" &&(
+           {infor.role==="buyer" &&(
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
                     return <Ionicons name={"add-circle-sharp"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
                 }
             }} name="AddProduct" component={AddProduct}/>
            )}
-            {infor.role==="seller" &&(
+            {infor.role==="buyer" &&(
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
                     return <Ionicons name={"heart-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
@@ -117,6 +128,7 @@ const BottomTabNav=()=>{
             
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
+                    
                     return <Ionicons name={focused ? "person" : "person-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
                 }
             }} name="Profile" component={Profile}/>

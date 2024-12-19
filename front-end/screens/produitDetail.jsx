@@ -67,7 +67,7 @@ const ProductDetails = ({ navigation }) => {
         });
         axios.get(`${AdresseIPPP_}/api/get/${sellerId}`).then((res)=>{
           setseller(res.data)
-          console.log(res.data,"choch")
+          console.log(res.data,"choch")  
         })
         .catch((err)=>{console.log(err)})
 
@@ -121,8 +121,8 @@ const ProductDetails = ({ navigation }) => {
         <View style={styles.container}>
 
             <View style={styles.upperRow}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons 
+                <TouchableOpacity onPress={() => navigation.goBack()}> 
+                    <Ionicons  
                         name="chevron-back-circle"
                         size={30}
                         style={{ top: 10 }}

@@ -83,11 +83,13 @@ export default ProductCardView;
 const styles = StyleSheet.create({
   container: {
     width: 182,
-    height: 280,
+    height: 270,
     marginEnd: 22,
     marginBottom: 120,
     borderRadius: SIZES.medium,
-    backgroundColor: COLORS.secondary,
+    backgroundColor:"white",
+    
+    elevation: 4,
   },
   imageContainer: {
     flex: 1,
@@ -98,10 +100,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   image: {
-    aspectRatio: 1,
+    aspectRatio: 1/1,
     resizeMode: "cover",
-    height: 160,
-    width: 160,
+    height: 150,
+    left: 10,
+    top:3,
+    borderRadius:15
   },
   details: {
     padding: SIZES.small,
