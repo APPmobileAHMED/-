@@ -4,6 +4,7 @@ import Svg, { Circle, Rect } from 'react-native-svg';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Ionicons,MaterialCommunityIcons } from "@expo/vector-icons"
 import { useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useStripe, CardField,
   
   CardFieldInput,
@@ -15,6 +16,7 @@ import { useAuth } from '../authcontext/authcontext';
 import axios from 'axios';
 
 const PaymentScreen = () => {
+  const navigation=useNavigation()
   const {infor,refreshh,setrefreshh,cartProducts} = useAuth()
   const route = useRoute();
   const {methodpayment,totalPrice}=route.params
@@ -34,7 +36,7 @@ const PaymentScreen = () => {
 const handlePayment = async () => {
   console.log(cardDetails)
   if (!cardDetails?.complete) {
-    Alert.alert('Error', 'Please complete the card details.');
+    Alert.alert('Error', 'Please complete the card details and put the right information.');
     return;
   }
 
@@ -68,13 +70,25 @@ const handlePayment = async () => {
     });
 
     if (error) {
-      Alert.alert('Payment failed', error.message);
+      Alert.alert('Payment failed', error.message)
+      navigation.navigate('Main', {
+        screen: 'SuccessPaymentStripe',
+        params: { status: "FAILURE" },
+      });
     } else {
-      Alert.alert('Success', 'Payment successful!');
+      
+      navigation.navigate('Main', {
+        screen: 'SuccessPaymentStripe',
+        params: { status: "SUCCESS" },
+      });
     }
   } catch (err) {
     console.error('Axios Error:', err.response?.data || err.message);
     Alert.alert('Error', err.response?.data?.message || 'Something went wrong.');
+    navigation.navigate('Main', {
+      screen: 'SuccessPaymentStripe',
+      params: { status: "FAILURE" },
+    });
   } finally {
     setLoading(false);
   }

@@ -15,8 +15,9 @@ import {AdresseIPPP_} from '@env'
 
 
 const Home=()=>{
-    const {infor,refreshh,setrefreshh} = useAuth()
+    const {infor,refreshh,setrefreshh,setSearchInput} = useAuth()
     const [cartItems, setCartItems] = useState([])
+    
     useEffect(() => {
         axios.get(`${AdresseIPPP_}/api/cart/cartitems/${infor.id}`)
           .then((res) => {

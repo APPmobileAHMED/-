@@ -84,7 +84,7 @@ const deleteItem=(product)=>{
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.description}>{item.description}</Text>
-        <Text style={styles.price}>{item.price}</Text>
+        <Text style={styles.price}> Price:{item.price}</Text>
         <Text style={styles.rating}>Rating: {item.rating}</Text>
         <Text style={styles.sizes}>Sizes: {item.width}</Text>
       </View>
@@ -135,6 +135,9 @@ const deleteItem=(product)=>{
     <TouchableOpacity style={{ left: 10,marginTop:25 }}>
          <Ionicons name="arrow-back-outline" size={35} color={COLORS.black} onPress={() => { navigation.goBack() }} />
        </TouchableOpacity>
+       <View style={{elevation:4,marginHorizontal:5,backgroundColor:"white",borderRadius:20,marginBottom:12,top:5}}>
+
+       
        <View style={styles.filterContainer}>
          <TouchableOpacity onPress={() => {setSelectedCategory('خشب') ;specifiqueproduct("خشب")}}>
            <Text style={[styles.filterButton, selectedCategory === 'خشب' && styles.selectedFilter]}>خشب</Text>
@@ -149,13 +152,13 @@ const deleteItem=(product)=>{
            <Text style={styles.filterButton}>كل الأنواع</Text>
          </TouchableOpacity>
        </View>
-
+       </View>
     
     <FlatList
          data={allproductBycategories}
          keyExtractor={item => item.id}
          renderItem={renderCard}
-         contentContainerStyle={{ paddingBottom: 90 }} 
+         contentContainerStyle={{ paddingBottom: 90,elevation:4,backgroundColor:"white" }} 
          
  
       />
@@ -189,17 +192,20 @@ headerIcons: {
 },
 
 item: {
+  elevation:4,
+  backgroundColor:"white",
 flexDirection: 'row',
 padding: 5,
 marginVertical: 8,
 marginHorizontal: 16,
-backgroundColor: '#f9f9f9',
+
 borderRadius: 10,
 alignItems: 'center', // تركز المحتوى عموديا
 },
 image: {
-width: 100,
-height: 100,
+
+aspectRatio: 1/1,
+height: 110,
 borderRadius: 10,
 marginRight: 10,
 },
@@ -207,9 +213,13 @@ textContainer: {
 flex: 1,
 fontFamily:"bold",
 justifyContent: 'center',
+bottom:30
+
 },
 cartticon:{
-top:50
+top:40,
+right:8
+
 },
 title: {
 fontSize: 16,
@@ -223,8 +233,9 @@ color: '#333',
 marginBottom: 5,
 },
 price: {
-fontSize: 18,
+fontSize: 16,
 fontFamily:"bold",
+right:2,
 color: 'green',
 },
 rating: {
@@ -232,19 +243,22 @@ fontSize: 16,
 fontFamily:"bold",
 },
 sizes: {
-fontSize: 14,
+fontSize: 16,
+fontFamily:"bold",
 },
 heartIcon: {
 alignSelf: 'center',
 marginLeft: 10,
-bottom:50,
+bottom:45,
 left:25
 },
 filterContainer: {
   flexDirection: 'row',
   justifyContent: 'space-around',
-  marginBottom: 20,
-  top: 15,
+  marginBottom: 18,
+  top: 10,
+  borderRadius:15
+  
   
 },
 filterButton: {

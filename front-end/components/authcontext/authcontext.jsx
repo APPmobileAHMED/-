@@ -16,7 +16,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const navigation = useNavigation();
   const [refreshh, setrefreshh] = useState(false)
-  const [userInfo,setUserInfo]=useState([]);
+const [searchInput, setSearchInput] = useState("");
   const [buyer, setbuyer] = useState({});
   const [seller, setseller] = useState({});
   const [tokenn, setToken] = useState("");
@@ -254,6 +254,7 @@ export const AuthProvider = ({ children }) => {
       wishlist,
       totalPriceTunisie, setTotalPriceTunisie,
       role, setRole,
+      searchInput, setSearchInput,
       fetchCartItems}}>
       {children}
     </AuthContext.Provider>

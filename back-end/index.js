@@ -18,6 +18,7 @@ const app = express();
  const routercart=require("./database/route/routeCart.js")
  const routerreview=require("./database/route/routeReview.js")
  const routerwishlist=require("./database/route/routeWishlist.js")
+ const routerSearch=require("./database/route/routeSearch.js")
  const routerPayment=require("./database/route/routePayment.js")
 
  const routerflouci=require("./database/route/routeWalletFlouci.js")
@@ -35,13 +36,13 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/redirect', (req, res) => {
-  const paymentId = req.query.payment_id; // استخرج payment_id من الـ query string
+  const paymentId = req.query.payment_id; 
   const target ='PaymentScreenTunisie';
   if (!paymentId) {
       return res.status(400).send("Payment ID is missing");
   }
 
-  // Redirect للـ Expo app مع payment_id
+
   res.redirect(`exp://192.168.100.4:8081?payment_id=${paymentId}&target=${target}`);
 });
 
@@ -56,6 +57,8 @@ app.use("/api/wishlist",routerwishlist)
 app.use("/api/payment",routerPayment)
 
 app.use("/api/flouci",routerflouci)
+
+app.use("/api/search",routerSearch)
 
 app.use("/",routerPassport)
 

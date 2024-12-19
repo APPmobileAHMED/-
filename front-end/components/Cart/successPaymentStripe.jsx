@@ -10,14 +10,11 @@ import { useAuth } from '../authcontext/authcontext';
 import axios from 'axios';
 
  
-const PaymentScreenTunisie = () => {
+const SuccessPaymentStripe = () => {
   const {infor,refreshh,setrefreshh,cartProducts,totalPriceTunisie, setTotalPriceTunisie} = useAuth()
   const [isModalVisible, setModalVisible] = useState(true);
   const route = useRoute();
-  const [infoPayment, setinfoPayment] = useState([])
-  const [StatusPayment, setStatusPayment] = useState([])
-
-  const {paymentId}=route.params
+  const {status}=route.params
    const navigation=useNavigation()
 
    const deleteAllItem=()=>{
@@ -28,32 +25,7 @@ const PaymentScreenTunisie = () => {
     }).catch((error)=>{console.log(error)})
   }
 
-  useEffect(()=>{
-   
-    axios.get(`${AdresseIPPP_}/api/flouci/buy/${paymentId}`,{
-      userId: infor.id,
-      cartItems: cartProducts,
-      totalAmount: parseFloat(totalPriceTunisie), 
-      username: `${infor.firstname} ${infor.lastname}`,
-    })
-    .then((res)=>{ 
-      if(res.data.result.status==="SUCCESS"){
-      setinfoPayment(res.data.result.details)
-setStatusPayment(res.data.result.status|| "SUCCESS" )
-axios.post(`${AdresseIPPP_}/api/flouci/save`,{
-  userId: infor.id,
-  totalAmount: parseFloat(totalPriceTunisie),
-  username: `${infor.firstname} ${infor.lastname}`,
-  cartItems: cartProducts,
-})   
 
-}else{
-  setStatusPayment("FAILURE")   
-}
-
-    }) 
-    .catch((error)=>console.log(error))
-  },[paymentId])
 
 
 
@@ -66,15 +38,14 @@ axios.post(`${AdresseIPPP_}/api/flouci/save`,{
   }
 
   return (
-
     <View >
 
    
     <Modal isVisible={isModalVisible} animationIn="zoomIn" animationOut="zoomOut">
     <View style={styles.modalContent}>
       {/* Success Icon */}
-      {StatusPayment==="SUCCESS" &&(<Ionicons name="checkmark-circle" size={80} color="#4CAF50" style={styles.icon} />) ||
-       StatusPayment==="FAILURE" &&(<Ionicons name="close-circle" size={80} color="#FF0000" style={styles.icon} />)
+      {status==="SUCCESS" &&(<Ionicons name="checkmark-circle" size={80} color="#4CAF50" style={styles.icon} />) ||
+       status==="FAILURE" &&(<Ionicons name="close-circle" size={80} color="#FF0000" style={styles.icon} />)
       }
       
 
@@ -84,11 +55,11 @@ axios.post(`${AdresseIPPP_}/api/flouci/save`,{
   
       {/* User Info */}
       <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>📧 Email: {infoPayment.email}</Text>
-        <Text style={styles.infoText}>👤 Name: {infoPayment.name}</Text>
-        <Text style={styles.infoText}>📞 Phone: {infoPayment.phone_number}</Text>
-        {StatusPayment==="SUCCESS"?(<Text  style={{color:"#4CAF50",fontSize: 16,marginVertical: 3}}>✅ Status: {StatusPayment}</Text>):
-        <Text  style={{color:"#FF0000",fontSize: 16,marginVertical: 3}}>❌ Status: {StatusPayment}</Text>
+        <Text style={styles.infoText}>📧 Email: {infor.email}</Text>
+        <Text style={styles.infoText}>👤 Name: {infor.firstname+" "+infor.lastname}</Text>
+        <Text style={styles.infoText}>📞 Phone: {infor.phoneNumber}</Text>
+        {status==="SUCCESS"?(<Text  style={{color:"#4CAF50",fontSize: 16,marginVertical: 3}}>✅ Status: {status}</Text>):
+        <Text  style={{color:"#FF0000",fontSize: 16,marginVertical: 3}}>❌ Status: {status}</Text>
         }
         
       </View>
@@ -100,7 +71,6 @@ axios.post(`${AdresseIPPP_}/api/flouci/save`,{
     </View>
   </Modal>
   </View>
-
   );
 };
 
@@ -149,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PaymentScreenTunisie;
+export default SuccessPaymentStripe;

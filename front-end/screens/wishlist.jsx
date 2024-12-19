@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity,ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons,Fontisto} from '@expo/vector-icons';
 import { useAuth } from '../components/authcontext/authcontext';
 import axios from 'axios';
 import {AdresseIPPP_} from '@env'
@@ -121,12 +121,12 @@ const Whishlist = () => {
       <TouchableOpacity style={styles.cartticon}>
 
       {isProductInCart(item.productId) ? (
-        <TouchableOpacity onPress={() => deleteItem(item.productId)}>
-          <Ionicons name="bag-check-outline" size={28} color="green" />
+        <TouchableOpacity  onPress={() => deleteItem(item.productId)}>
+          <Fontisto name="shopping-basket-remove" size={25} />
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity onPress={() => addtocart(item.productId)}>
-          <Ionicons name="bag-add-outline" size={28} color="black" />
+        <TouchableOpacity  onPress={() => addtocart(item.productId)}>
+          <Fontisto name="shopping-basket-add" size={25}  />
         </TouchableOpacity>
       )}
       </TouchableOpacity>
@@ -154,6 +154,7 @@ const Whishlist = () => {
         data={favorite}
         renderItem={({ item }) => <Item {...item} />}
         keyExtractor={item => item.id}
+        contentContainerStyle={{ paddingBottom: 90,}} 
       />
     </View>
   );
@@ -186,9 +187,10 @@ item: {
   padding: 1,
   marginVertical: 8,
   marginHorizontal: 16,
-  backgroundColor: '#f9f9f9',
+  elevation:7,
+  backgroundColor:"white",
   borderRadius: 10,
-  alignItems: 'center', // تركز المحتوى عموديا
+  alignItems: 'center', 
 },
 image: {
   width: 100,
@@ -201,7 +203,8 @@ textContainer: {
   justifyContent: 'center',
 },
 cartticon:{
-    top:40
+    top:40,
+right:8
 },
 cartCount:{ 
   position:"absolute",
@@ -252,8 +255,9 @@ width: {
 heartIcon: {
   alignSelf: 'center',
   marginLeft: 10,
-  bottom:50,
-  left:25
+  bottom:42,
+  left:20,
+  
 },
 carousel: {
   width: 100, // نفس عرض الصور
