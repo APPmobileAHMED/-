@@ -2,7 +2,7 @@ import {View,Text,StyleSheet, TouchableOpacity, TextInput,Image,  Modal,} from "
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../constants";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Feather, Fontisto, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../authcontext/authcontext";
 import * as ImagePicker from "expo-image-picker";
@@ -20,76 +20,76 @@ const Welcome=()=>{
     const [modalVisible, setModalVisible] = useState(false);
   
 
-    const openCamera = async () => {
+    // const openCamera = async () => {
         
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-          alert("Permission to access camera is required!");
-          return;
-        }
+    //     const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    //     if (status !== "granted") {
+    //       alert("Permission to access camera is required!");
+    //       return;
+    //     }
     
-        // Ouvrir la caméra
-        const result = await ImagePicker.launchCameraAsync({
-          allowsEditing: true,
-          quality: 1,
-        });
+    //     // Ouvrir la caméra
+    //     const result = await ImagePicker.launchCameraAsync({
+    //       allowsEditing: true,
+    //       quality: 1,
+    //     });
     
-        if (!result.canceled) {
-          setImage(result.assets[0].uri);
-          setModalVisible(true)
-          console.log(result.assets[0].uri)
-        //   setModalVisible(true)
+    //     if (!result.canceled) {
+    //       setImage(result.assets[0].uri);
+    //       setModalVisible(true)
+    //       console.log(result.assets[0].uri)
+    //     //   setModalVisible(true)
           
-        }
-      };
+    //     }
+    //   };
 
-      const uploadImage = () => {
-        const formData = new FormData()
+      // const uploadImage = () => {
+      //   const formData = new FormData()
     
-        if(!image){
-          alert("please enter image")
-        }else{
-          formData.append("file", {
-            uri: image,
-            type: "image/jpeg",
-            name: image.split("/").pop() ,
-          })
-          formData.append("upload_preset", "ecommer-ce")
+      //   if(!image){
+      //     alert("please enter image")
+      //   }else{
+      //     formData.append("file", {
+      //       uri: image,
+      //       type: "image/jpeg",
+      //       name: image.split("/").pop() ,
+      //     })
+      //     formData.append("upload_preset", "ecommer-ce")
         
-          axios.post("https://api.cloudinary.com/v1_1/dcwa4oceq/image/upload", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            })
-            .then((response) => {
+      //     axios.post("https://api.cloudinary.com/v1_1/dcwa4oceq/image/upload", formData, {
+      //         headers: {
+      //           "Content-Type": "multipart/form-data",
+      //         },
+      //       })
+      //       .then((response) => {
       
-              console.log("Upload response:", response)
+      //         console.log("Upload response:", response)
         
-              if (response.status === 200) {
-                const imageUrl = response.data.secure_url
-                setUrl(imageUrl) 
+      //         if (response.status === 200) {
+      //           const imageUrl = response.data.secure_url
+      //           setUrl(imageUrl) 
                 
-                console.log(imageUrl)
+      //           console.log(imageUrl)
                 
-              } else {
-                Alert.alert("Error", "Failed to upload image")
-              }
-            }) 
-            .catch((error) => {
-              console.error("Image upload error:", error)
-              Alert.alert("Error", "An error occurred while uploading the image")
-            })
+      //         } else {
+      //           Alert.alert("Error", "Failed to upload image")
+      //         }
+      //       }) 
+      //       .catch((error) => {
+      //         console.error("Image upload error:", error)
+      //         Alert.alert("Error", "An error occurred while uploading the image")
+      //       })
     
-        }
+      //   }
         
-      }
+      // }
 
-            const handleNext = () => {
-        uploadImage()
-        setModalVisible(false);
-        console.log("Next clicked, image URL:", image);
-        // أضف الكود هنا حسب الإجراء اللي تحب تعملو بعد الضغط على "Next"
-      };
+      //       const handleNext = () => {
+      //   uploadImage()
+      //   setModalVisible(false);
+      //   console.log("Next clicked, image URL:", image);
+      //   // أضف الكود هنا حسب الإجراء اللي تحب تعملو بعد الضغط على "Next"
+      // };
 
 
     return(
@@ -119,9 +119,10 @@ Luxurious furniture
 </View>
 
 <View>
-    <TouchableOpacity style={styles.searchbtn} onPress={openCamera}>
-        <Ionicons name="camera-outline" size={SIZES.xLarge} color={COLORS.offwhite}/>
+    <TouchableOpacity style={styles.searchbtn} >
+        <Fontisto name="filter" size={20} color={COLORS.offwhite}/>
     </TouchableOpacity>
+    
 </View>
 
 </View>
@@ -141,7 +142,7 @@ Luxurious furniture
               >
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+              <TouchableOpacity style={styles.nextButton} >
                 <Text style={styles.buttonText}>Next</Text>
               </TouchableOpacity>
             </View>
