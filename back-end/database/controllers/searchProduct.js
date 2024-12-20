@@ -43,11 +43,24 @@ searchBycategoriesBySpecifqueTypeAndName:(req,res)=>{
 } ,
 
 serachByMeasureAndName:(req,res)=>{
-    db.products.findAll({where:{name:req.params.name,width:req.params.width,length:req.params.length}})
-    .then((response)=>{
-        res.send(response)
+    db.products.findAll({
+        include: [
+            {
+                model: db.categories,
+                where: {
+                    name: req.params.name
+                }
+            }
+        ],
+        where: {
+            length: req.params.length,
+            width: req.params.width
+        }
     })
-    .catch((err)=>res.send(err))
+    .then((response) => {
+        res.send(response);
+    })
+    .catch((err) => res.send(err));
 },
 
 searchBycategoriesBySpecifqueTypeAndMeasuresAndName: (req, res) => {

@@ -27,6 +27,7 @@ const [searchInput, setSearchInput] = useState("");
   const [role, setRole] = useState("buyer");
   const [wishlist, setwishlist] = useState([]);
    const [totalPriceTunisie, setTotalPriceTunisie] = useState(0);
+   const [ProductSearch,setProdSearch]=useState([])
 
   const handleGoogleSignIn = async () => {
     try {
@@ -253,6 +254,7 @@ const [searchInput, setSearchInput] = useState("");
       totalPriceTunisie, setTotalPriceTunisie,
       role, setRole,
       searchInput, setSearchInput,
+      ProductSearch,setProdSearch,
       fetchCartItems}}>
       {children}
     </AuthContext.Provider>
