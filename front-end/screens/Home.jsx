@@ -50,7 +50,7 @@ const Home = () => {
                         <Text style={styles.location}>{language === "tunisia" ? "Tunisia" : "French"}</Text>
                     </TouchableOpacity>
 
-                    {/* Dropdown عند الضغط على أيقونة العالم */}
+                    
                     {isDropdownVisible && (
                         <View style={styles.dropdown}>
                             <TouchableOpacity onPress={() => toggleLanguage("tunisia")}>

@@ -11,17 +11,18 @@ import BottomTabNav from './navigation/bottomTabNavigateur';
 import Login from './components/auth/Login';
 import SignUp from './components/auth/signup';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import SignUp2 from './components/auth/signup2';
 import { Profile } from './screens';
 import { AuthProvider } from './components/authcontext/authcontext';
 import {PUBLISH_KEY_STRIPE} from "@env"
-
-
 import * as Linking from 'expo-linking';
+import Start1 from './components/auth/start1';
+import ForgetPassword from './components/auth/ForgetPass/ForgetPassword';
+import ConfirmIdentity from './components/auth/ForgetPass/confirmIdentity';
+import VerifyCode from './components/auth/ForgetPass/VerifyCode';
 
 const Stack = createNativeStackNavigator();
 const linking = {
-  prefixes: ["learningrn://"], // تأكد أن البادئة تتطابق مع البادئة في الـ app.json
+  prefixes: ["learningrn://"], 
   config: {
     screens: {
       Main: {
@@ -63,13 +64,14 @@ export default function App() {
     <StripeProvider publishableKey={PUBLISH_KEY_STRIPE} >
     <NavigationContainer  >
       <AuthProvider>
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Main">
-         
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Start1">
+        <Stack.Screen name='Start1' component={Start1} />
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='SignUp' component={SignUp} />
-          <Stack.Screen name='SignUp2' component={SignUp2} />
           
-        
+          <Stack.Screen name='ForgetPassword' component={ForgetPassword} />
+          <Stack.Screen name='ConfirmIdentity' component={ConfirmIdentity} />
+          <Stack.Screen name='VerifyCode' component={VerifyCode} />
           <Stack.Screen name='Main' component={BottomTabNav} />
         </Stack.Navigator>
       </AuthProvider>
