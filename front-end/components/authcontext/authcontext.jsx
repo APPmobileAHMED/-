@@ -26,11 +26,33 @@ const [searchInput, setSearchInput] = useState("");
   const [cartProducts, setCartProducts] = useState([]);
   const [role, setRole] = useState("buyer");
   const [wishlist, setwishlist] = useState([]);
-   const [totalPriceTunisie, setTotalPriceTunisie] = useState(0);
-   const [ProductSearch,setProdSearch]=useState([])
-const [code,setCode]=useState('')
+  const [totalPriceTunisie, setTotalPriceTunisie] = useState(0);
+  const [ProductSearch,setProdSearch]=useState([])
+  const [code,setCode]=useState('')
+  const [orders, setOrders] = useState([]);
+  const [pendingOrders, SetPendingOrders] = useState([]);
+  const [shippedOrders, setshippedOrder] = useState([]);
+  const [ItemsOrder,setItemsOrder]=useState(0)
 
    
+ useEffect(() => {
+  if(infor.id){
+    axios.get(`${AdresseIPPP_}/api/order/get/${infor.id}`)
+    .then((result)=>{setOrders(result.data)
+      
+      const pendingOrder = result.data.filter(order => order.status === 'pending')
+      const shippedOrder = result.data.filter(order => order.status === 'shipped')  
+      SetPendingOrders(pendingOrder)
+      setItemsOrder(pendingOrder.length)
+      setshippedOrder(shippedOrder)
+
+    } )
+    .catch((err)=>console.log(err))
+  }
+  }, [infor.id,refreshh])
+
+
+
 
   const handleGoogleSignIn = async () => {
     try {
@@ -258,7 +280,10 @@ const [code,setCode]=useState('')
       role, setRole,
       searchInput, setSearchInput,
       ProductSearch,setProdSearch,
-      code,setCode,
+      code,setCode,setcategory,
+      orders,ItemsOrder, setOrders,
+      shippedOrders, setshippedOrder,
+      pendingOrders, SetPendingOrders,
       fetchCartItems}}>
       {children}
     </AuthContext.Provider>

@@ -25,7 +25,7 @@ module.exports={
           const order = await db.orders.create({
             totalAmount: totalAmount,
             userId: userId,
-            status: 'shipped', // الافتراضي
+            status: 'pending', // الافتراضي
           }, { transaction: t });
     
           // Step 4: تسجيل OrderItems لكل منتج في السلة

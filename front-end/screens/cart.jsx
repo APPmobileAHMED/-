@@ -8,7 +8,8 @@ import { COLORS } from '../constants';
 import {AdresseIPPP_} from '@env'
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
-import styles from "../style/styleCart.js"
+import styles from "../styleScreens/styleCart"
+import PaymentModal from '../modals/PaymentModal';
 
 const Cart = () => {
 
@@ -231,51 +232,14 @@ const updateQuantity=(product,quantity)=>{
         </View>
       )}
 
-<Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={toggleModal}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Payment</Text>
-
-            <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("MasterCard")}} style={[styles.paymentOption, selectedPayment === 'MasterCard' && styles.selectedPaymentOption]}>
-              <Image source={require('../assets/images/credit.png')} style={{ width: 36, height: 22, right: 5 }} />
-              <Text style={[styles.paymentText, selectedPayment === 'MasterCard' && styles.selectedPaymentText]}>Credit Card</Text>
-              <Ionicons name={selectedPayment === 'MasterCard' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'MasterCard' ? "#fff" : "#000"} />
-            </TouchableOpacity>
-
-            {/* <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("Paypal")}} style={[styles.paymentOption, selectedPayment === 'Paypal' && styles.selectedPaymentOption]}>
-              <Image source={require('../assets/images/paypal.webp')} style={styles.paymentIcon} />
-              <Text style={[styles.paymentText, selectedPayment === 'Paypal' && styles.selectedPaymentText]}>Paypal</Text>
-              <Ionicons name={selectedPayment === 'Paypal' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'Paypal' ? "#fff" : "#000"} />
-            </TouchableOpacity> */}
-
-            <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("Visa")}} style={[styles.paymentOption, selectedPayment === 'Visa' && styles.selectedPaymentOption]}>
-              <Image source={require('../assets/images/visa.png')} style={{ width: 68, height: 22, right: 5 }} />
-              <Text style={[styles.paymentText, selectedPayment === 'Visa' && styles.selectedPaymentText]}>Visa</Text>
-              <Ionicons name={selectedPayment === 'Visa' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'Visa' ? "#fff" : "#000"} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("Flouci")}} style={[styles.paymentOption, selectedPayment === 'Flouci' && styles.selectedPaymentOption]}>
-              <Image source={require('../assets/images/flouci_logo_new.webp')} style={{ width: 110, height: 22, right: 5 }} />
-              <Text style={[styles.paymentTextt, selectedPayment === 'Flouci' && styles.selectedPaymentTextt]}> الدفع بتونسي </Text>
-              <Ionicons name={selectedPayment === 'Flouci' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'Flouci' ? "#fff" : "#000"} />
-            </TouchableOpacity>
-
-           
-
-            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=> {nextPage(selectedPayment)}} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>next</Text>
-            </TouchableOpacity> 
-          </View>
-        </View>
-      </Modal>
-
+<PaymentModal
+  isModalVisible={isModalVisible}
+  toggleModal={toggleModal}
+  handlePaymentOptionSelect={handlePaymentOptionSelect}
+  selectedPayment={selectedPayment}
+  nextPage={nextPage}
+  
+/>
 
     </View>
   );

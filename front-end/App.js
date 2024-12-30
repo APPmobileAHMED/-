@@ -19,6 +19,8 @@ import Start1 from './components/auth/start1';
 import ForgetPassword from './components/auth/ForgetPass/ForgetPassword';
 import ConfirmIdentity from './components/auth/ForgetPass/confirmIdentity';
 import VerifyCode from './components/auth/ForgetPass/VerifyCode';
+import ResetPassword from './components/auth/ForgetPass/ResetPassword';
+
 
 const Stack = createNativeStackNavigator();
 const linking = {
@@ -64,7 +66,7 @@ export default function App() {
     <StripeProvider publishableKey={PUBLISH_KEY_STRIPE} >
     <NavigationContainer  >
       <AuthProvider>
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Start1">
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Main">
         <Stack.Screen name='Start1' component={Start1} />
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='SignUp' component={SignUp} />
@@ -72,6 +74,8 @@ export default function App() {
           <Stack.Screen name='ForgetPassword' component={ForgetPassword} />
           <Stack.Screen name='ConfirmIdentity' component={ConfirmIdentity} />
           <Stack.Screen name='VerifyCode' component={VerifyCode} />
+          <Stack.Screen name='ResetPassword' component={ResetPassword} />
+     
           <Stack.Screen name='Main' component={BottomTabNav} />
         </Stack.Navigator>
       </AuthProvider>

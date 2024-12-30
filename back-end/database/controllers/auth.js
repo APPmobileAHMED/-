@@ -158,6 +158,38 @@ sendMail: async (req, res) => {
     } catch (err) {
       res.status(500).send("Failed to send email");
     }
+  },
+
+ResetYourPassword : (req, res) => {
+    
+    const { password } = req.body;
+  
+    
+    if (!password) {
+      return res.status(400).json({ message: 'Password is required' });
+    }
+  
+    
+    bcrypt.hash(password, 10)
+      .then(hashedPassword => {
+       
+        return db.users.update(
+          { password: hashedPassword },
+          { where: { email:req.params.email } }
+        );
+      })
+      .then(result => {
+        if (result[0] === 0) {
+         
+          return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'Password updated successfully' });
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating password' });
+      });
   }
+  
 
 }

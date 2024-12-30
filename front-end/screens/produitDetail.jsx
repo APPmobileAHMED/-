@@ -6,7 +6,13 @@ import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 import { useAuth } from "../components/authcontext/authcontext";
 import {AdresseIPPP_} from '@env'
-const ProductDetails = ({ navigation }) => {
+import { useNavigation } from "@react-navigation/native";
+import styles from "../styleScreens/styleProductDetails"
+import * as Linking from 'expo-linking';
+import * as WebBrowser from 'expo-web-browser';
+import PaymentModalByOneproduct from '../modals/paymentModalByOneproduct';
+const ProductDetails = () => {
+    const navigation = useNavigation();
     const [oneproduct, setOneproduct] = useState({});
     const [seller, setseller] = useState({});
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -20,10 +26,49 @@ const ProductDetails = ({ navigation }) => {
     const [allcomments, setallcomment] = useState([]);
     const [isFavorite, setIsFavorite] = useState(false);
     const [refresh, setrefresh] = useState(false)
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const {infor,isProductInWishlist,setrefreshh,refreshh}=useAuth()
+     const [selectedPayment, setSelectedPayment] = useState(null);
 
 
+    const calculTotal=(price,quantity)=>{
+      return price*quantity
+    }
 
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible); 
+      }
+
+      const handlePaymentOptionSelect = (option) => {
+        setSelectedPayment(option);
+      }
+
+      const nextPage=( selected,totalPrice )=>{
+        if(selected==="Visa"){
+          navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:totalPrice})
+          setIsModalVisible(false)
+        }else if(selected==="MasterCard"){
+        
+          navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:totalPrice})
+          setIsModalVisible(false)
+        
+        }
+        else if(selected==="Flouci"){
+          axios.post(`${AdresseIPPP_}/api/flouci/buy`,{
+            amount:totalPrice
+          })
+          .then((res)=>{
+            const {result}=res.data
+            if(result){
+              console.log(result.link)
+        
+                WebBrowser.openBrowserAsync(result.link);
+                 setIsModalVisible(false) 
+            }
+          })
+          .catch((err)=>console.log(err))
+        }
+        }
 
     const postComment=()=>{
       if(newComment===""){
@@ -128,7 +173,8 @@ const ProductDetails = ({ navigation }) => {
                         style={{ top: 10 }}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={toggleFavorite}>
+                {infor.role==="buyer"&&(
+                    <TouchableOpacity onPress={toggleFavorite}>
                 <View style={{
                   top:10,
                     width: 35,
@@ -160,6 +206,8 @@ const ProductDetails = ({ navigation }) => {
 
                 </View>
             </TouchableOpacity>
+                )}
+                
             </View>
 
             <ScrollView 
@@ -189,13 +237,14 @@ const ProductDetails = ({ navigation }) => {
             </View>
 
           <View style={styles.details}>
-          <View style={{marginBottom:40}}>
+          <View style={{marginBottom: infor.role === "buyer" ? 40 : 80}}>
             <View style={styles.titleRow}>
                 <Text style={styles.title}>{oneproduct.title}</Text>
                 
                 <View style={styles.priceWrapper}>
                     
-                    <Text style={styles.price}>{oneproduct.price} dt</Text>
+                    <Text style={styles.price}>{calculTotal(oneproduct.price,count)} dt</Text>
+                    
                 </View>
                 
             </View>
@@ -214,8 +263,7 @@ const ProductDetails = ({ navigation }) => {
     
                     <Text style={{top:-50}}>(4.9)</Text>
                 </View>
-    
-                <View style={styles.rating}>
+                 {infor.role==="buyer"&&(<View style={styles.rating}>
                   <TouchableOpacity onPress={increment}>
                       <SimpleLineIcons 
                         name="plus"
@@ -224,14 +272,15 @@ const ProductDetails = ({ navigation }) => {
                       />
                   </TouchableOpacity>
                   <Text style={styles.ratingText}>  {count}   </Text>
-                  <TouchableOpacity onPress={()=>decrement}>
+                  <TouchableOpacity onPress={()=>decrement()}>
                       <SimpleLineIcons 
                         name="minus"
                         size={20}
                         color={COLORS.black}
                       />
                   </TouchableOpacity>
-                </View>
+                </View>)}
+                
             </View>
     
             <View style={styles.descriptionWrapper}>
@@ -342,19 +391,27 @@ const ProductDetails = ({ navigation }) => {
             </Modal>
 
             
-    
-            <View style={styles.cartRow}>
-                <TouchableOpacity onPress={() => {}} style={styles.cartBtn}>
+             {infor.role==="buyer" &&(<View style={styles.cartRow}>
+                <TouchableOpacity onPress={() => {toggleModal()}} style={styles.cartBtn}>
                     <Text style={styles.cartTitle}>اشتري الآن</Text>
                 </TouchableOpacity>
     
-                <TouchableOpacity onPress={() => {}} style={styles.addCard}>
-                    <Fontisto name="shopping-bag" size={20} color={COLORS.lightWhite} />
-                </TouchableOpacity>
-            </View>
+                
+            </View>)}
+            
            </View>
           </View>
-          
+          <PaymentModalByOneproduct
+  isModalVisible={isModalVisible}
+  toggleModal={toggleModal}
+  handlePaymentOptionSelect={handlePaymentOptionSelect}
+  selectedPayment={selectedPayment}
+  nextPage={nextPage}
+  calculTotal={calculTotal}
+  count={count}
+  price={oneproduct.price}
+  
+/>
         </View>
     
       )
@@ -362,213 +419,5 @@ const ProductDetails = ({ navigation }) => {
     
     
     
-    const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-        backgroundColor: COLORS.lightWhite,
-        
-    },
-    upperRow: {
-        marginHorizontal: 20,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        position: "absolute",
-        top: SIZES.xLarge * 1.3,
-        zIndex: 999,
-        width: SIZES.width - 44
-    },
-    listItem: {
-      top:10,
-      right: 220,
-      fontFamily: "bold",
-      
-      color: COLORS.gray,
-    },
-    image: {
-        top: 100,
-        aspectRatio: 1,
-        height: 600,
-        width: 360
-    },
-    navigationArrows: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        position: 'absolute',
-        top: 400,
-        width: '100%',
-        paddingHorizontal: 20
-    },
-
-    
-    
-      details: {
-        top: -18,
-        backgroundColor: COLORS.lightWhite,
-        width: SIZES.width,
-        borderTopLeftRadius: SIZES.medium,
-        marginBottom: SIZES.xLarge,
-        borderTopRightRadius: SIZES.medium,
-      },
-      titleRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: SIZES.width - 44,
-        top: 20,
-        marginHorizontal: 20,
-        paddingBottom: SIZES.small,
-      },
-      title: {
-        fontFamily: "bold",
-        fontSize: SIZES.large,
-      },
-      priceWrapper: {
-        backgroundColor: COLORS.secondary,
-        borderRadius: SIZES.large
-      },
-      price: {
-        fontFamily: "semibold",
-        fontSize: SIZES.large,
-        paddingHorizontal: 10,
-      },
-      ratingRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: SIZES.width - 10,
-        top: 5,
-        paddingBottom: SIZES.small
-      },
-      rating: {
-        top: SIZES.large,
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        marginHorizontal: SIZES.large
-      },
-      ratingText: {
-        color: COLORS.gray,
-        fontFamily: "medium",
-        marginLeft: 5,
-        paddingHorizontal: SIZES.xSmall,
-        
-      },
-      descriptionWrapper: {
-    
-        
-        marginTop: 20,
-        top: -55,
-        marginHorizontal: SIZES.large,
-      },
-      
-      description: {
-        right:220,
-        top:10,
-        fontSize: SIZES.large - 2,
-      },
-      descText: {
-        
-        fontSize: SIZES.small,
-        textAlign: "justify",
-        marginBottom: SIZES.small,
-      },
-      location: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        backgroundColor: COLORS.secondary,
-        alignItems: "center",
-        padding: 5,
-        borderRadius: SIZES.large,
-        marginHorizontal: 12,
-      },
-      cartRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: SIZES.width - 22,
-        paddingBottom: SIZES.small,
-      },
-      cartBtn: {
-        width: SIZES.width * 0.7,
-        backgroundColor: COLORS.black,
-        padding: SIZES.xSmall,
-        borderRadius: SIZES.large,
-        marginLeft: 12,
-        alignItems: "center"
-      },
-      cartTitle: {
-        fontFamily: "bold",
-        color: COLORS.lightWhite,
-        fontSize: SIZES.medium
-      },
-      addCard: {
-        width: 37,
-        height: 37,
-        borderRadius: 50,
-        margin: SIZES.small,
-        backgroundColor: COLORS.black,
-        alignItems: "center",
-        justifyContent: "center"
-      },
-      addCard1: {
-        width: 37,
-        height: 37,
-        borderRadius: 50,
-        marginTop:-30,
-        backgroundColor:COLORS.lightWhite,
-        alignItems: "center",
-        justifyContent: "center",
-        bottom:10,
-        left:290,
-      },
-        modalContainer: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)'
-        },
-        modalContent: {
-            backgroundColor: 'white',
-            padding: 20,
-            borderRadius: 10,
-            alignItems: 'center'
-        },
-        modalCloseBtn: {
-            marginTop: 20
-        },
-        modalCloseText: {
-            color: '#0891b2',
-            fontSize: 16,
-            fontWeight: 'bold'
-        },
-        overlay: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-        modalBox: { width: '90%', backgroundColor: 'white', borderRadius: 10, padding: 20, maxHeight: '100%' },
-        closeButton: { alignSelf: 'flex-end', padding: 10 },
-        closeButtonText: { color: '#0891b2', fontFamily:"bold",fontSize:20,right:25,bottom:15 },
-        commentsScroll: { flexGrow: 0, maxHeight: '60%' },  
-        commentBox: { flexDirection: 'row', marginVertical: 10, alignItems: 'center',  marginBottom: 10, 
-          marginLeft: 10,
-          borderBottomWidth: 0.5,
-          borderBottomColor: "gray",
-          paddingVertical: 5,
-          
-          color:'gray', },
-        userImage: { width: 40, height: 40, borderRadius: 20, marginRight: 10 },
-        commentTextBox: { flex: 1 },
-        userName: { fontFamily:"bold",fontSize:20 },
-        usercomments:{fontFamily:"regular",fontSize:18 },
-        commentInputContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-        commentInput: {   width: '100%', 
-          marginTop:30,    
-          height: "13%",        
-          padding: 5,        
-          fontSize: 14, 
-          borderColor: '#ccc',  
-          borderWidth: 2,     
-          borderRadius: 5, },
-        submitButton: { backgroundColor: '#0891b2', padding: 10, borderRadius: 5,top:10, },
-        submitButtonText: { color: 'white', fontWeight: 'bold',left: '30%' },
-        
-    });
+   
     export default ProductDetails

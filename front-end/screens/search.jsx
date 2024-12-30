@@ -7,7 +7,7 @@ import axios from "axios"
 import {AdresseIPPP_} from '@env'
 import ModalSearch from '../modals/modalSearch'
 import { useAuth } from "../components/authcontext/authcontext";
-import styles from "../style/styleSearch"
+import styles from "../styleScreens/styleSearch"
 import { useNavigation } from "@react-navigation/native";
 const Search = () => {
    const {searchInput, setSearchInput,ProductSearch,isProductInWishlist,infor,setrefreshh,refreshh,setProdSearch} = useAuth()
@@ -77,7 +77,8 @@ const Item = ({item}) => {
         <Text style={styles.length}>الطول: {item.length}</Text>
         <Text style={styles.width}>العرض: {item.width}</Text>
       </View>
-      {isProductInWishlist(item.id) ? (
+      {infor.role==="buyer"&&( <View>
+        {isProductInWishlist(item.id) ? (
               <TouchableOpacity style={styles.heartIcon} onPress={() => deleteFavoriteItem(item.id)}>
                 <Ionicons 
                               name="heart-dislike" 
@@ -96,6 +97,8 @@ const Item = ({item}) => {
                           />
               </TouchableOpacity>
             )}
+      </View>)}
+     
     </View>
  ) }
 

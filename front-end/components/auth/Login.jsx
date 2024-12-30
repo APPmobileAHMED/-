@@ -4,7 +4,7 @@ import { COLORS } from '../../constants';
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../authcontext/authcontext';
 import { Ionicons } from '@expo/vector-icons';
-
+import styles from "../auth/styleAuth/styleLogin"
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email,setEmail]=useState("")
@@ -17,6 +17,13 @@ const Login = () => {
       };
 
   return (
+
+    <KeyboardAvoidingView
+    
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+  >
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+
     <View style={styles.container}>
      
       <TouchableOpacity style={styles.backButton} onPress={()=>navigation.goBack()}>
@@ -81,137 +88,10 @@ const Login = () => {
         
       </TouchableOpacity>
     </View>
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 20,
-    top:10
-    
-  },
-  backButton: {
-    marginBottom: 100,
-    top:20
-  },
-  divider: {
-    width: '150%',
-    borderBottomWidth: 1,
-    bottom:80,
-    right:20,
-    borderBottomColor: '#ccc', 
-    marginVertical: 10, 
-  },
-  title: {
-    fontSize: 35,
-    fontFamily:"bold",
-    color: COLORS.primary,
-    marginBottom: 20,
-    bottom:40
-  },
-  socialButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 15,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    marginLeft: "20%",
-    right:10,
-    bottom:1
-  },
-  buttonText: {
-    fontSize: 21,
-    
-    color: '#000',
-    fontFamily:"bold",
-  },
-  dividerWithText: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginVertical: 25,
-     bottom:15
-  },
-  line: {
-    flex: 1, 
-    height: 1, 
-    backgroundColor: '#ccc', 
-    marginHorizontal:3,
-   
-    
-  },
-  orText: {
-    textAlign: 'center',
-    color: '#666',
-    fontSize: 16,
-    fontFamily:"bold"
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
-    fontFamily:"bold",
-    fontSize: 20,
-    color: '#000',
-  },
-  inputPassword: {
-    fontSize: 20,
-    color: '#000',
-    fontFamily:"bold",
-
-  },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    fontFamily:"bold",
-    padding: 15,
-    marginBottom: 15,
-  },
-  loginButton: {
-    backgroundColor: '#000',
-    padding: 6,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  loginText: {
-    fontSize: 28,
-    color: '#fff',
-    fontFamily:"bold",
-  },
-  forgotText: {
-    textAlign: 'center',
-    color: '#666',
-    fontFamily:"bold",
-    textDecorationLine: 'underline',
-    fontSize: 18,
-  },
-  OrText: {
-    textAlign: 'center',
-    color: '#666',
-    fontFamily:"bold",
-    fontSize: 18,
-  },
-  CreateNewText: {
-    textAlign: 'center',
-    color: '#666',
-    fontFamily:"bold",
-    textDecorationLine: 'underline',
-    fontSize: 18,
-  },
-
-});
 
 export default Login;

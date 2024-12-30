@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: width * 0.9,  // Adjust the width as needed
-    height: 200,        // Adjust the height as needed
+    width: width * 0.9,  
+    height: 200,       
     borderRadius: 10,
   },
   pagination: {

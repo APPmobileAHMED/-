@@ -20,6 +20,7 @@ const app = express();
  const routerSearch=require("./database/route/routeSearch.js")
  const routerPayment=require("./database/route/routePayment.js")
  const routerflouci=require("./database/route/routeWalletFlouci.js")
+ const routerOrder=require("./database/route/routeOrder.js")
   const routerPassport=require("./database/route/routePassport.js")
 app.use(express.json());
 app.use(cors());
@@ -52,6 +53,7 @@ app.use("/api/wishlist",routerwishlist)
 app.use("/api/payment",routerPayment)
 app.use("/api/flouci",routerflouci)
 app.use("/api/search",routerSearch)
+app.use("/api/order",routerOrder)
 app.use("/",routerPassport)
 
 
