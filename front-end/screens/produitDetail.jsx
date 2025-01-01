@@ -11,6 +11,8 @@ import styles from "../styleScreens/styleProductDetails"
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import PaymentModalByOneproduct from '../modals/paymentModalByOneproduct';
+import { useToast } from "../toastProvider/toast";
+import { useTranslation } from "react-i18next";
 const ProductDetails = () => {
     const navigation = useNavigation();
     const [oneproduct, setOneproduct] = useState({});
@@ -29,6 +31,8 @@ const ProductDetails = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const {infor,isProductInWishlist,setrefreshh,refreshh}=useAuth()
      const [selectedPayment, setSelectedPayment] = useState(null);
+     const { showToast } = useToast();
+     const { t} = useTranslation()
 
 
     const calculTotal=(price,quantity)=>{
@@ -72,7 +76,7 @@ const ProductDetails = () => {
 
     const postComment=()=>{
       if(newComment===""){
-        alert("please enter text")
+        showToast("❌ please enter text","red")
       }else{
       axios.post(`${AdresseIPPP_}/api/review/add/${infor.id}`,{
         comment:newComment,
@@ -80,7 +84,6 @@ const ProductDetails = () => {
       }).then((res)=>{
         console.log(res) 
         setNewComment("")
-        alert("success")
         setrefresh(!refresh)
       }).catch((err)=>console.log(err))}
     }
@@ -128,14 +131,14 @@ const ProductDetails = () => {
         console.log(res.data)
         
         setrefreshh(!refreshh) 
-        alert("added to cart")
-      }).catch((error)=>{console.log("kkjf")})
+        showToast(t('produitDetails:toastAdedWishlist'))
+      }).catch((error)=>{console.log("error")})
     }
 
     deleteFavoriteItem=(id)=>{
       axios.delete(`${AdresseIPPP_}/api/wishlist/delete/${id}`)
       .then((res) => {
-           alert("item deleted")
+           showToast(t('search:toastDeleteWishlist'),"red")
        setrefreshh(!refreshh)
      })
      .catch((error) => {
@@ -284,13 +287,10 @@ const ProductDetails = () => {
             </View>
     
             <View style={styles.descriptionWrapper}>
-              <View></View>
-                <Text style={styles.description}>
-                القياس :
-                </Text>
-                <Text style={styles.listItem}>- الطول: {oneproduct.length}</Text>
-                <Text style={styles.listItem}>-العرض: {oneproduct.width}</Text>
-                
+             
+                <Text style={{fontFamily:"bold",fontSize:17}}>{t('produitDetails:measure')} : </Text>
+                <Text style={{fontFamily:"bold",fontSize:17}}>-{t('produitDetails:length')}: {oneproduct.length}</Text>
+                <Text style={{fontFamily:"bold",fontSize:17}}>-{t('produitDetails:width')}: {oneproduct.width}</Text>
      
             </View>
           
@@ -299,8 +299,8 @@ const ProductDetails = () => {
             <TouchableOpacity style={styles.addCard1} >
 
             <TouchableOpacity onPress={() => setModalVisible(true)} >
- <Fontisto name="male" size={20} color={"#0891b2"} style={{top:20,left:20}} />
-            <Text style={{right:60, marginHorizontal:-50,bottom:-3}}>معلومات عن البائع</Text>
+ <Fontisto name="male" size={20} color={"#0891b2"} style={{top:20,left:10}} />
+            <Text style={{right:60, marginHorizontal:-50,bottom:-3,fontFamily:"bold",fontSize:17}}>{t('produitDetails:sellerInformation')}</Text>
             </TouchableOpacity>
 
                  <TouchableOpacity onPress={() => setsVisibleComment(true)}  >
@@ -318,7 +318,7 @@ const ProductDetails = () => {
                 <View style={styles.modalBox}>
                     <TouchableOpacity onPress={() => setsVisibleComment(false)} style={styles.closeButton}>
                     <Fontisto name="close" size={24} color={"#0891b2"} style={{left:20,bottom:10}}/>
-                        <Text style={styles.closeButtonText}>إغلاق</Text>
+                        <Text style={styles.closeButtonText}>{t('produitDetails:close')}</Text>
                     </TouchableOpacity>
 
                   
@@ -342,7 +342,7 @@ const ProductDetails = () => {
                         <View>
                         
                         <Text style={{ fontFamily: 'bold', fontSize: 40, color:"gray",top:50,left:-40  }}>
-          لا توجد تعليقات     
+                        {t('produitDetails:NoComments')}    
         </Text>
         <Fontisto name="commenting" size={45} color={"gray"} style={{left:220,bottom:50}}/>
                         </View>
@@ -358,12 +358,12 @@ const ProductDetails = () => {
                     <TextInput
                     
                         style={styles.commentInput}
-                        placeholder="Add a comment..."
+                        placeholder={t('produitDetails:placeholderComment')}
                         value={newComment}
                         onChangeText={setNewComment}
                     />
                     <TouchableOpacity style={styles.submitButton} onPress={()=>postComment()}>
-                        <Text style={styles.submitButtonText}>Post Comment</Text>
+                        <Text style={styles.submitButtonText}>{t('produitDetails:PostComment')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -377,14 +377,14 @@ const ProductDetails = () => {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <Text style={{fontFamily:"bold",fontSize:24}}> البائع: {seller.username}</Text>
-                        <Text style={{fontFamily:"bold",fontSize:15,top:10}}>الاسم و اللقب:  {seller.firstname+" "+seller.lastname}  </Text>
-                        <Text style={{fontFamily:"bold",fontSize:15,top:10}}>البريد الإلكتروني:  {seller.email} </Text>
-                        <Text style={{fontFamily:"bold",fontSize:15,top:10}}>رقم الهاتف :  {seller.phoneNumber} </Text>
-                        <Text style={{fontFamily:"bold",fontSize:15,top:10}}>المكان :  {seller.location} </Text>
+                        <Text style={{fontFamily:"bold",fontSize:24}}> {t('produitDetails:modalSeller')}: {seller.username}</Text>
+                        <Text style={{fontFamily:"bold",fontSize:15,top:10}}>{t('produitDetails:modalName')} :  {seller.firstname+" "+seller.lastname}  </Text>
+                        <Text style={{fontFamily:"bold",fontSize:15,top:10}}>{t('produitDetails:modalEmail')} : {seller.email} </Text>
+                        <Text style={{fontFamily:"bold",fontSize:15,top:10}}>{t('produitDetails:modalPhone')} :  {seller.phoneNumber} </Text>
+                        <Text style={{fontFamily:"bold",fontSize:15,top:10}}>{t('produitDetails:modalLocation')} :  {seller.location} </Text>
                        
                         <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalCloseBtn}>
-                            <Text style={styles.modalCloseText}>إغلاق</Text>
+                            <Text style={styles.modalCloseText}>{t('produitDetails:close')}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -393,7 +393,7 @@ const ProductDetails = () => {
             
              {infor.role==="buyer" &&(<View style={styles.cartRow}>
                 <TouchableOpacity onPress={() => {toggleModal()}} style={styles.cartBtn}>
-                    <Text style={styles.cartTitle}>اشتري الآن</Text>
+                    <Text style={styles.cartTitle}> {t('produitDetails:buttonBuy')}</Text>
                 </TouchableOpacity>
     
                 

@@ -41,6 +41,7 @@ image: {
 textContainer: {
   flex: 1,
   justifyContent: 'center',
+  
 },
 cartticon:{
     top:40,

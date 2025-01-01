@@ -5,9 +5,9 @@ import { COLORS, SIZES } from "../../constants";
 import { Feather, Fontisto, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../authcontext/authcontext";
-import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import styles from "../../components/home/styleHomeFile/styleWelcome"
+import { useTranslation } from "react-i18next";
 
 
 
@@ -16,16 +16,16 @@ const Welcome=()=>{
     const [image, setImage] = useState(null);
     const [url, setUrl] = useState("")
     const [modalVisible, setModalVisible] = useState(false);
-  
+   const { t,} = useTranslation()
     return(
 
         <View>
        <View style={styles.container}>
 <Text style={styles.tex}>
-عمر دارك بأرخص الأسوام
+{t('welcome:title')}
 </Text>
 <Text style={styles.texx} > 
-Luxurious furniture
+{t('welcome:subtitle')}
 </Text>
        </View>
 
@@ -39,7 +39,7 @@ Luxurious furniture
     style={styles.searchinput}
     value=""
     onPressIn={()=>{navigation.navigate("Search")}}
-    placeholder=" what are you looking here"
+    placeholder={t('welcome:placeholderSearch')}
     />
 </View>
 
@@ -51,31 +51,6 @@ Luxurious furniture
 </View>
 
 </View>
-<Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalText}>Are you sure?</Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.nextButton} >
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    
-
        </View>
 
 

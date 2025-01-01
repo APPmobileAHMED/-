@@ -7,10 +7,12 @@ import { useAuth } from "../authcontext/authcontext";
 import axios from "axios";
 import styles from "../../components/products/styleProductFile/styleProductCard"
 import {AdresseIPPP_} from '@env'
+import { useToast } from "../../toastProvider/toast";
+import { useTranslation } from "react-i18next";
 const ProductCardView = ({ product }) => {
   const navigation = useNavigation();
-  
- 
+  const { showToast } = useToast();
+  const { t} = useTranslation()
  
 const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
 
@@ -20,18 +22,17 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
     axios.post(`${AdresseIPPP_}/api/cart/addtocart/${infor.id}`,{
       productId: product
 }).then((res)=>{
-      console.log(res.data)
-      
+    
       setrefreshh(!refreshh) 
-      alert("added to cart")
-    }).catch((error)=>{console.log("kkjf")})
+      showToast(t('ProductCardView:addTocart'),COLORS.primary)
+    }).catch((error)=>{console.log(error)})
   }
   const deleteItem=(product)=>{
     axios.delete(`${AdresseIPPP_}/api/cart/deleteitems/${infor.id}`,{
       data:{productId: product}
 }).then((res)=>{
-      console.log(res.data)
-      alert("deleted ")
+      
+      showToast(t('ProductCardView:deleteFromCart'),"red")
       setrefreshh(!refreshh)
     }).catch((error)=>{console.log(error)})
   }
@@ -57,9 +58,9 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
               {product.name}
             </Text>
             <Text style={styles.supplier} numberOfLines={1}>
-            مقاس: الطول {product.length} <Text style={{ fontWeight: 'bold',fontSize: 18}}>/</Text> العرض {product.width}
+            {t('ProductCardView:size')}: {t('ProductCardView:length')} {product.length} <Text style={{ fontWeight: 'bold',fontSize: 18}}>/</Text> {t('ProductCardView:width')} {product.width}
             </Text>
-            <Text style={styles.price}>{product.price} dt</Text>
+            <Text style={styles.price}>{t('ProductCardView:price')}: {product.price} dt</Text>
             {infor.role==="buyer"&&(
    <TouchableOpacity style={styles.addBtn}>
    {isProductInCart(product.id) ? (

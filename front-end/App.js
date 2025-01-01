@@ -19,8 +19,10 @@ import Start1 from './components/auth/start1';
 import ForgetPassword from './components/auth/ForgetPass/ForgetPassword';
 import ConfirmIdentity from './components/auth/ForgetPass/confirmIdentity';
 import VerifyCode from './components/auth/ForgetPass/VerifyCode';
+import { I18nextProvider } from 'react-i18next';
 import ResetPassword from './components/auth/ForgetPass/ResetPassword';
-
+import { ToastProvider } from './toastProvider/toast';
+import i18n from './language/i18n.js';
 
 const Stack = createNativeStackNavigator();
 const linking = {
@@ -63,6 +65,8 @@ export default function App() {
   }
 
   return (
+    <I18nextProvider i18n={i18n}>
+    <ToastProvider>
     <StripeProvider publishableKey={PUBLISH_KEY_STRIPE} >
     <NavigationContainer  >
       <AuthProvider>
@@ -81,6 +85,8 @@ export default function App() {
       </AuthProvider>
     </NavigationContainer>
     </StripeProvider>
+    </ToastProvider>
+    </I18nextProvider>
   );
 }
 

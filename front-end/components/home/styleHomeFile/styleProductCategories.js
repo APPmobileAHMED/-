@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   flex: 1,
   fontFamily:"bold",
   justifyContent: 'center',
-  bottom:30
+  bottom:30,
+  
   
   },
   cartticon:{

@@ -7,6 +7,7 @@ import { useRoute } from "@react-navigation/native";
 import axios from 'axios';
 import {AdresseIPPP_} from '@env'
 import { useAuth } from '../authcontext/authcontext';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -14,6 +15,7 @@ const OrderDetails = () => {
   const[allProductOrder,setall]=useState([])
   const {infor,isProductInWishlist,setrefreshh,refreshh,isProductInCart}=useAuth()
   const navigation = useNavigation();
+  const { t} = useTranslation()
   
  const route=useRoute()
  const{OrderId}=route.params
@@ -21,7 +23,7 @@ useEffect(()=>{
     axios.get(`${AdresseIPPP_}/api/order/getorderItems/${OrderId}/${infor.id}`)
     .then((result)=>{
         setall(result.data)
-        console.log(result.data,"hahahahahahhahha")
+        
     })
     .catch((err)=>console.log(err))
 },[OrderId])
@@ -36,10 +38,10 @@ useEffect(()=>{
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.product.name}</Text>
         <Text style={styles.description}>{item.product.description}</Text>
-        <Text style={styles.price}> Price :{item.product.price}</Text>
-        <Text style={styles.rating}>length : {item.product.length}</Text>
-        <Text style={styles.sizes}>width : {item.product.width}</Text>
-        <Text style={{fontSize: 16,fontFamily:"bold",color: 'green',}}> Order Quantity : x{item.quantity}</Text>
+        <Text style={styles.price}> {t('ProductCardView:price')} :{item.product.price}</Text>
+        <Text style={styles.rating}>{t('ProductCardView:length')} : {item.product.length}</Text>
+        <Text style={styles.sizes}>{t('ProductCardView:width')} : {item.product.width}</Text>
+        <Text style={{fontSize: 16,fontFamily:"bold",color: 'green',}}> {t('OrderDetails:quantity')} : x{item.quantity}</Text>
       </View>    
     </View>
       </TouchableOpacity>
@@ -60,7 +62,7 @@ useEffect(()=>{
     <TouchableOpacity style={{ left: 20,marginTop:30,top:35,marginBottom:20 }}>
          <Ionicons name="arrow-back-outline" size={35} color={COLORS.black} onPress={() => { navigation.navigate("OrderScreen") }} />
        </TouchableOpacity>
-       <Text style={{fontFamily:"bold",fontSize:24,left:"35%",bottom:55}} >OrderItems {OrderId}</Text>
+       <Text style={{fontFamily:"bold",fontSize:24,left:"35%",bottom:55}} >{t('OrderDetails:title')} {OrderId}</Text>
       
     <FlatList
          data={allProductOrder}

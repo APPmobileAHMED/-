@@ -9,6 +9,7 @@ import {AdresseIPPP_} from '@env'
 import { useAuth } from '../authcontext/authcontext';
 import axios from 'axios';
 import styles from "../../components/Cart/StyleCart/StylePaymentTunisie"
+import { useTranslation } from 'react-i18next';
  
 const PaymentScreenTunisie = () => {
   const {infor,refreshh,setrefreshh,cartProducts,totalPriceTunisie, setTotalPriceTunisie} = useAuth()
@@ -18,6 +19,7 @@ const PaymentScreenTunisie = () => {
   const [StatusPayment, setStatusPayment] = useState([])
   const {paymentId}=route.params
    const navigation=useNavigation()
+    const { t} = useTranslation()
 
    const deleteAllItem=()=>{
     axios.delete(`${AdresseIPPP_}/api/cart/deleteAllitems/${infor.id}`).then((res)=>{
@@ -77,14 +79,14 @@ axios.post(`${AdresseIPPP_}/api/flouci/save`,{
       
 
       {/* Success Message */}
-      <Text style={styles.title}>Payment Successful!</Text>
-      <Text style={styles.subtitle}>Thank you for your payment</Text>
+      <Text style={styles.title}>{t('successPayment:title')}</Text>
+      <Text style={styles.subtitle}>{t('successPayment:subtitle')}</Text>
   
       {/* User Info */}
       <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>📧 Email: {infoPayment.email}</Text>
-        <Text style={styles.infoText}>👤 Name: {infoPayment.name}</Text>
-        <Text style={styles.infoText}>📞 Phone: {infoPayment.phone_number}</Text>
+        <Text style={styles.infoText}>📧 {t('successPayment:email')}: {infoPayment.email}</Text>
+        <Text style={styles.infoText}>👤 {t('successPayment:name')}: {infoPayment.name}</Text>
+        <Text style={styles.infoText}>📞 {t('successPayment:phone')}: {infoPayment.phone_number}</Text>
         {StatusPayment==="SUCCESS"?(<Text  style={{color:"#4CAF50",fontSize: 16,marginVertical: 3}}>✅ Status: {StatusPayment}</Text>):
         <Text  style={{color:"#FF0000",fontSize: 16,marginVertical: 3}}>❌ Status: {StatusPayment}</Text>
         }
@@ -93,7 +95,7 @@ axios.post(`${AdresseIPPP_}/api/flouci/save`,{
 
       {/* Close Button */}
       <TouchableOpacity style={styles.closeButton} onPress={()=>onClose()}>
-        <Text style={styles.buttonText}>Close</Text>
+        <Text style={styles.buttonText}>{t('successPayment:close')}</Text>
       </TouchableOpacity>
     </View>
   </Modal>

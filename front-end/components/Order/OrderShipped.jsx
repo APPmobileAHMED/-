@@ -4,12 +4,13 @@ import { useAuth } from '../authcontext/authcontext';
 import { COLORS } from '../../constants';
 import { useNavigation } from "@react-navigation/native";
 import { Fontisto, Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 
 const OrderShipped = () => {
   const { shippedOrders, orders, setrefreshh, refreshh } = useAuth();
   const navigation = useNavigation();
-  
+   const { t} = useTranslation()
   const renderOrder = ({ item }) => (
     <View style={styles.orderContainer}>
       {item.status === "shipped" ? 
@@ -23,18 +24,18 @@ const OrderShipped = () => {
         />
       }
       <View style={styles.orderCard}>
-        <Text style={styles.orderTitle}>Order Number: {item.id}</Text>
+        <Text style={styles.orderTitle}>{t('ProductCardView:titelCard')}: {item.id}</Text>
         {item.User.photoDeprofile && (
           <Image source={{ uri: item.User.photoDeprofile }} style={styles.userImage} />
         )}
-        <Text style={styles.orderDetail}>Phone Number: {item.User.phoneNumber}</Text>
-        <Text style={styles.orderDetail}>buyer: {item.User.firstname}</Text>
-        <Text style={styles.orderDetail}>Location: {item.User.Location}</Text>
-        <Text style={styles.orderDetail}>Price: ${item.totalAmount}</Text>
-        <Text style={styles.orderDetail}>Date: {new Date(item.createdAt).toLocaleDateString()}</Text>
+        <Text style={styles.orderDetail}>{t('ProductCardView:PhoneNumber')}: {item.User.phoneNumber}</Text>
+        <Text style={styles.orderDetail}>{t('ProductCardView:buyer')}: {item.User.firstname}</Text>
+        <Text style={styles.orderDetail}>{t('ProductCardView:Location')}: {item.User.location}</Text>
+        <Text style={styles.orderDetail}>{t('ProductCardView:Price')}: ${item.totalAmount}</Text>
+        <Text style={styles.orderDetail}>{t('ProductCardView:Date')}: {new Date(item.createdAt).toLocaleDateString()}</Text>
         
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("OrderDetails", {OrderId: item.id})}>
-          <Text style={styles.buttonText}>View Details</Text>
+          <Text style={styles.buttonText}>{t('ProductCardView:buttonView')}</Text>
         </TouchableOpacity>
        
       </View>
@@ -47,7 +48,7 @@ const OrderShipped = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Orders</Text>
+      <Text style={styles.header}>{t('ProductCardView:title')}</Text>
     
       <TouchableOpacity style={{ left: 10, marginTop: 0, marginBottom: 15 }}>
         <Ionicons name="arrow-back-outline" size={35} color={COLORS.black} onPress={() => { navigation.navigate("OrderScreen") }} />

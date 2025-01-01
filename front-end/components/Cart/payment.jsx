@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet,Button,ActivityIndicator, Image ,Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet,Button,ActivityIndicator, Image} from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
@@ -8,9 +8,12 @@ import {AdresseIPPP_} from '@env'
 import { useAuth } from '../authcontext/authcontext';
 import axios from 'axios';
 import styles from "../../components/Cart/StyleCart/stylePayment"
+import { useToast } from '../../toastProvider/toast';
+import { useTranslation } from 'react-i18next';
 
 const PaymentScreen = () => {
   const navigation=useNavigation()
+  const { t} = useTranslation()
   const {infor,refreshh,setrefreshh,cartProducts} = useAuth()
   const route = useRoute();
   const {methodpayment,totalPrice}=route.params
@@ -21,7 +24,7 @@ const PaymentScreen = () => {
   const [methode, setmethode] = useState("");
   const [year, setyear] = useState("");
   const [loading, setLoading] = useState(false);
-
+ const { showToast } = useToast();
 
   
 
@@ -30,7 +33,7 @@ const PaymentScreen = () => {
 const handlePayment = async () => {
   console.log(cardDetails)
   if (!cardDetails?.complete) {
-    Alert.alert('Error', 'Please complete the card details and put the right information.');
+  showToast(t('PaymentStripe:inputEmpty'),"red");
     return;
   }
 
@@ -48,7 +51,7 @@ const handlePayment = async () => {
     const { clientSecret } = response.data;
 
     if (!clientSecret) {
-      Alert.alert('Error', 'Failed to fetch PaymentIntent.');
+    showToast(t('PaymentStripe:failedFetch'),"red");
       return;
     }
 
@@ -64,7 +67,7 @@ const handlePayment = async () => {
     });
 
     if (error) {
-      Alert.alert('Payment failed', error.message)
+    showToast(t('PaymentStripe:paymentFailed'),"red")
       navigation.navigate('Main', {
         screen: 'SuccessPaymentStripe',
         params: { status: "FAILURE" },
@@ -78,7 +81,7 @@ const handlePayment = async () => {
     }
   } catch (err) {
     console.error('Axios Error:', err.response?.data || err.message);
-    Alert.alert('Error', err.response?.data?.message || 'Something went wrong.');
+  showToast(t('PaymentStripe:wrong'),"red");
     navigation.navigate('Main', {
       screen: 'SuccessPaymentStripe',
       params: { status: "FAILURE" },
@@ -153,7 +156,7 @@ const handlePayment = async () => {
 
 
       
-        <Text style={{fontFamily:"bold",fontSize:25}}> card details </Text>
+        <Text style={{fontFamily:"bold",fontSize:25}}> {t('PaymentStripe:detailsCard')} </Text>
 <View style={styles.cardFieldRow}> 
   
 
@@ -193,7 +196,7 @@ const handlePayment = async () => {
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>Pay Now</Text>
+          <Text style={styles.buttonText}>{t('PaymentStripe:buttonPay')}</Text>
         )}
       </TouchableOpacity>              
     </View>

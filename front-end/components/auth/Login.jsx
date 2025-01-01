@@ -5,13 +5,14 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../authcontext/authcontext';
 import { Ionicons } from '@expo/vector-icons';
 import styles from "../auth/styleAuth/styleLogin"
+import { useTranslation } from 'react-i18next';
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
   const {login,token,handleGoogleSignIn,role, setRole}=useAuth()
   const navigation=useNavigation()
-
+const { t} = useTranslation()
   const handleNext = () => {
         handleGoogleSignIn() 
       };
@@ -32,7 +33,7 @@ const Login = () => {
 
       <View style={styles.divider} />
       
-      <Text style={styles.title}>Login to Ammer Darek</Text>
+      <Text style={styles.title}>{t('Login:title')}</Text>
 
     
       <TouchableOpacity style={styles.socialButton} onPress={()=>{handleNext()}} >
@@ -40,19 +41,19 @@ const Login = () => {
           source={require("../../assets/images/GoogleLogo.png")}
           style={styles.icon}
         />
-        <Text style={styles.buttonText}>Sign in with Google</Text>
+        <Text style={styles.buttonText}>{t('Login:buttonGoogle')}</Text>
       </TouchableOpacity>
 
       <View style={styles.dividerWithText}>
   <View style={styles.line} />
-  <Text style={styles.orText}>OR LOGIN WITH EMAIL</Text>
+  <Text style={styles.orText}>{t('Login:orText')}</Text>
   <View style={styles.line} />
 </View>
 
       
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder={t('SignUp:placeholderName')}
         placeholderTextColor="#aaa"
         value={email}
         onChangeText={setEmail}
@@ -60,7 +61,7 @@ const Login = () => {
       <View style={styles.passwordContainer}>
         <TextInput
           style={[styles.inputPassword, { flex: 1 }]}
-          placeholder="Password"
+          placeholder={t('SignUp:placeholderpassword')}
           secureTextEntry={!showPassword}
           placeholderTextColor="#aaa"
           value={password}
@@ -73,17 +74,17 @@ const Login = () => {
 
      
       <TouchableOpacity style={styles.loginButton} onPress={()=>{login(password,email)}}>
-        <Text style={styles.loginText}>Login</Text>
+        <Text style={styles.loginText}>{t('Login:buttonLogin')}</Text>
       </TouchableOpacity>
 
       
       <TouchableOpacity>
         <TouchableOpacity onPress={()=>navigation.navigate("ForgetPassword")}>
-        <Text style={styles.forgotText}>Forgot your password?</Text>
+        <Text style={styles.forgotText}>{t('Login:ForgetPass')}</Text>
         </TouchableOpacity>
-        <Text style={styles.OrText}>Or</Text>
+        <Text style={styles.OrText}>{t('Login:or')}</Text>
         <TouchableOpacity onPress={()=>navigation.navigate("SignUp")}> 
-        <Text style={styles.CreateNewText}>Create New account</Text>
+        <Text style={styles.CreateNewText}>{t('Login:if')}</Text>
            </TouchableOpacity>
         
       </TouchableOpacity>

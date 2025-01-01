@@ -1,4 +1,5 @@
 import { StyleSheet} from 'react-native';
+import { COLORS } from '../constants';
 
 
 const styles = StyleSheet.create({
@@ -12,6 +13,7 @@ const styles = StyleSheet.create({
       fontSize: 22,
       fontWeight: 'bold',
       marginBottom: 20,
+      
     },
     cartList: {
       marginBottom: 20,
@@ -40,10 +42,10 @@ const styles = StyleSheet.create({
       
     },
     itemPrice: {
-      fontWeight:"bold",
-      fontSize: 14,
-      color: '#888',
-      marginBottom: 10,
+      fontFamily:"bold",
+      fontSize: 16,
+      color: 'black',
+      
       left:15
     },
     quantityContainer: {
@@ -70,16 +72,17 @@ const styles = StyleSheet.create({
     totalText: {
       fontWeight: 'bold',
       fontSize: 12,
-      color: '#888',
+      color: COLORS.tertiary,
     },
     totalPrice: {
       fontSize: 16,
       fontWeight: 'bold',
       marginVertical: 2,
+    
     },
     checkoutButton: {
       
-      backgroundColor: '#32CD32',
+      backgroundColor: COLORS.primary,
       paddingVertical: 15,
       paddingHorizontal: 40,
       borderRadius: 10,

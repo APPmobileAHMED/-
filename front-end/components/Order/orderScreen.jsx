@@ -17,6 +17,7 @@ const OrderScreen = () => {
 
 
   useEffect(() => {
+    console.log(pendingOrders,"hahhahahhaahha")
     const initialStates = {};
     pendingOrders.forEach(order => {
       initialStates[order.id] = {
@@ -39,7 +40,7 @@ const OrderScreen = () => {
   const handleShippedClick = (orderId) => {
     setShipped(false);
     
-    // Update animation state for specific order
+
     setAnimationStates(prev => ({
       ...prev,
       [orderId]: {
@@ -96,7 +97,7 @@ const OrderScreen = () => {
         )}
         <Text style={styles.orderDetail}>Phone Number: {item.User.phoneNumber}</Text>
         <Text style={styles.orderDetail}>buyer: {item.User.firstname}</Text>
-        <Text style={styles.orderDetail}>Location: {item.User.Location}</Text>
+        <Text style={styles.orderDetail}>Location: {item.User.location}</Text>
         <Text style={styles.orderDetail}>Price: ${item.totalAmount}</Text>
         <Text style={styles.orderDetail}>Date: {new Date(item.createdAt).toLocaleDateString()}</Text>
         

@@ -9,6 +9,7 @@ import * as WebBrowser from 'expo-web-browser';
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as Linking from 'expo-linking';
+import { useToast } from "../../toastProvider/toast";
 
 
 const AuthContext = createContext();
@@ -33,7 +34,7 @@ const [searchInput, setSearchInput] = useState("");
   const [pendingOrders, SetPendingOrders] = useState([]);
   const [shippedOrders, setshippedOrder] = useState([]);
   const [ItemsOrder,setItemsOrder]=useState(0)
-
+  const { showToast } = useToast();
    
  useEffect(() => {
   if(infor.id){
@@ -91,7 +92,7 @@ const [searchInput, setSearchInput] = useState("");
        
       } 
     } catch (error) {
-      console.error('Error during Google Sign-In:', error);
+      showToast('❌ Error during Google Sign-In:',"red");
     }
   };
 
@@ -156,7 +157,7 @@ const [searchInput, setSearchInput] = useState("");
           console.log('Aucun token trouvé');
         }
       } catch (error) {
-        console.error('Erreur lors de la récupération du token:', error);
+        showToast('Erreur lors de la récupération du token:',"red");
       }
     };
     getTokenFromStorage()
@@ -175,7 +176,7 @@ const [searchInput, setSearchInput] = useState("");
 
         }
       } catch (err) {
-        console.error("Error decoding token:", err);
+        showToast("Error decoding token:", "red");
       }
     }
   }, [tokenn,refreshh]);
@@ -208,7 +209,7 @@ const [searchInput, setSearchInput] = useState("");
           
     }
       catch(err) {
-        console.error("Login error:", err);
+        showToast("❌ Login error","red");
       }
   };
 
@@ -237,7 +238,7 @@ const [searchInput, setSearchInput] = useState("");
         screen: 'Profile',
       });
     } catch (err) {
-      console.error(err);
+      showToast("❌ SignUp Error","red");
     }
   };
 
@@ -261,7 +262,7 @@ const [searchInput, setSearchInput] = useState("");
         routes: [{ name: 'Login' }],
       })
     } catch (error) {
-      console.error('Logout Error:', error)
+      showToast('Logout Error:', error)
     }
     
   };

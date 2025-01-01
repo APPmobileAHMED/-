@@ -6,8 +6,11 @@ import { COLORS } from '../../../constants';
 import {AdresseIPPP_} from '@env'
 import { useRoute } from "@react-navigation/native";
 import axios from 'axios';
-import style from "./styleForgetPass/styleResetpassword"
+import styles from "./styleForgetPass/styleResetpassword"
+import { useToast } from '../../../toastProvider/toast';
+import { useTranslation } from 'react-i18next';
 const ResetPassword = () => {
+  const { showToast } = useToast()
     const route = useRoute()
     const { email } = route.params;
   const [newPassword, setNewPassword] = useState('');
@@ -16,7 +19,7 @@ const ResetPassword = () => {
   const navigation = useNavigation();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
-
+  const { t} = useTranslation()
   const handleResetPassword = () => {
     console.log(email,"ahaha")
     if (newPassword === confirmPassword) {
@@ -27,18 +30,18 @@ const ResetPassword = () => {
     }
 
     else {
-      setError('Passwords do not match')
+      showToast(t('ResetPassword:matchPass'))
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Reset Your Password</Text>
+      <Text style={styles.title}>{t('ResetPassword:title')}</Text>
 
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="New Password"
+          placeholder={t('ResetPassword:placeholderNewPass')}
           secureTextEntry={!showNewPassword}
           placeholderTextColor="#aaa"
           value={newPassword}
@@ -52,7 +55,7 @@ const ResetPassword = () => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Confirm New Password"
+          placeholder={t('ResetPassword:placeholderConfirm')}
           secureTextEntry={!showConfirmPassword}
           placeholderTextColor="#aaa"
           value={confirmPassword}
@@ -66,7 +69,7 @@ const ResetPassword = () => {
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <TouchableOpacity style={styles.resetButton} onPress={handleResetPassword}>
-        <Text style={styles.resetButtonText}>Reset Password</Text>
+        <Text style={styles.resetButtonText}>{t('ResetPassword:buttonReset')}</Text>
       </TouchableOpacity>
     </View>
   );

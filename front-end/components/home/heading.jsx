@@ -4,12 +4,14 @@ import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { COLORS } from '../../constants'
 import { SIZES } from '../../constants'
+import { useTranslation } from 'react-i18next'
 
 const Headings = () => {
+  const { t,} = useTranslation()
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Fin De Stock</Text>
+        <Text style={styles.headerTitle}>{t('heading:title')}</Text>
         <TouchableOpacity>
           <Ionicons name='grid' size={24} color={COLORS.primary}/>
         </TouchableOpacity>

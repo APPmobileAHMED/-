@@ -10,6 +10,8 @@ import axios from "axios"
 import * as Location from 'expo-location'
 import MapView, { Marker } from 'react-native-maps' 
 import styles from "../styleScreens/styleProfile"
+import { useToast } from "../toastProvider/toast"
+import { useTranslation } from "react-i18next"
 const COLORS = {
   green: '#4CAF50',
   lightGreen: '#81C784',
@@ -17,6 +19,9 @@ const COLORS = {
   white: '#FFFFFF',
   lightGray: '#E0E0E0',
   darkGray: '#757575',
+  primary: "#24AD50",
+  secondary: "#DDF0FF",
+  tertiary: "#FF7754",
 };
 
 const Profile = () => {
@@ -33,7 +38,8 @@ const Profile = () => {
   const [selectedLocation, setSelectedLocation] = useState(null)
   const [placeName, setPlaceName] = useState('') 
   const navigation = useNavigation()
- 
+  const { showToast } = useToast();
+  const { t} = useTranslation()
   
 
 useEffect(()=>{
@@ -101,11 +107,11 @@ useEffect(()=>{
         quality: 1,
       })
 
-      console.log('ImagePicker result:', result)
+      
 
       if (!result.canceled) {
         const source = { uri: result.assets[0].uri }
-        console.log('Selected image URI:', source.uri)
+        
         setfile(source.uri)
       }
     } catch (error) {
@@ -118,7 +124,7 @@ useEffect(()=>{
     const formData = new FormData()
 
     if(!file){
-      alert("please enter image")
+    showToast(t('profile:imageNotfound'),"red")
     }else{
       formData.append("file", {
         uri: file,
@@ -141,12 +147,12 @@ useEffect(()=>{
             setImage(imageUrl) 
             
           } else {
-            Alert.alert("Error", "Failed to upload image")
+          showToast(t('profile:failedUploadimage'),"red")
           }
         })
         .catch((error) => {
           console.error("Image upload error:", error)
-          Alert.alert("Error", "An error occurred while uploading the image")
+        showToast(t('profile:errorUpload'),"red")
         })
 
     }
@@ -155,7 +161,7 @@ useEffect(()=>{
 
   const updateProfile= async()=>{
   if(name==="" || placeName==="" || phone==="" || image===null ){
-    alert("you must put the information")
+  showToast(t('profile:inputNull'),"red")
   }else{
 
   
@@ -172,9 +178,9 @@ useEffect(()=>{
       })
       
       if(result.data==="wrong current password"){
-        alert("your current password isnt true please try again")
+      showToast(t('profile:confirmPassword'),"red")
       }else{
-        alert("success") 
+      showToast(t('profile:successUpdate'),COLORS.primary) 
         setTimeout(() => {
           setrefreshh(!refreshh)
           setrefresh(!refresh)  
@@ -209,7 +215,7 @@ useEffect(()=>{
         </View>
         <TouchableOpacity style={styles.uploadButton} onPress={() => { uploadImage() }}>
           <Ionicons name="cloud-upload-outline" size={24} color={COLORS.white} />
-          <Text style={styles.uploadButtonText}>تنزيل الصورة</Text>
+          <Text style={styles.uploadButtonText}>{t('profile:downloadImage')} </Text>
         </TouchableOpacity>
 
         <View style={styles.detailsContainer}>
@@ -220,7 +226,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={name}
               onChangeText={setName}
-              placeholder={`${infor.username}`||'name'}
+              placeholder={`${infor.username}`||t('profile:inputName')}
             />
           </TouchableOpacity>
           <View style={styles.underline} />
@@ -229,7 +235,7 @@ useEffect(()=>{
             <FontAwesome name="map-marker" size={24} color="green" />
             <TextInput
               style={styles.detailTextInput}
-              placeholder={`${infor.location}`||'location'}
+              placeholder={`${infor.location}`||t('profile:inputLocation')}
               value={placeName ? placeName : selectedLocation ? `Lat: ${selectedLocation.latitude}, Lon: ${selectedLocation.longitude}` : ''}
             />
             <TouchableOpacity onPress={() => setMapVisible(true)}>
@@ -245,7 +251,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={phone}
               onChangeText={setPhone}
-              placeholder={`${infor.phoneNumber}`||'Phone Number'}
+              placeholder={`${infor.phoneNumber}`||t('profile:inputPhone')}
               keyboardType="phone-pad"
 
             />
@@ -258,7 +264,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
                value={instagram}
               onChangeText={setInstagram}
-              placeholder={`${infor.instagram}`||'instagram'}
+              placeholder={`${infor.instagram}`||t('profile:inputInsta')}
             />
           </TouchableOpacity>
           <View style={styles.underline} />
@@ -269,7 +275,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={currentpassword}
               onChangeText={setcurrentPassword}
-              placeholder="Current Password"
+              placeholder={t('profile:inputCurrentPassword')}
               secureTextEntry
             />
           </TouchableOpacity>
@@ -281,7 +287,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={newpassword}
               onChangeText={setPassword}
-              placeholder="New Password "
+              placeholder={t('profile:inputNewPassword')}
               secureTextEntry
             />
           </TouchableOpacity>
@@ -312,17 +318,17 @@ useEffect(()=>{
 
         {!mapVisible && (
           <TouchableOpacity style={styles.editButton} onPress={() => { updateProfile() }}>
-            <Text style={styles.editButtonText}>تعديل الملف الشخصي</Text>
+            <Text style={styles.editButtonText}>{t('profile:buttonEdit')}</Text>
           </TouchableOpacity>
         )}
 
         {mapVisible && (
           <View>
             <TouchableOpacity style={styles.saveLocationButton} onPress={() => setMapVisible(false)}>
-              <Text style={styles.saveLocationButtonText}>حفظ الموقع</Text>
+              <Text style={styles.saveLocationButtonText}> {t('profile:savelocation')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.editButton} onPress={() => { updateProfile() }}>
-              <Text style={styles.editButtonText}>تعديل الملف الشخصي</Text>
+              <Text style={styles.editButtonText}>{t('profile:buttonEdit')}</Text>
             </TouchableOpacity>
           </View>
         )}

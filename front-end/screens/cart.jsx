@@ -10,9 +10,11 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import styles from "../styleScreens/styleCart"
 import PaymentModal from '../modals/PaymentModal';
+import { useToast } from '../toastProvider/toast';
+import { useTranslation } from 'react-i18next';
 
 const Cart = () => {
-
+const { t} = useTranslation()
 const navigation=useNavigation()
 
   const {infor,refreshh,setrefreshh, setTotalPriceTunisie} = useAuth()
@@ -20,7 +22,7 @@ const navigation=useNavigation()
   const [cartItems, setCartItems] = useState([])
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
- 
+  const { showToast } = useToast();
   useEffect(() => {
       const handleOpenURL = ({ url }) => {
         const urlParams = new URL(url);
@@ -157,7 +159,7 @@ const updateQuantity=(product,quantity)=>{
       data:{productId: product}
 }).then((res)=>{
       console.log(res.data)
-      alert("success")
+      showToast(t('cart:deleteItem'),"red")
       setrefreshh(!refreshh)
     }).catch((error)=>{console.log(error)})
   }
@@ -174,12 +176,12 @@ const updateQuantity=(product,quantity)=>{
       <TouchableOpacity onPress={() => { navigation.goBack() }}>
         <MaterialCommunityIcons name="arrow-left" size={30} color={COLORS.black} style={{ marginTop: 3 }} />
       </TouchableOpacity>
-      <Text style={styles.header}>المشتريات</Text>
+      <Text style={styles.header}>{t('cart:Purchases')}</Text>
 
       {cartItems.length > 0 ? (
   <FlatList
     data={cartItems}
-    keyExtractor={(item, index) => index.toString()} // Use unique keys
+    keyExtractor={(item, index) => index.toString()} 
     renderItem={({ item }) => (
       <View style={styles.cartItem}>
         <TouchableOpacity
@@ -195,7 +197,11 @@ const updateQuantity=(product,quantity)=>{
 
         <View style={styles.itemDetails}>
           <Text style={styles.itemName}>{item.product.name}</Text>
-          <Text style={styles.itemPrice}>DT {item.product.price}</Text>
+          <View style={{width:100,marginBottom:12,marginTop:-25}}>
+          <Text style={styles.itemPrice}>{t('cart:price')}: <Text style={{color:COLORS.primary}}>{item.product.price} dinars</Text> </Text>
+          <Text style={styles.itemPrice}>{t('cart:length')}: <Text style={{color:COLORS.primary}}>{item.product.width}</Text></Text>
+          <Text style={styles.itemPrice}>{t('cart:width')}:<Text style={{color:COLORS.primary}}>{item.product.length}</Text></Text>
+          </View>
           <View style={styles.quantityContainer}>
             <TouchableOpacity onPress={() => {decrement(item.productId);updateQuantity(item.productId,item.quantity-1)}}>
               <Ionicons name='remove-circle-outline' size={23} style={{marginLeft:10}}/>
@@ -208,7 +214,7 @@ const updateQuantity=(product,quantity)=>{
         </View>
         <TouchableOpacity onPress={() => deleteItem(item.product.id)}>
        
-         <Ionicons name='trash-bin' size={25} style={{top:25}} color={"red"}/>
+         <Ionicons name='trash-bin' size={25} style={{top:25}} color={COLORS.tertiary}/>
           
         </TouchableOpacity>
       </View>
@@ -217,17 +223,17 @@ const updateQuantity=(product,quantity)=>{
   />
 ) : (
   <Text style={{ fontFamily: 'bold', fontSize: 40, top: 250, left: -65 }}>
-    السلة فارغة
+   {t('cart:notfound')}
   </Text>
 )}
 
 
       {cartItems.length > 0 && (
         <View style={styles.footer}>
-          <Text style={styles.totalText}>Total {cartItems.length} Items</Text>
+          <Text style={styles.totalText}>{t('cart:total')} {cartItems.length} {t('cart:Items')}</Text>
           <Text style={styles.totalPrice} > {totalPrice} DT</Text>
           <TouchableOpacity style={styles.checkoutButton} onPress={toggleModal}>
-            <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
+            <Text style={styles.checkoutButtonText}>{t('cart:checkout')}</Text>
           </TouchableOpacity>
         </View>
       )}

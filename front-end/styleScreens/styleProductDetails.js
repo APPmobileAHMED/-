@@ -93,11 +93,12 @@ const styles = StyleSheet.create({
       
     },
     descriptionWrapper: {
-  
+
       
-      marginTop: 20,
+      marginTop: 35,
       top: -55,
-      marginHorizontal: SIZES.large,
+      width:85,
+      left:50
     },
     
     description: {
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     cartTitle: {
       fontFamily: "bold",
       color: COLORS.lightWhite,
-      fontSize: SIZES.medium
+      fontSize: 18
     },
     addCard: {
       width: 37,
@@ -205,8 +206,8 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',  
         borderWidth: 2,     
         borderRadius: 5, },
-      submitButton: { backgroundColor: '#0891b2', padding: 10, borderRadius: 5,top:10, },
-      submitButtonText: { color: 'white', fontWeight: 'bold',left: '30%' },
+      submitButton: { backgroundColor: '#0891b2', padding: 10, borderRadius: 5,top:10,width:200,marginHorizontal:40,alignItems: 'center', },
+      submitButtonText: { color: 'white', fontWeight: 'bold' },
       
   });
 export default styles

@@ -1,6 +1,6 @@
 import { StyleSheet} from 'react-native';
 import { COLORS, SIZES } from "../../../constants/theme";
-
+import { StatusBar } from "react-native";
 
 
 const styles = StyleSheet.create({
@@ -54,6 +54,21 @@ const styles = StyleSheet.create({
       bottom: SIZES.xSmall,
       right: SIZES.xSmall,
     },
+    toastContainer: {
+      position: "absolute",
+      bottom: 350 || 10, // Add status bar height
+      left: 0,
+      right: 0,
+      backgroundColor: "#333",
+      padding: 15,
+      zIndex: 9999,
+      alignItems: "center",
+    },
+    toastText: {
+      color: "#fff",
+      fontSize: 16,
+    },
+  
   });
   
 export default styles

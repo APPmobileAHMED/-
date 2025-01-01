@@ -6,6 +6,8 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import styles from "../auth/styleAuth/styleSignup"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useAuth } from '../authcontext/authcontext';
+import { useToast } from '../../toastProvider/toast';
+import { useTranslation } from 'react-i18next';
 const SignUp = () => {
   const navigation=useNavigation()
    const [firstname, setFirstname] = useState("");
@@ -18,14 +20,15 @@ const [email,setEmail]=useState("")
  const [confirmPassword, setConfirmPassword] = useState(""); 
  const [showPassword, setShowPassword] = useState(false);
  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+ const { showToast } = useToast()
  const handleNext = () => {
   handleGoogleSignIn() 
 }; 
+const { t} = useTranslation()
 
  const validatePasswords = () => {
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      showToast(t('SignUp:Wrongpassword'),"red");
       return false;
     }
     register(firstname,lastname,email,password,role)
@@ -42,32 +45,32 @@ return (
       <Ionicons name="arrow-back" size={33} color="#000" />
     </TouchableOpacity>
     <View style={styles.divider} />
-    <Text style={styles.title}>Sign Up to Aammer Darek</Text>
+    <Text style={styles.title}>{t('SignUp:title')}</Text>
     <TouchableOpacity style={styles.socialButton} onPress={() => { handleNext() }}>
       <Image
         source={require("../../assets/images/GoogleLogo.png")}
         style={styles.icon}
       />
-      <Text style={styles.buttonText}>Create account with Google</Text>
+      <Text style={styles.buttonText}>{t('SignUp:buttonGoogle')}</Text>
     </TouchableOpacity>
 
     <View style={styles.dividerWithText}>
       <View style={styles.line} />
-      <Text style={styles.orText}>OR SIGN UP WITH EMAIL</Text>
+      <Text style={styles.orText}>{t('SignUp:orText')}</Text>
       <View style={styles.line} />
     </View>
 
     <View style={styles.namesContainer}>
         <TextInput
           style={[styles.input, styles.inputHalf]}
-          placeholder="First Name"
+          placeholder={t('SignUp:placeholderName')}
           placeholderTextColor="#aaa"
           value={firstname}
           onChangeText={setFirstname}
         />
         <TextInput
           style={[styles.input, styles.inputHalf]}
-          placeholder="Last Name"
+          placeholder={t('SignUp:placeholderLastname')}
           placeholderTextColor="#aaa"
           value={lastname}
           onChangeText={setLastname}
@@ -75,7 +78,7 @@ return (
       </View>
     <TextInput
       style={styles.input}
-      placeholder="Email"
+      placeholder={t('SignUp:placeholderemail')}
       placeholderTextColor="#aaa"
       value={email}
       onChangeText={setEmail}
@@ -83,7 +86,7 @@ return (
    <View style={styles.passwordContainer}>
   <TextInput
     style={[styles.inputPassword,{width:"48%"}]}
-    placeholder="Password"
+    placeholder={t('SignUp:placeholderpassword')}
     secureTextEntry={!showPassword}
     placeholderTextColor="#aaa"
     value={password}
@@ -94,7 +97,7 @@ return (
   </TouchableOpacity>
   <TextInput
     style={[styles.inputPassword,{width:"50%",right:15}]}
-    placeholder="Confirm Pass"
+    placeholder={t('SignUp:placeholderconfirmPass')}
     secureTextEntry={!showConfirmPassword}
     placeholderTextColor="#aaa"
     value={confirmPassword}
@@ -104,7 +107,7 @@ return (
     <Ionicons name={showConfirmPassword ? 'eye' : 'eye-off'} size={24} color="#000" style={{right:40,bottom:15}}/>
   </TouchableOpacity>
 </View>
-<Text style={styles.modalLabel}>Select Role:</Text>
+<Text style={styles.modalLabel}>{t('SignUp:role')}:</Text>
           <View style={{ zIndex: RoleOpen ? 1000 : 1,bottom:45 }}>
             <DropDownPicker
               open={RoleOpen}
@@ -114,19 +117,19 @@ return (
               setValue={setRole}
               setItems={setCategoryRole}
               style={styles.dropdown}
-              placeholder="Choose a Role..."
+              placeholder={t('SignUp:placeholderRole')}
               dropDownDirection="BOTTOM"
               textStyle={{fontFamily: "bold",
                 color: '#666', fontSize:20}}
             />
           </View>
     <TouchableOpacity style={styles.loginButton} onPress={() => {validatePasswords()}}>
-      <Text style={styles.loginText}>Login</Text>
+      <Text style={styles.loginText}>{t('SignUp:buttonSignup')}</Text>
     </TouchableOpacity>
 
     <TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-        <Text style={styles.CreateNewText}>Sign In if you have account</Text>
+        <Text style={styles.CreateNewText}>{t('SignUp:if')}</Text>
       </TouchableOpacity>
     </TouchableOpacity>
   </View>

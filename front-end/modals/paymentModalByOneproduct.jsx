@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Modal, Image } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../styleScreens/styleCart"
+import { useTranslation } from 'react-i18next';
 const PaymentModalByOneproduct = ({
   isModalVisible,
   toggleModal,
@@ -12,7 +13,9 @@ const PaymentModalByOneproduct = ({
   price,
   calculTotal
   
-}) => {
+}) => { 
+
+  const { t} = useTranslation()
   return (
     <Modal
       visible={isModalVisible}
@@ -22,7 +25,7 @@ const PaymentModalByOneproduct = ({
     >
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Payment</Text>
+          <Text style={styles.modalTitle}>{t('PaymentModal:title')}</Text>
 
           <TouchableOpacity
             onPress={() => { handlePaymentOptionSelect("MasterCard") }}
@@ -60,7 +63,7 @@ const PaymentModalByOneproduct = ({
           >
             <Image source={require('../assets/images/flouci_logo_new.webp')} style={{ width: 110, height: 22, right: 5 }} />
             <Text style={[styles.paymentTextt, selectedPayment === 'Flouci' && styles.selectedPaymentTextt]}>
-              الدفع بتونسي
+            {t('PaymentModalByOneProduct:PaymentTunisie')}
             </Text>
             <Ionicons
               name={selectedPayment === 'Flouci' ? "ellipse" : "ellipse-outline"}
@@ -70,10 +73,10 @@ const PaymentModalByOneproduct = ({
           </TouchableOpacity>
 
           <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
+            <Text style={styles.closeButtonText}>{t('PaymentModalByOneProduct:close')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => { nextPage(selectedPayment,calculTotal(price,count)) }} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>next</Text>
+            <Text style={styles.closeButtonText}>{t('PaymentModalByOneProduct:next')}</Text>
           </TouchableOpacity>
         </View>
       </View>

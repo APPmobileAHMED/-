@@ -7,13 +7,15 @@ import {AdresseIPPP_} from '@env'
 import { COLORS, SIZES } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import styles from "../styleScreens/styleWishlist"
+import { useToast } from '../toastProvider/toast';
+import { useTranslation } from 'react-i18next'
 const Whishlist = () => {
   const navigation=useNavigation()
-
+  
   const [favorite, setfavorite] = useState([]);
   const {infor,refreshh,setrefreshh,isProductInCart,cartProducts} = useAuth()
-
-
+   const { showToast } = useToast();
+   const { t,} = useTranslation()
  
 
 
@@ -34,7 +36,7 @@ const Whishlist = () => {
   deleteFavoriteItem=(id)=>{
     axios.delete(`${AdresseIPPP_}/api/wishlist/delete/${id}`)
     .then((res) => {
-         alert("item deleted")
+         showToast(t('wishlist:toastDeleteWishlist'),"red")
      setrefreshh(!refreshh)
    })
    .catch((error) => {
@@ -51,7 +53,7 @@ const Whishlist = () => {
       console.log(res.data)
       
       setrefreshh(!refreshh) 
-      alert("added to cart")
+      showToast(t('ProductCardView:addTocart'),COLORS.primary)
     }).catch((error)=>{console.log("erorr oops")})
   }
   const deleteItem=(product)=>{
@@ -59,7 +61,7 @@ const Whishlist = () => {
       data:{productId: product}
 }).then((res)=>{
       console.log(res.data)
-      alert("deleted ")
+      showToast(t('ProductCardView:deleteFromCart'),"red")
       setrefreshh(!refreshh)
     }).catch((error)=>{console.log(error)})
   }
@@ -86,7 +88,7 @@ const Whishlist = () => {
     useEffect(() => {
       if (scrollRef.current) {
         scrollRef.current.scrollTo({
-          x: currentIndex * 100, // عرض الصورة
+          x: currentIndex * 100, 
           animated: true,
         });
       }
@@ -116,9 +118,11 @@ const Whishlist = () => {
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.product.name}</Text>
         <Text style={styles.description}>{item.product.description}</Text>
-        <Text style={styles.price}>الثمن :{item.product.price}</Text>
-        <Text style={styles.length}>الطول: {item.product.length}</Text>
-        <Text style={styles.width}>العرض: {item.product.width}</Text>
+        <View style={{width:80,left:85,bottom:10}}>
+        <Text style={styles.price}>{t('wishlist:price')} :{item.product.price}</Text>
+        <Text style={styles.length}>{t('wishlist:length')}: {item.product.length}</Text>
+        <Text style={styles.width}>{t('wishlist:width')}: {item.product.width}</Text>
+        </View>
       </View>
       <TouchableOpacity style={styles.heartIcon} onPress={()=>deleteFavoriteItem(item.productId)}>
         <Ionicons name="heart-dislike-outline" size={24} color="red" />
@@ -144,7 +148,7 @@ const Whishlist = () => {
       <TouchableOpacity onPress={()=>navigation.navigate("Search")}>
             <Ionicons name="search" size={30} color="black" />
           </TouchableOpacity>
-        <Text style={styles.headerTitle}>favoris</Text>
+        <Text style={styles.headerTitle}>{t('wishlist:title')}</Text>
         <View style={styles.headerIcons}>
         <View style={styles.cartCount}>
     <Text style={styles.cartnumber}>{cartProducts.length}</Text>
@@ -164,7 +168,7 @@ const Whishlist = () => {
        />
       ):( 
       <View>
-        <Text style={{ fontFamily: 'bold', fontSize: 40, top: 50, left: -30, zIndex:99999}}> قائمة الرغبات فارغة</Text>
+        <Text style={{ fontFamily: 'bold', fontSize: 35, top: 50, left: -3, zIndex:99999}}> {t('wishlist:notfound')}</Text>
         <Ionicons name="heart-dislike" size={350} style={{top:20}} color={"#ccc"}/>    
       </View>
       )}

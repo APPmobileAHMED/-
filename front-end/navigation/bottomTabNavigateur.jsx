@@ -148,7 +148,7 @@ const BottomTabNav=()=>{
                 }
             }} name="AddProduct" component={AddProduct}/>
            )}
-            {infor.role==="seller" &&(
+            {infor.role==="buyer" &&(
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
                     return <Ionicons name={"heart-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>

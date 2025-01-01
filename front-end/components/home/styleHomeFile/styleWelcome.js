@@ -7,7 +7,7 @@ const  styles=StyleSheet.create({
     },
     tex:{
         fontFamily:"bold",
-        fontSize:SIZES.xLarge,
+        fontSize:23,
         marginTop:SIZES.xSmall,
         color:COLORS.black,
         marginHorizontal:12,

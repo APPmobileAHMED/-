@@ -5,9 +5,10 @@ import ProductCardView from "../products/productCardView";
 import axios from "axios";
 import { useAuth } from "../authcontext/authcontext";
 import {AdresseIPPP_} from '@env'
+import { useTranslation } from "react-i18next";
 const ProductRow = () => {
   const [finStock,setFinStock]=useState([]) 
-
+  const { t,} = useTranslation()
   const {category,setrefreshh,refreshh,infor,fetchCartItems} =useAuth()
   const fetchFinStockProducts = async () => {
 
@@ -55,7 +56,7 @@ const ProductRow = () => {
             />
           ) : (
             <Text style={styles.noProductsText}>
-              لا توجد منتجات في نهاية المخزون
+             {t('productRow:notfound')}
             </Text>
           )}
         </View>
