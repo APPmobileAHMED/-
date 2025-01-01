@@ -2,7 +2,11 @@
 const db=require("../sequelize/index.js")
 const bcrypt=require("bcrypt")
 const jwt=require("jsonwebtoken")
+const { nodeMailer }=require("../lib/nodeMailer.js")
 
+function generateVerificationCode() {
+    return Math.floor(100000 + Math.random() * 900000); 
+  }
 module.exports={
 register: function(req,res){
   db.users.count({where:{email:req.body.email}}).then((response)=>{
@@ -129,10 +133,63 @@ getUser:(req,res)=>{
     }).catch((err)=>{console.log(err)})
 
 },
+getUserByEmail:(req,res)=>{
+    db.users.findOne({where:{email:req.params.email}}).then((result)=>{
+        if(result){
+            res.json({photo:result.photoDeprofile,email:result.email,status:"success",firstname:result.firstname,lastname:result.lastname}) 
+        }else{
+            res.send({status:"failed"})
+        }
+        
+    }).catch((err)=>{console.log(err)})
+
+},
 deleteuser:(req,res)=>{
     db.users.destroy({where:{email:req.params.email}}).then((result)=>{
         res.sendStatus(200);
     }).catch((err)=>{console.log(err)})
-}
+},
+
+sendMail: async (req, res) => {
+    const code = generateVerificationCode();
+    try {
+      await nodeMailer(req.body.to,req.body.subject,`<b><h3>Your verification code is:<h3><br/><h1> ${code}<h1></b>`);
+      res.json({code:code,status:"success"});
+    } catch (err) {
+      res.status(500).send("Failed to send email");
+    }
+  },
+
+ResetYourPassword : (req, res) => {
+    
+    const { password } = req.body;
+  
+    
+    if (!password) {
+      return res.status(400).json({ message: 'Password is required' });
+    }
+  
+    
+    bcrypt.hash(password, 10)
+      .then(hashedPassword => {
+       
+        return db.users.update(
+          { password: hashedPassword },
+          { where: { email:req.params.email } }
+        );
+      })
+      .then(result => {
+        if (result[0] === 0) {
+         
+          return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'Password updated successfully' });
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating password' });
+      });
+  }
+  
 
 }

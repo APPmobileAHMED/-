@@ -5,6 +5,7 @@ import { COLORS, SIZES } from "../constants";
 import { useAuth } from '../components/authcontext/authcontext';
 import axios from 'axios';
 import {AdresseIPPP_} from '@env'
+import { useTranslation } from 'react-i18next';
 const ModalSearch = ({ setModalVisible, modalVisible }) => {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [selectedCategoryName, setSelectedCategoryName] = useState(null);
@@ -15,7 +16,7 @@ const ModalSearch = ({ setModalVisible, modalVisible }) => {
   const [typeItems, setTypeItems] = useState([]);
   const [width, setWidth] = useState('');
   const [length, setLength] = useState('');
-
+  const { t} = useTranslation()
   useEffect(() => {
     if (category && Array.isArray(category)) {
       const nameCategory = Array.from(
@@ -41,7 +42,7 @@ const search=()=>{
     axios.get(`${AdresseIPPP_}/api/search/searchBycategoriesBySpecifqueTypeAndMeasuresAndName/${selectedCategoryName}/${selectedType}/${width}/${length}`)
   .then((response)=>{
     setProdSearch(response.data)
-      console.log(response.data,"searchhhhhhhhchhchchchh")
+      
       
   })
   .catch((err)=>console.log(err)) 
@@ -50,7 +51,7 @@ const search=()=>{
     axios.get(`${AdresseIPPP_}/api/search/searchBycategoriesBySpecifqueTypeAndMeasures/${selectedType}/${width}/${length}`)
     .then((response)=>{
       setProdSearch(response.data)
-        console.log(response.data,"searchhhhhhhhchhchchchh")
+        
         
     })
     .catch((err)=>console.log(err)) 
@@ -60,7 +61,7 @@ const search=()=>{
     axios.get(`${AdresseIPPP_}/api/search/serachByMeasureAndName/${selectedCategoryName}/${width}/${length}`)
     .then((response)=>{
       setProdSearch(response.data)
-        console.log(response.data,"searchhhhhhhhchhchchchh")
+        
         
     })
     .catch((err)=>console.log(err)) 
@@ -70,7 +71,7 @@ const search=()=>{
     axios.get(`${AdresseIPPP_}/api/search/searchBycategoriesBySpecifqueTypeAndName/${selectedCategoryName}/${selectedType}`)
     .then((response)=>{
       setProdSearch(response.data)
-        console.log(response.data,"searchhhhhhhhchhchchchh")
+        
         
     })
     .catch((err)=>console.log(err)) 
@@ -78,7 +79,7 @@ const search=()=>{
     axios.get(`${AdresseIPPP_}/api/search/searchBycategoriesBySpecifqueType/${selectedType}`)
     .then((response)=>{
       setProdSearch(response.data)
-        console.log(response.data,"searchhhhhhhhchhchchchh")
+        
         
     })
     .catch((err)=>console.log(err)) 
@@ -86,7 +87,7 @@ const search=()=>{
     axios.get(`${AdresseIPPP_}/api/search/searchByName/${selectedCategoryName}`)
     .then((response)=>{
       setProdSearch(response.data)
-        console.log(response.data,"searchhhhhhhhchhchchchh")
+        
         
     })
     .catch((err)=>console.log(err)) 
@@ -111,10 +112,10 @@ const search=()=>{
     >
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Filter Options</Text>
+          <Text style={styles.modalTitle}>{t('modalSearch:title')}</Text>
 
           {/* Dropdown for Category */}
-          <Text style={styles.modalLabel}>Select Category:</Text>
+          <Text style={styles.modalLabel}>{t('modalSearch:inputCatgories')}:</Text>
           <View style={{ zIndex: categoryOpen ? 1000 : 1 }}>
             <DropDownPicker
               open={categoryOpen}
@@ -124,13 +125,13 @@ const search=()=>{
               setValue={setSelectedCategoryName}
               setItems={setCategoryName}
               style={styles.dropdown}
-              placeholder="Choose a category..."
+              placeholder={t('modalSearch:placeholderCatgories')}
               dropDownContainerStyle={styles.dropdownContainer}
             />
           </View>
 
           
-          <Text style={styles.modalLabel}>Select Type:</Text>
+          <Text style={styles.modalLabel}>{t('modalSearch:inputType')}:</Text>
           <View style={{ zIndex: typeOpen ? 1000 : 1 }}>
             <DropDownPicker
               open={typeOpen}
@@ -140,20 +141,20 @@ const search=()=>{
               setValue={setSelectedType}
               setItems={setTypeItems}
               style={styles.dropdown}
-              placeholder="Choose a type..."
+              placeholder={t('modalSearch:placeholderType')}
               dropDownContainerStyle={styles.dropdownContainer}
             />
           </View>
 
         
-          <Text style={styles.modalLabel}>Width and Length:</Text>
+          <Text style={styles.modalLabel}>{t('modalSearch:inputMeasure')}:</Text>
           <View style={styles.inputsRow}>
        
             <TextInput
               style={styles.input}
               value={width}
               onChangeText={setWidth}
-              placeholder="Enter width"
+              placeholder={t('modalSearch:placeholderWidth')}
               keyboardType="numeric"
             />
 
@@ -162,7 +163,7 @@ const search=()=>{
               style={styles.input}
               value={length}
               onChangeText={setLength}
-              placeholder="Enter length"
+              placeholder={t('modalSearch:placeholderLength')}
               keyboardType="numeric"
             />
           </View>
@@ -175,7 +176,7 @@ const search=()=>{
               setModalVisible(false);
             }}
           >
-            <Text style={styles.applyText}>Search</Text>
+            <Text style={styles.applyText}>{t('modalSearch:buttonSearch')}</Text>
           </TouchableOpacity>
         </View>
       </View>

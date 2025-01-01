@@ -7,7 +7,9 @@ import { useRoute } from "@react-navigation/native";
 import axios from 'axios';
 import {AdresseIPPP_} from '@env'
 import { useAuth } from '../authcontext/authcontext';
-
+import styles from "../../components/home/styleHomeFile/styleProductCategories"
+import { useToast } from '../../toastProvider/toast';
+import { useTranslation } from 'react-i18next';
 
 const ProductWithCategorie = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -15,41 +17,57 @@ const ProductWithCategorie = () => {
   const {infor,isProductInWishlist,setrefreshh,refreshh,isProductInCart}=useAuth()
   const[refresh,setrefresh]=useState(false)
   const navigation = useNavigation();
-  
+  const { showToast } = useToast();
+  const { t} = useTranslation()
  const route=useRoute()
  const{name}=route.params
+
+
  useEffect(()=>{
   console.log(name)
+
   axios.get(`${AdresseIPPP_}/api/category/${name}`).then((res)=>{
      setall(res.data) 
-    console.log(res.data,"hhhhhsssssssssssss")
+   
    })
+
   .catch((error)=>console.log(error))
+
  },[refresh])
+
 const specifiqueproduct=(selectcategory)=>{
   axios.get(`${AdresseIPPP_}/api/category/${name}/${selectcategory}`).then((res)=>{
     setall(res.data) 
    console.log(res.data)
   })
+
  .catch((error)=>console.log(error))
+
 }
+
 const addtoWishlist=(product)=>{
   axios.post(`${AdresseIPPP_}/api/wishlist/add/${infor.id}`,{
     productId: product
-}).then((res)=>{
+})
+
+.then((res)=>{
     console.log(res.data)
     
     setrefreshh(!refreshh) 
-    alert("added to cart")
-  }).catch((error)=>{console.log("kkjf")})
+    showToast(t('produitDetails:toastAdedWishlist'))
+  })
+  
+  .catch((error)=>{console.log("kkjf")})
 }
 
 deleteFavoriteItem=(id)=>{
   axios.delete(`${AdresseIPPP_}/api/wishlist/delete/${id}`)
+ 
   .then((res) => {
-       alert("item deleted")
+    showToast(t('search:toastDeleteWishlist'),"red")
    setrefreshh(!refreshh)
  })
+
  .catch((error) => {
    console.log("oops");
      
@@ -59,35 +77,49 @@ deleteFavoriteItem=(id)=>{
 const addtocart=(product)=>{
   axios.post(`${AdresseIPPP_}/api/cart/addtocart/${infor.id}`,{
     productId: product
-}).then((res)=>{
+})
+
+.then((res)=>{
     console.log(res.data)
     
     setrefreshh(!refreshh) 
-    alert("added to cart")
-  }).catch((error)=>{console.log("kkjf")})
+    showToast(t('ProductCardView:addTocart'),COLORS.primary)
+  })
+  
+  .catch((error)=>{console.log("kkjf")})
 }
 const deleteItem=(product)=>{
   axios.delete(`${AdresseIPPP_}/api/cart/deleteitems/${infor.id}`,{
     data:{productId: product}
-}).then((res)=>{
+})
+
+.then((res)=>{
     console.log(res.data)
-    alert("deleted ")
+    showToast(t('ProductCardView:deleteFromCart'),"red")
     setrefreshh(!refreshh)
-  }).catch((error)=>{console.log(error)})
+  })
+  
+  .catch((error)=>{console.log(error)})
 }
 
   const renderCard = ({ item }) => {
     const scaleValue = new Animated.Value(1);
     return (
+      
       <View style={styles.item}>
+        <TouchableOpacity onPress={() => navigation.navigate("ProductDetails", { productId: item.id, sellerId: item.userId })}>
       <Image source={{ uri: item.img1 }} style={styles.image} />
+      </TouchableOpacity>
       <View style={styles.textContainer}>
+        <View style={{width:85}}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
-        <Text style={styles.price}> Price:{item.price}</Text>
-        <Text style={styles.rating}>Rating: {item.rating}</Text>
-        <Text style={styles.sizes}>Sizes: {item.width}</Text>
+         <Text style={styles.price}> {t('cart:price')}:{item.price}</Text>
+          <Text style={styles.rating}>{t('cart:length')}: {item.length}</Text>
+          <Text style={styles.sizes}>{t('cart:width')}: {item.width}</Text>
+        </View>
+       
       </View>
+      
       {isProductInWishlist(item.id) ? (
         <TouchableOpacity style={styles.heartIcon} onPress={() => deleteFavoriteItem(item.id)}>
           <Ionicons 
@@ -140,16 +172,16 @@ const deleteItem=(product)=>{
        
        <View style={styles.filterContainer}>
          <TouchableOpacity onPress={() => {setSelectedCategory('خشب') ;specifiqueproduct("خشب")}}>
-           <Text style={[styles.filterButton, selectedCategory === 'خشب' && styles.selectedFilter]}>خشب</Text>
+           <Text style={[styles.filterButton, selectedCategory === 'خشب' && styles.selectedFilter]}>{t('type:wood')}</Text>
          </TouchableOpacity>
          <TouchableOpacity onPress={() => {setSelectedCategory('ألومنيوم');specifiqueproduct("ألومنيوم")}}>
-           <Text style={[styles.filterButton, selectedCategory === 'ألومنيوم' && styles.selectedFilter]}>ألومنيوم</Text>
+           <Text style={[styles.filterButton, selectedCategory === 'ألومنيوم' && styles.selectedFilter]}>{t('type:alum')}</Text>
          </TouchableOpacity>
          <TouchableOpacity onPress={() => {setSelectedCategory('حديد');specifiqueproduct("حديدية")}}>
-           <Text style={[styles.filterButton, selectedCategory === 'حديد' && styles.selectedFilter]}>حديد</Text>
+           <Text style={[styles.filterButton, selectedCategory === 'حديد' && styles.selectedFilter]}>{t('type:iron')}</Text>
          </TouchableOpacity>
          <TouchableOpacity onPress={() => {setSelectedCategory('');setrefresh(!refresh)}}>
-           <Text style={styles.filterButton}>كل الأنواع</Text>
+           <Text style={styles.filterButton}>{t('type:all')}</Text>
          </TouchableOpacity>
        </View>
        </View>
@@ -167,114 +199,6 @@ const deleteItem=(product)=>{
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-    paddingTop: 20,
-   
-  flex: 1,
-  backgroundColor: 'white',
-},
-header: {
-    marginTop:4,
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: 10,
-},
-headerTitle: {
-  fontSize: 20,
-  fontFamily:"bold",
-},
-headerIcons: {
-  flexDirection: 'row',
-},
-
-item: {
-  elevation:4,
-  backgroundColor:"white",
-flexDirection: 'row',
-padding: 5,
-marginVertical: 8,
-marginHorizontal: 16,
-
-borderRadius: 10,
-alignItems: 'center', // تركز المحتوى عموديا
-},
-image: {
-
-aspectRatio: 1/1,
-height: 110,
-borderRadius: 10,
-marginRight: 10,
-},
-textContainer: {
-flex: 1,
-fontFamily:"bold",
-justifyContent: 'center',
-bottom:30
-
-},
-cartticon:{
-top:40,
-right:8
-
-},
-title: {
-fontSize: 16,
-fontFamily:"bold",
-marginVertical: 5,
-},
-description: {
-fontSize: 14,
-fontFamily:"bold",
-color: '#333',
-marginBottom: 5,
-},
-price: {
-fontSize: 16,
-fontFamily:"bold",
-right:2,
-color: 'green',
-},
-rating: {
-fontSize: 16,
-fontFamily:"bold",
-},
-sizes: {
-fontSize: 16,
-fontFamily:"bold",
-},
-heartIcon: {
-alignSelf: 'center',
-marginLeft: 10,
-bottom:45,
-left:25
-},
-filterContainer: {
-  flexDirection: 'row',
-  justifyContent: 'space-around',
-  marginBottom: 18,
-  top: 10,
-  borderRadius:15
-  
-  
-},
-filterButton: {
-  fontSize: 16,
-  fontFamily:"bold",
-  padding: 10,
-  backgroundColor: COLORS.lightGray,
-  borderRadius: 20,
-  marginHorizontal: 5,
-  transition: 'background-color 0.2s ease',
-},
-selectedFilter: {
-  backgroundColor: COLORS.primary,
-  color: COLORS.white,
-},
-});
 
 
 export default ProductWithCategorie;

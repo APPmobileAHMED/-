@@ -5,11 +5,14 @@ import { COLORS, SIZES } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../authcontext/authcontext";
 import axios from "axios";
+import styles from "../../components/products/styleProductFile/styleProductCard"
 import {AdresseIPPP_} from '@env'
+import { useToast } from "../../toastProvider/toast";
+import { useTranslation } from "react-i18next";
 const ProductCardView = ({ product }) => {
   const navigation = useNavigation();
-  
- 
+  const { showToast } = useToast();
+  const { t} = useTranslation()
  
 const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
 
@@ -19,18 +22,17 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
     axios.post(`${AdresseIPPP_}/api/cart/addtocart/${infor.id}`,{
       productId: product
 }).then((res)=>{
-      console.log(res.data)
-      
+    
       setrefreshh(!refreshh) 
-      alert("added to cart")
-    }).catch((error)=>{console.log("kkjf")})
+      showToast(t('ProductCardView:addTocart'),COLORS.primary)
+    }).catch((error)=>{console.log(error)})
   }
   const deleteItem=(product)=>{
     axios.delete(`${AdresseIPPP_}/api/cart/deleteitems/${infor.id}`,{
       data:{productId: product}
 }).then((res)=>{
-      console.log(res.data)
-      alert("deleted ")
+      
+      showToast(t('ProductCardView:deleteFromCart'),"red")
       setrefreshh(!refreshh)
     }).catch((error)=>{console.log(error)})
   }
@@ -56,21 +58,23 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
               {product.name}
             </Text>
             <Text style={styles.supplier} numberOfLines={1}>
-            مقاس: الطول {product.length} <Text style={{ fontWeight: 'bold',fontSize: 18}}>/</Text> العرض {product.width}
+            {t('ProductCardView:size')}: {t('ProductCardView:length')} {product.length} <Text style={{ fontWeight: 'bold',fontSize: 18}}>/</Text> {t('ProductCardView:width')} {product.width}
             </Text>
-            <Text style={styles.price}>{product.price}</Text>
-            
-            <TouchableOpacity style={styles.addBtn}>
-      {isProductInCart(product.id) ? (
-        <TouchableOpacity onPress={() => deleteItem(product.id)}>
-          <Fontisto name="shopping-basket-remove" size={25} />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity onPress={() => addtocart(product.id)}>
-          <Fontisto name="shopping-basket-add" size={25}  />
-        </TouchableOpacity>
-      )}
-    </TouchableOpacity>
+            <Text style={styles.price}>{t('ProductCardView:price')}: {product.price} dt</Text>
+            {infor.role==="buyer"&&(
+   <TouchableOpacity style={styles.addBtn}>
+   {isProductInCart(product.id) ? (
+     <TouchableOpacity onPress={() => deleteItem(product.id)}>
+       <Fontisto name="shopping-basket-remove" size={25} />
+     </TouchableOpacity>
+   ) : (
+     <TouchableOpacity onPress={() => addtocart(product.id)}>
+       <Fontisto name="shopping-basket-add" size={25}  />
+     </TouchableOpacity>
+   )}
+ </TouchableOpacity>
+            )}
+         
           </View>
         </View>
       </TouchableOpacity>
@@ -80,55 +84,3 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
 
 export default ProductCardView;
 
-const styles = StyleSheet.create({
-  container: {
-    width: 182,
-    height: 270,
-    marginEnd: 22,
-    marginBottom: 120,
-    borderRadius: SIZES.medium,
-    backgroundColor:"white",
-    
-    elevation: 4,
-  },
-  imageContainer: {
-    flex: 1,
-    width: 170,
-    marginLeft: SIZES.small / 2,
-    marginTop: SIZES.small / 2,
-    borderRadius: SIZES.small,
-    overflow: "hidden",
-  },
-  image: {
-    aspectRatio: 1/1,
-    resizeMode: "cover",
-    height: 150,
-    left: 10,
-    top:3,
-    borderRadius:15
-  },
-  details: {
-    padding: SIZES.small,
-  },
-  title: {
-    fontFamily: "bold",
-    fontSize: SIZES.large,
-    marginBottom: 2,
-  },
-  supplier: {
-    fontFamily: "regular",
-    fontSize: 13,
-    color: COLORS.gray,
-    marginBottom: 2,
-  },
-  price: {
-    fontFamily: "bold",
-    fontSize: SIZES.large,
-    marginBottom: 2,
-  },
-  addBtn: {
-    position: "absolute",
-    bottom: SIZES.xSmall,
-    right: SIZES.xSmall,
-  },
-});

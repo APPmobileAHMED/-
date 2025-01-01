@@ -4,10 +4,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import {Ionicons,MaterialCommunityIcons } from "@expo/vector-icons"
 import * as ImagePicker from 'expo-image-picker'
 import { Picker } from '@react-native-picker/picker';
+import styles from "../styleScreens/styleAddProduct"
 import { useNavigation } from "@react-navigation/native"
 import axios from 'axios';
 import {AdresseIPPP_} from '@env'
 import { useAuth } from '../components/authcontext/authcontext';
+import { useToast } from '../toastProvider/toast';
+import { useTranslation } from 'react-i18next';
 const COLORS = {
   green: '#4CAF50',
   lightGreen: '#81C784',
@@ -29,16 +32,16 @@ const AddProduct = () => {
   const [file2, setfile2] = useState(null)
   const [file3, setfile3] = useState(null)
   const [file4, setfile4] = useState(null)
-const[allfiles,setallfiles]=useState([])
-const [loading, setLoading] = useState(false); 
-const [refr, setref] = useState(false)
-const [length, setLength] = useState('');
-const [width, setWidth] = useState('');
-const navigation = useNavigation()
+  const[allfiles,setallfiles]=useState([])
+  const [loading, setLoading] = useState(false); 
+  const [refr, setref] = useState(false)
+  const [length, setLength] = useState('');
+  const [width, setWidth] = useState('');
+  const navigation = useNavigation()
   const {category,setrefreshh,refreshh,infor} = useAuth()
   const [selectedCategory, setSelectedCategory] = useState('')
-
-
+  const { showToast } = useToast();
+  const { t} = useTranslation()
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
@@ -152,46 +155,45 @@ const navigation = useNavigation()
   }
 
   const addproduct= async ()=>{
-    try{
-     
-  const result=await axios.post(`${AdresseIPPP_}/api/product/add`,{
-    name:name,
-    price:price,
-    width:width,
-    length:length,
-    stock:stock,
-    img1:img1,
-    img2:img2,
-    img3:img3,
-    img4:img4,
-    userId:infor.id,
-    categoryId: selectedCategory.id
-  })
 
-console.log(result.data,"gh")
+  if(!name||!price||!width||!length||!stock||!img1||!img2||!img3||!img4){
+     showToast(t('addProduct:inputEmpty'),"red")
+    }else{
+ axios.post(`${AdresseIPPP_}/api/product/add`,{
+
+        name:name,
+        price:price,
+        width:width,
+        length:length,
+        stock:stock,
+        img1:img1,
+        img2:img2,
+        img3:img3,
+        img4:img4,
+        userId:infor.id,
+        categoryId: selectedCategory.id
+        
+      }).then((result)=>{
+        showToast(t('addProduct:SuccessAdd'))
 setrefreshh(!refreshh)
+}).catch((err)=>console.log(err))
+    
 
-    }
-    catch(err){
-      console.log(err)
-      
-    }
-
-  }
+}}
 
   return (
     <LinearGradient colors={['#4CAF50', '#45a049', '#388E3C']} style={styles.container}>
       <Animated.View style={[styles.content, animatedStyle]}>
-        <Text style={styles.title}>إضافة منتج جديد</Text>
+        <Text style={styles.title}>{t('addProduct:title')}</Text>
         
-        <TouchableOpacity onPress={() => { navigation.goBack();setName(''),setImages1(""),setImages2(""),setImages3(""),setImages4(""),setPrice(""),setStock(""),setSelectedCategory(""),setDescription("") }}>
+        <TouchableOpacity onPress={() => { navigation.goBack();setName(''),setLength(""),setWidth(""),setImages1(""),setImages2(""),setImages3(""),setImages4(""),setPrice(""),setStock(""),setSelectedCategory(""),setDescription("") }}>
             <MaterialCommunityIcons name="arrow-left" size={30} color={COLORS.white} style={{marginTop:-30,top:-10}} />
           </TouchableOpacity>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>name product</Text>
+          <Text style={styles.label}>{t('addProduct:nameProd')}</Text>
           <TextInput
             style={styles.input}
-            placeholder="اسم المنتج"
+            placeholder={t('addProduct:nameProd')}
             placeholderTextColor="#7caf7e"
             value={name}
             onChangeText={setName}
@@ -201,10 +203,10 @@ setrefreshh(!refreshh)
       
         <View style={styles.row}>
     <View style={styles.halfInputContainer}>
-        <Text style={styles.label}>longueur</Text>
+        <Text style={styles.label}>{t('addProduct:lengthProd')}</Text>
         <TextInput
             style={styles.input}
-            placeholder="أدخل الطول"
+            placeholder={t('addProduct:placeholderLength')}
             placeholderTextColor="#7caf7e"
             value={length}
             onChangeText={setLength}
@@ -212,10 +214,10 @@ setrefreshh(!refreshh)
         />
     </View>
     <View style={styles.halfInputContainer}>
-        <Text style={styles.label}>Largeur</Text>
+        <Text style={styles.label}>{t('addProduct:widthProd')}</Text>
         <TextInput
             style={styles.input}
-            placeholder="أدخل العرض"
+            placeholder={t('addProduct:placeholderWidth')}
             placeholderTextColor="#7caf7e"
             value={width}
             onChangeText={setWidth}
@@ -230,10 +232,10 @@ setrefreshh(!refreshh)
         <Text style={styles.label}></Text>
         <View style={styles.row}>
           <View style={styles.halfInputContainer}>
-            <Text style={styles.label}>price</Text>
+            <Text style={styles.label}>{t('addProduct:priceProd')}</Text>
             <TextInput
               style={styles.input}
-              placeholder="السعر"
+              placeholder={t('addProduct:priceProd')}
               placeholderTextColor="#7caf7e"
               value={price}
               onChangeText={setPrice}
@@ -241,10 +243,10 @@ setrefreshh(!refreshh)
             />
           </View>
           <View style={styles.halfInputContainer}>
-            <Text style={styles.label}>stock</Text>
+            <Text style={styles.label}>{t('addProduct:stockProd')}</Text>
             <TextInput
               style={styles.input}
-              placeholder="المخزون"
+              placeholder={t('addProduct:stockProd')}
               placeholderTextColor="#7caf7e"
               value={stock}
               onChangeText={setStock}
@@ -254,10 +256,11 @@ setrefreshh(!refreshh)
         </View>
         
          <View style={styles.inputContainer}>
-          <Text style={styles.label}>اختيار الفئة</Text>
-          <Picker
+          <Text style={styles.label}>{t('addProduct:SelectCategory')}</Text>
+          <Picker 
+          
             selectedValue={selectedCategory}
-            style={styles.picker}
+            style={{borderRadius:55,backgroundColor:"rgba(232, 245, 233, 0.9)",}}
             onValueChange={(itemValue) => setSelectedCategory(itemValue)}
           >
             {category.map((category, index) => (
@@ -266,8 +269,8 @@ setrefreshh(!refreshh)
           </Picker>
         </View>
        
-        <Text style={styles.label}>الصور (4)</Text>
-        <Text style={{color:"#2E7D32",right:134,backgroundColor:"rgba(232, 245, 233, 0.9)",marginHorizontal:129,borderRadius:5}}>الصورة الرئيسية</Text>
+        <Text style={styles.label}>{t('addProduct:image')} (4)</Text>
+        <Text style={{color:"#2E7D32",right:134,backgroundColor:"rgba(232, 245, 233, 0.9)",marginHorizontal:129,borderRadius:5}}>{t('addProduct:MainImage')}</Text>
         <View style={styles.imageContainer}>
             <TouchableOpacity  style={styles.imageBox} onPress={()=>pickImage(1)}>
               {img1 ? (
@@ -303,7 +306,7 @@ setrefreshh(!refreshh)
         {loading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#FFFFFF" />
-            <Text style={styles.loadingText}>تحميل الصور...</Text>
+            <Text style={styles.loadingText}>{t('addProduct:LoadingImage')}</Text>
           </View>
         )}
          <View style={styles.checkboxContainer}>
@@ -313,12 +316,12 @@ setrefreshh(!refreshh)
           >
             <Ionicons name="cloud-upload-outline" size={30} color={COLORS.white} />
           </TouchableOpacity>
-          <Text style={styles.checkboxText}>عندما تنتهي من إختيار الصور إضغط على أيقونة التحميل </Text>
+          <Text style={styles.checkboxText}>{t('addProduct:iconDowanload')} </Text>
         </View>
         
         <Animated.View style={{ transform: [{ scale: buttonScale }] }} >
           <TouchableOpacity style={styles.button} onPress={()=>{addproduct()}}  >
-            <Text style={styles.buttonText}>إضافة المنتج</Text>
+            <Text style={styles.buttonText}>{t('addProduct:buttonAdd')}</Text>
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
@@ -326,147 +329,5 @@ setrefreshh(!refreshh)
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    padding: 10,
-    marginTop: 25,
-  },
-  title: {
-    fontFamily:"bold",
-    top:10,
-    fontSize: 28,
-
-   
-    marginBottom: 30,
-    color: '#E8F5E9',
-    textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
-  },
-  inputContainer: {
-    fontFamily:"bold",
-    marginBottom: 10,
-  },
-  label: {
-    fontSize: 16,
-    fontFamily:"bold",
-    color: '#E8F5E9',
-    marginBottom: 1,
-  },
-  loadingText: {
-    color: '#FFF',
-    fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  
-  input: {
-    fontFamily:"bold",
-    backgroundColor: 'rgba(232, 245, 233, 0.9)',
-    borderRadius: 12,
-    padding: 5,
-    fontSize: 16,
-    color: '#2E7D32',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  textArea: {
-    height: 70,
-    textAlignVertical: 'top',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  halfInputContainer: {
-    width: '48%',
-  },
-  imageContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 30,
-    top:12
-  },
-  imageBox: {
-    width: 70,
-    height: 70,
-    backgroundColor: 'rgba(232, 245, 233, 0.9)',
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
-  },
-  imagePlaceholder: {
-    fontSize: 30,
-    color: '#4CAF50',
-  },
-  picker:{
-    fontFamily:"bold",
-    backgroundColor: 'rgba(232, 245, 233, 0.9)',
-    borderRadius: 12,
-    padding: 15,
-    fontSize: 16,
-    color: '#2E7D32',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  button: {
-    backgroundColor: '#81C784',
-    padding: 18,
-    borderRadius: 12,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 5,
-  },
-  buttonText: {
-    color: '#1B5E20',
-    fontSize: 18,
-  
-    fontFamily:"bold",
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 10,
-    
-     left:30,
-  },
-  checkbox: {
-  right:10
-  },
-  checkboxLabel: {
-    fontSize: 20,
-    color: '#E8F5E9',
-  },
-  checkboxText: {
-    color: '#E8F5E9',
-    fontSize: 14,
-  },
-});
 
 export default AddProduct;

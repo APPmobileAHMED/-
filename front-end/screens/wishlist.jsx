@@ -6,14 +6,16 @@ import axios from 'axios';
 import {AdresseIPPP_} from '@env'
 import { COLORS, SIZES } from "../constants";
 import { useNavigation } from "@react-navigation/native";
-
+import styles from "../styleScreens/styleWishlist"
+import { useToast } from '../toastProvider/toast';
+import { useTranslation } from 'react-i18next'
 const Whishlist = () => {
   const navigation=useNavigation()
-
+  
   const [favorite, setfavorite] = useState([]);
   const {infor,refreshh,setrefreshh,isProductInCart,cartProducts} = useAuth()
-
-
+   const { showToast } = useToast();
+   const { t,} = useTranslation()
  
 
 
@@ -34,7 +36,7 @@ const Whishlist = () => {
   deleteFavoriteItem=(id)=>{
     axios.delete(`${AdresseIPPP_}/api/wishlist/delete/${id}`)
     .then((res) => {
-         alert("item deleted")
+         showToast(t('wishlist:toastDeleteWishlist'),"red")
      setrefreshh(!refreshh)
    })
    .catch((error) => {
@@ -51,7 +53,7 @@ const Whishlist = () => {
       console.log(res.data)
       
       setrefreshh(!refreshh) 
-      alert("added to cart")
+      showToast(t('ProductCardView:addTocart'),COLORS.primary)
     }).catch((error)=>{console.log("erorr oops")})
   }
   const deleteItem=(product)=>{
@@ -59,7 +61,7 @@ const Whishlist = () => {
       data:{productId: product}
 }).then((res)=>{
       console.log(res.data)
-      alert("deleted ")
+      showToast(t('ProductCardView:deleteFromCart'),"red")
       setrefreshh(!refreshh)
     }).catch((error)=>{console.log(error)})
   }
@@ -79,14 +81,14 @@ const Whishlist = () => {
         setCurrentIndex((prevIndex) =>
           prevIndex === images.length - 1 ? 0 : prevIndex + 1
         );
-      }, 3000); // كل 3 ثواني يتبدل
-      return () => clearInterval(interval); // تنظيف التايمر
+      }, 3000); 
+      return () => clearInterval(interval); 
     }, [images]);
   
     useEffect(() => {
       if (scrollRef.current) {
         scrollRef.current.scrollTo({
-          x: currentIndex * 100, // عرض الصورة
+          x: currentIndex * 100, 
           animated: true,
         });
       }
@@ -94,7 +96,7 @@ const Whishlist = () => {
     return(
     
     <View style={styles.item}>
-    <TouchableOpacity onPress={()=>navigation.navigate("ProductDetails", { productId: item.productId, sellerId: item.product.userId })}>
+    <TouchableOpacity  >
     <ScrollView
         horizontal
         pagingEnabled
@@ -102,8 +104,13 @@ const Whishlist = () => {
         showsHorizontalScrollIndicator={false}
         style={styles.carousel}
       >
+        
         {images.map((img, index) => (
-          <Image key={index} source={{ uri: img }} style={styles.carouselImage} />
+         
+          <TouchableOpacity onPress={()=>navigation.navigate("ProductDetails", { productId: item.productId, sellerId: item.product.userId })}>
+<Image key={index} source={{ uri: img }} style={styles.carouselImage} />
+          </TouchableOpacity>
+          
         ))}
       </ScrollView>
     </TouchableOpacity>
@@ -111,9 +118,11 @@ const Whishlist = () => {
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.product.name}</Text>
         <Text style={styles.description}>{item.product.description}</Text>
-        <Text style={styles.price}>الثمن :{item.product.price}</Text>
-        <Text style={styles.length}>الطول: {item.product.length}</Text>
-        <Text style={styles.width}>العرض: {item.product.width}</Text>
+        <View style={{width:80,left:85,bottom:10}}>
+        <Text style={styles.price}>{t('wishlist:price')} :{item.product.price}</Text>
+        <Text style={styles.length}>{t('wishlist:length')}: {item.product.length}</Text>
+        <Text style={styles.width}>{t('wishlist:width')}: {item.product.width}</Text>
+        </View>
       </View>
       <TouchableOpacity style={styles.heartIcon} onPress={()=>deleteFavoriteItem(item.productId)}>
         <Ionicons name="heart-dislike-outline" size={24} color="red" />
@@ -136,10 +145,10 @@ const Whishlist = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>navigation.navigate("Search")}>
             <Ionicons name="search" size={30} color="black" />
           </TouchableOpacity>
-        <Text style={styles.headerTitle}>favoris</Text>
+        <Text style={styles.headerTitle}>{t('wishlist:title')}</Text>
         <View style={styles.headerIcons}>
         <View style={styles.cartCount}>
     <Text style={styles.cartnumber}>{cartProducts.length}</Text>
@@ -150,129 +159,24 @@ const Whishlist = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <FlatList
-        data={favorite}
-        renderItem={({ item }) => <Item {...item} />}
-        keyExtractor={item => item.id}
-        contentContainerStyle={{ paddingBottom: 90,}} 
-      />
+      {favorite.length> 0 ?(
+         <FlatList
+         data={favorite}
+         renderItem={({ item }) => <Item {...item} />}
+         keyExtractor={item => item.id}
+         contentContainerStyle={{ paddingBottom: 90,}} 
+       />
+      ):( 
+      <View>
+        <Text style={{ fontFamily: 'bold', fontSize: 35, top: 50, left: -3, zIndex:99999}}> {t('wishlist:notfound')}</Text>
+        <Ionicons name="heart-dislike" size={350} style={{top:20}} color={"#ccc"}/>    
+      </View>
+      )}
+     
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        padding:5,
-       
-      flex: 1,
-      backgroundColor: 'white',
-    },
-    header: {
-        marginTop:25,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: 10,
-    },
-    headerTitle: {
-      fontSize: 20,
-      fontWeight: 'bold',
-    },
-    headerIcons: {
-      flexDirection: 'row',
-    },
 
-item: {
-  flexDirection: 'row',
-  padding: 1,
-  marginVertical: 8,
-  marginHorizontal: 16,
-  elevation:7,
-  backgroundColor:"white",
-  borderRadius: 10,
-  alignItems: 'center', 
-},
-image: {
-  width: 100,
-  height: 100,
-  borderRadius: 10,
-  marginRight: 10,
-},
-textContainer: {
-  flex: 1,
-  justifyContent: 'center',
-},
-cartticon:{
-    top:40,
-right:8
-},
-cartCount:{ 
-  position:"absolute",
-  bottom:18,
-  width:16,
-  left:2,
-  height:16,
-  borderRadius:8,
-  alignItems:"center",
-  backgroundColor:"green",
-  justifyContent:"center",
-  zIndex:9999
-}, 
-cartnumber:{
-  fontFamily:"regular",
-  fontWeight:"600",
-  fontSize:10,
-  color:COLORS.lightWhite
-},
-
-title: {
-  fontSize: 20,
-  
-  marginVertical: 5,
-   fontFamily:"bold"
-},
-description: {
-  fontSize: 14,
-  color: '#333',
-  marginBottom: 5,
-},
-price: {
-  fontSize: 16,
-  color: 'green',
-  fontFamily:"regular",
-  right:80
-},
-length: {
-  fontSize: 14,
-  fontFamily:"regular",
-  right:80
-},
-width: {
-  fontSize: 14,
-  fontFamily:"regular",
-  right:80
-},
-heartIcon: {
-  alignSelf: 'center',
-  marginLeft: 10,
-  bottom:42,
-  left:20,
-  
-},
-carousel: {
-  width: 100, // نفس عرض الصور
-  height: 100, // نفس ارتفاع الصور
-  marginBottom: 10,
-  top:10
-},
-carouselImage: {
-  width: 90,
-  height: 100,
-  borderRadius: 10,
-  marginRight: 9,
-  left:5
-},
-
-    });
     
 export default Whishlist;

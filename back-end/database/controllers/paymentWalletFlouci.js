@@ -48,7 +48,7 @@ savePayment : async (req,res) => {
       const order = await db.orders.create({
         totalAmount: totalAmount,
         userId: userId,
-        status: 'shipped', // الافتراضي
+        status: 'pending', // الافتراضي
       });
   
       // إضافة العناصر للطلب

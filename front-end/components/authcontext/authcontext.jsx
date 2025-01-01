@@ -3,12 +3,13 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {jwtDecode} from "jwt-decode"; 
-import {AdresseIPPP_,ID_CLIENT,CLIENT_SECRET,GOOGLE_REDIRECT_URI} from '@env'
+import {AdresseIPPP_} from '@env'
 
 import * as WebBrowser from 'expo-web-browser';
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as Linking from 'expo-linking';
+import { useToast } from "../../toastProvider/toast";
 
 
 const AuthContext = createContext();
@@ -26,8 +27,33 @@ const [searchInput, setSearchInput] = useState("");
   const [cartProducts, setCartProducts] = useState([]);
   const [role, setRole] = useState("buyer");
   const [wishlist, setwishlist] = useState([]);
-   const [totalPriceTunisie, setTotalPriceTunisie] = useState(0);
-   const [ProductSearch,setProdSearch]=useState([])
+  const [totalPriceTunisie, setTotalPriceTunisie] = useState(0);
+  const [ProductSearch,setProdSearch]=useState([])
+  const [code,setCode]=useState('')
+  const [orders, setOrders] = useState([]);
+  const [pendingOrders, SetPendingOrders] = useState([]);
+  const [shippedOrders, setshippedOrder] = useState([]);
+  const [ItemsOrder,setItemsOrder]=useState(0)
+  const { showToast } = useToast();
+   
+ useEffect(() => {
+  if(infor.id){
+    axios.get(`${AdresseIPPP_}/api/order/get/${infor.id}`)
+    .then((result)=>{setOrders(result.data)
+      
+      const pendingOrder = result.data.filter(order => order.status === 'pending')
+      const shippedOrder = result.data.filter(order => order.status === 'shipped')  
+      SetPendingOrders(pendingOrder)
+      setItemsOrder(pendingOrder.length)
+      setshippedOrder(shippedOrder)
+
+    } )
+    .catch((err)=>console.log(err))
+  }
+  }, [infor.id,refreshh])
+
+
+
 
   const handleGoogleSignIn = async () => {
     try {
@@ -68,7 +94,7 @@ const [searchInput, setSearchInput] = useState("");
        
       } 
     } catch (error) {
-      console.error('Error during Google Sign-In:', error);
+      showToast('❌ Error during Google Sign-In:',"red");
     }
   };
 
@@ -133,7 +159,7 @@ const [searchInput, setSearchInput] = useState("");
           console.log('Aucun token trouvé');
         }
       } catch (error) {
-        console.error('Erreur lors de la récupération du token:', error);
+        showToast('Erreur lors de la récupération du token:',"red");
       }
     };
     getTokenFromStorage()
@@ -152,7 +178,7 @@ const [searchInput, setSearchInput] = useState("");
 
         }
       } catch (err) {
-        console.error("Error decoding token:", err);
+        showToast("Error decoding token:", "red");
       }
     }
   }, [tokenn,refreshh]);
@@ -185,7 +211,7 @@ const [searchInput, setSearchInput] = useState("");
           
     }
       catch(err) {
-        console.error("Login error:", err);
+        showToast("❌ Login error","red");
       }
   };
 
@@ -214,7 +240,7 @@ const [searchInput, setSearchInput] = useState("");
         screen: 'Profile',
       });
     } catch (err) {
-      console.error(err);
+      showToast("❌ SignUp Error","red");
     }
   };
 
@@ -238,7 +264,7 @@ const [searchInput, setSearchInput] = useState("");
         routes: [{ name: 'Login' }],
       })
     } catch (error) {
-      console.error('Logout Error:', error)
+      showToast('Logout Error:', error)
     }
     
   };
@@ -257,6 +283,10 @@ const [searchInput, setSearchInput] = useState("");
       role, setRole,
       searchInput, setSearchInput,
       ProductSearch,setProdSearch,
+      code,setCode,setcategory,
+      orders,ItemsOrder, setOrders,
+      shippedOrders, setshippedOrder,
+      pendingOrders, SetPendingOrders,
       fetchCartItems}}>
       {children}
     </AuthContext.Provider>

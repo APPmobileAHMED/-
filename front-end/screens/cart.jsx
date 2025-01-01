@@ -9,11 +9,14 @@ import {AdresseIPPP_} from '@env'
 
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
-import styles from "../style/styleCart.js"
+import styles from "../styleScreens/styleCart"
+import PaymentModal from '../modals/PaymentModal';
+import { useToast } from '../toastProvider/toast';
+import { useTranslation } from 'react-i18next';
 
 
 const Cart = () => {
-
+const { t} = useTranslation()
 const navigation=useNavigation()
 
   const {infor,refreshh,setrefreshh, setTotalPriceTunisie} = useAuth()
@@ -21,7 +24,7 @@ const navigation=useNavigation()
   const [cartItems, setCartItems] = useState([])
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
- 
+  const { showToast } = useToast();
   useEffect(() => {
       const handleOpenURL = ({ url }) => {
         const urlParams = new URL(url);
@@ -162,7 +165,7 @@ const updateQuantity=(product,quantity)=>{
       data:{productId: product}
 }).then((res)=>{
       console.log(res.data)
-      alert("success")
+      showToast(t('cart:deleteItem'),"red")
       setrefreshh(!refreshh)
     }).catch((error)=>{console.log(error)})
   }
@@ -179,12 +182,12 @@ const updateQuantity=(product,quantity)=>{
       <TouchableOpacity onPress={() => { navigation.goBack() }}>
         <MaterialCommunityIcons name="arrow-left" size={30} color={COLORS.black} style={{ marginTop: 3 }} />
       </TouchableOpacity>
-      <Text style={styles.header}>المشتريات</Text>
+      <Text style={styles.header}>{t('cart:Purchases')}</Text>
 
       {cartItems.length > 0 ? (
   <FlatList
     data={cartItems}
-    keyExtractor={(item, index) => index.toString()} // Use unique keys
+    keyExtractor={(item, index) => index.toString()} 
     renderItem={({ item }) => (
       <View style={styles.cartItem}>
         <TouchableOpacity
@@ -200,7 +203,11 @@ const updateQuantity=(product,quantity)=>{
 
         <View style={styles.itemDetails}>
           <Text style={styles.itemName}>{item.product.name}</Text>
-          <Text style={styles.itemPrice}>DT {item.product.price}</Text>
+          <View style={{width:100,marginBottom:12,marginTop:-25}}>
+          <Text style={styles.itemPrice}>{t('cart:price')}: <Text style={{color:COLORS.primary}}>{item.product.price} dinars</Text> </Text>
+          <Text style={styles.itemPrice}>{t('cart:length')}: <Text style={{color:COLORS.primary}}>{item.product.width}</Text></Text>
+          <Text style={styles.itemPrice}>{t('cart:width')}:<Text style={{color:COLORS.primary}}>{item.product.length}</Text></Text>
+          </View>
           <View style={styles.quantityContainer}>
             <TouchableOpacity onPress={() => {decrement(item.productId);updateQuantity(item.productId,item.quantity-1)}}>
               <Ionicons name='remove-circle-outline' size={23} style={{marginLeft:10}}/>
@@ -213,7 +220,7 @@ const updateQuantity=(product,quantity)=>{
         </View>
         <TouchableOpacity onPress={() => deleteItem(item.product.id)}>
        
-         <Ionicons name='trash-bin' size={25} style={{top:25}} color={"red"}/>
+         <Ionicons name='trash-bin' size={25} style={{top:25}} color={COLORS.tertiary}/>
           
         </TouchableOpacity>
       </View>
@@ -222,66 +229,29 @@ const updateQuantity=(product,quantity)=>{
   />
 ) : (
   <Text style={{ fontFamily: 'bold', fontSize: 40, top: 250, left: -65 }}>
-    السلة فارغة
+   {t('cart:notfound')}
   </Text>
 )}
 
 
       {cartItems.length > 0 && (
         <View style={styles.footer}>
-          <Text style={styles.totalText}>Total {cartItems.length} Items</Text>
+          <Text style={styles.totalText}>{t('cart:total')} {cartItems.length} {t('cart:Items')}</Text>
           <Text style={styles.totalPrice} > {totalPrice} DT</Text>
           <TouchableOpacity style={styles.checkoutButton} onPress={toggleModal}>
-            <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
+            <Text style={styles.checkoutButtonText}>{t('cart:checkout')}</Text>
           </TouchableOpacity>
         </View>
       )}
 
-<Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={toggleModal}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Payment</Text>
-
-            <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("MasterCard")}} style={[styles.paymentOption, selectedPayment === 'MasterCard' && styles.selectedPaymentOption]}>
-              <Image source={require('../assets/images/credit.png')} style={{ width: 36, height: 22, right: 5 }} />
-              <Text style={[styles.paymentText, selectedPayment === 'MasterCard' && styles.selectedPaymentText]}>Credit Card</Text>
-              <Ionicons name={selectedPayment === 'MasterCard' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'MasterCard' ? "#fff" : "#000"} />
-            </TouchableOpacity>
-
-            {/* <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("Paypal")}} style={[styles.paymentOption, selectedPayment === 'Paypal' && styles.selectedPaymentOption]}>
-              <Image source={require('../assets/images/paypal.webp')} style={styles.paymentIcon} />
-              <Text style={[styles.paymentText, selectedPayment === 'Paypal' && styles.selectedPaymentText]}>Paypal</Text>
-              <Ionicons name={selectedPayment === 'Paypal' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'Paypal' ? "#fff" : "#000"} />
-            </TouchableOpacity> */}
-
-            <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("Visa")}} style={[styles.paymentOption, selectedPayment === 'Visa' && styles.selectedPaymentOption]}>
-              <Image source={require('../assets/images/visa.png')} style={{ width: 68, height: 22, right: 5 }} />
-              <Text style={[styles.paymentText, selectedPayment === 'Visa' && styles.selectedPaymentText]}>Visa</Text>
-              <Ionicons name={selectedPayment === 'Visa' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'Visa' ? "#fff" : "#000"} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{handlePaymentOptionSelect("Flouci")}} style={[styles.paymentOption, selectedPayment === 'Flouci' && styles.selectedPaymentOption]}>
-              <Image source={require('../assets/images/flouci_logo_new.webp')} style={{ width: 110, height: 22, right: 5 }} />
-              <Text style={[styles.paymentTextt, selectedPayment === 'Flouci' && styles.selectedPaymentTextt]}> الدفع بتونسي </Text>
-              <Ionicons name={selectedPayment === 'Flouci' ? "ellipse" : "ellipse-outline"} size={20} color={selectedPayment === 'Flouci' ? "#fff" : "#000"} />
-            </TouchableOpacity>
-
-           
-
-            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=> {nextPage(selectedPayment)}} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>next</Text>
-            </TouchableOpacity> 
-          </View>
-        </View>
-      </Modal>
-
+<PaymentModal
+  isModalVisible={isModalVisible}
+  toggleModal={toggleModal}
+  handlePaymentOptionSelect={handlePaymentOptionSelect}
+  selectedPayment={selectedPayment}
+  nextPage={nextPage}
+  
+/>
 
     </View>
   );

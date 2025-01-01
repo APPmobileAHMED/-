@@ -9,7 +9,9 @@ import {AdresseIPPP_} from '@env'
 import axios from "axios"
 import * as Location from 'expo-location'
 import MapView, { Marker } from 'react-native-maps' 
-
+import styles from "../styleScreens/styleProfile"
+import { useToast } from "../toastProvider/toast"
+import { useTranslation } from "react-i18next"
 const COLORS = {
   green: '#4CAF50',
   lightGreen: '#81C784',
@@ -17,6 +19,9 @@ const COLORS = {
   white: '#FFFFFF',
   lightGray: '#E0E0E0',
   darkGray: '#757575',
+  primary: "#24AD50",
+  secondary: "#DDF0FF",
+  tertiary: "#FF7754",
 };
 
 const Profile = () => {
@@ -26,7 +31,6 @@ const Profile = () => {
   const [instagram, setInstagram] = useState("")
   const [refresh, setrefresh] = useState(false)
   const [newpassword, setPassword] = useState("")
-  
   const [file, setfile] = useState(null)
   const {logout,seller,buyer,infor,setrefreshh,refreshh,image, setImage} = useAuth()
   const [location, setLocation] = useState(null)
@@ -34,7 +38,8 @@ const Profile = () => {
   const [selectedLocation, setSelectedLocation] = useState(null)
   const [placeName, setPlaceName] = useState('') 
   const navigation = useNavigation()
- 
+  const { showToast } = useToast();
+  const { t} = useTranslation()
   
 
 useEffect(()=>{
@@ -102,11 +107,11 @@ useEffect(()=>{
         quality: 1,
       })
 
-      console.log('ImagePicker result:', result)
+      
 
       if (!result.canceled) {
         const source = { uri: result.assets[0].uri }
-        console.log('Selected image URI:', source.uri)
+        
         setfile(source.uri)
       }
     } catch (error) {
@@ -119,7 +124,7 @@ useEffect(()=>{
     const formData = new FormData()
 
     if(!file){
-      alert("please enter image")
+    showToast(t('profile:imageNotfound'),"red")
     }else{
       formData.append("file", {
         uri: file,
@@ -142,12 +147,12 @@ useEffect(()=>{
             setImage(imageUrl) 
             
           } else {
-            Alert.alert("Error", "Failed to upload image")
+          showToast(t('profile:failedUploadimage'),"red")
           }
         })
         .catch((error) => {
           console.error("Image upload error:", error)
-          Alert.alert("Error", "An error occurred while uploading the image")
+        showToast(t('profile:errorUpload'),"red")
         })
 
     }
@@ -156,7 +161,7 @@ useEffect(()=>{
 
   const updateProfile= async()=>{
   if(name==="" || placeName==="" || phone==="" || image===null ){
-    alert("you must put the information")
+  showToast(t('profile:inputNull'),"red")
   }else{
 
   
@@ -173,9 +178,9 @@ useEffect(()=>{
       })
       
       if(result.data==="wrong current password"){
-        alert("your current password isnt true please try again")
+      showToast(t('profile:confirmPassword'),"red")
       }else{
-        alert("success") 
+      showToast(t('profile:successUpdate'),COLORS.primary) 
         setTimeout(() => {
           setrefreshh(!refreshh)
           setrefresh(!refresh)  
@@ -210,7 +215,7 @@ useEffect(()=>{
         </View>
         <TouchableOpacity style={styles.uploadButton} onPress={() => { uploadImage() }}>
           <Ionicons name="cloud-upload-outline" size={24} color={COLORS.white} />
-          <Text style={styles.uploadButtonText}>تنزيل الصورة</Text>
+          <Text style={styles.uploadButtonText}>{t('profile:downloadImage')} </Text>
         </TouchableOpacity>
 
         <View style={styles.detailsContainer}>
@@ -221,7 +226,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={name}
               onChangeText={setName}
-              placeholder={`${infor.username}`||'name'}
+              placeholder={`${infor.username}`||t('profile:inputName')}
             />
           </TouchableOpacity>
           <View style={styles.underline} />
@@ -230,7 +235,7 @@ useEffect(()=>{
             <FontAwesome name="map-marker" size={24} color="green" />
             <TextInput
               style={styles.detailTextInput}
-              placeholder={`${infor.location}`||'location'}
+              placeholder={`${infor.location}`||t('profile:inputLocation')}
               value={placeName ? placeName : selectedLocation ? `Lat: ${selectedLocation.latitude}, Lon: ${selectedLocation.longitude}` : ''}
             />
             <TouchableOpacity onPress={() => setMapVisible(true)}>
@@ -246,7 +251,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={phone}
               onChangeText={setPhone}
-              placeholder={`${infor.phoneNumber}`||'Phone Number'}
+              placeholder={`${infor.phoneNumber}`||t('profile:inputPhone')}
               keyboardType="phone-pad"
 
             />
@@ -259,7 +264,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
                value={instagram}
               onChangeText={setInstagram}
-              placeholder={`${infor.instagram}`||'instagram'}
+              placeholder={`${infor.instagram}`||t('profile:inputInsta')}
             />
           </TouchableOpacity>
           <View style={styles.underline} />
@@ -270,7 +275,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={currentpassword}
               onChangeText={setcurrentPassword}
-              placeholder="Current Password"
+              placeholder={t('profile:inputCurrentPassword')}
               secureTextEntry
             />
           </TouchableOpacity>
@@ -282,7 +287,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={newpassword}
               onChangeText={setPassword}
-              placeholder="New Password "
+              placeholder={t('profile:inputNewPassword')}
               secureTextEntry
             />
           </TouchableOpacity>
@@ -313,17 +318,17 @@ useEffect(()=>{
 
         {!mapVisible && (
           <TouchableOpacity style={styles.editButton} onPress={() => { updateProfile() }}>
-            <Text style={styles.editButtonText}>تعديل الملف الشخصي</Text>
+            <Text style={styles.editButtonText}>{t('profile:buttonEdit')}</Text>
           </TouchableOpacity>
         )}
 
         {mapVisible && (
           <View>
             <TouchableOpacity style={styles.saveLocationButton} onPress={() => setMapVisible(false)}>
-              <Text style={styles.saveLocationButtonText}>حفظ الموقع</Text>
+              <Text style={styles.saveLocationButtonText}> {t('profile:savelocation')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.editButton} onPress={() => { updateProfile() }}>
-              <Text style={styles.editButtonText}>تعديل الملف الشخصي</Text>
+              <Text style={styles.editButtonText}>{t('profile:buttonEdit')}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -333,120 +338,5 @@ useEffect(()=>{
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.lightGreen,
-  },
-  header: {
-    fontFamily:"bold",
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.green,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-  },
-  backIcon: {
-    position: 'absolute',
-    top: 40,
-    right: 120,
-  },
-  logoutIcon: {
-    position: 'absolute',
-    top: 40,
-    left: 120,
-  },
-  headerText: {
-    color: COLORS.white,
-    fontSize: 24,
-    fontFamily:"bold",
-    bottom: -10,
-  },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 60,
-    borderWidth: 3,
-    borderColor: COLORS.white,
-    bottom:-15
-  },
-  uploadButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.darkGreen,
-    paddingVertical: 10,
-    marginTop: 10,
-    borderRadius: 20,
-    marginHorizontal: 20,
-  },
-  uploadButtonText: {
-    color: COLORS.white,
-    marginLeft: 10,
-    fontFamily:"bold",
-    fontSize: 16,
-  },
-  detailsContainer: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: COLORS.white,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    fontFamily:"bold",
-    marginTop: 20,
-  },
-  detailItem: {
-    flexDirection: 'row',
-    fontFamily:"bold",
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  detailTextInput: {
-    flex: 1,
-
-    fontFamily:"bold",
-    marginLeft: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.lightGray,
-    paddingVertical: 5,
-    fontSize: 20,
-    color: COLORS.darkGray,
-  },
-  map: {
-    height: 320,
-    marginVertical: 2,
-    marginHorizontal:-20,
-    borderRadius: 15,
-    overflow: 'hidden',
-  },
-  editButton: {
-    backgroundColor: COLORS.green,
-    paddingVertical: 8,
-    borderRadius: 25,
-    alignItems: 'center',
-    marginHorizontal: 80,
-    top: 10,
-  },
-  editButtonText: {
-    color: COLORS.white,
-    fontSize: 18,
-    fontFamily:"bold",
-  },
-  saveLocationButton: {
-    backgroundColor: COLORS.darkGreen,
-    paddingVertical: 1,
-    borderRadius: 25,
-    alignItems: 'center',
-    marginHorizontal: 120,
-     top: -315,
-     left:132,
-  },
-  saveLocationButtonText: {
-    color: "yellow",
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default Profile

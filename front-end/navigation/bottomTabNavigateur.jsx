@@ -10,6 +10,9 @@ import ProductWithCategorie from "../components/home/productCategories.jsx";
 import PaymentScreen from "../components/Cart/payment.jsx"
 import PaymentScreenTunisie from "../components/Cart/paymentTunis.jsx"
 import SuccessPaymentStripe from "../components/Cart/successPaymentStripe.jsx"
+import OrderScreen from "../components/Order/orderScreen.jsx"
+import OrderDetails from "../components/Order/orderDetails.jsx"
+import OrderShipped from "../components/Order/OrderShipped.jsx"
 
 const Tab =createBottomTabNavigator()
 
@@ -110,8 +113,35 @@ const BottomTabNav=()=>{
                     ),
                 }}
             />
+            <Tab.Screen
+                name="OrderScreen"
+                component={OrderScreen}
+                options={{
+                    tabBarButton: (props) => (
+                        <View style={{ display: 'none' }} /> 
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="OrderShipped"
+                component={OrderShipped}
+                options={{
+                    tabBarButton: (props) => (
+                        <View style={{ display: 'none' }} /> 
+                    ),
+                }}
+            />
+             <Tab.Screen
+                name="OrderDetails"
+                component={OrderDetails}
+                options={{
+                    tabBarButton: (props) => (
+                        <View style={{ display: 'none' }} /> 
+                    ),
+                }}
+            />
 
-           {infor.role==="buyer" &&(
+           {infor.role==="seller" &&(
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
                     return <Ionicons name={"add-circle-sharp"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>

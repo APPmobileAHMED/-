@@ -4,327 +4,95 @@ import { COLORS } from '../../constants';
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../authcontext/authcontext';
 import { Ionicons } from '@expo/vector-icons';
+import styles from "../auth/styleAuth/styleLogin"
+import { useTranslation } from 'react-i18next';
 const Login = () => {
- 
+  const [showPassword, setShowPassword] = useState(false);
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
   const {login,token,handleGoogleSignIn,role, setRole}=useAuth()
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isBuyerSelected, setIsBuyerSelected] = useState(false); 
-  const [isSellerSelected, setIsSellerSelected] = useState(false); 
   const navigation=useNavigation()
- 
-  const handleBuyerSelection = () => {
-    setRole("buyer")
-    setIsBuyerSelected(true);
-    setIsSellerSelected(false); // إلغاء تحديد الـ seller عند تحديد الـ buyer
-  };
-
-  // التعامل مع تغيير اختيار الـ seller
-  const handleSellerSelection = () => {
-    setRole("seller")
-    setIsSellerSelected(true);
-    setIsBuyerSelected(false); // إلغاء تحديد الـ buyer عند تحديد الـ seller
-  };
-
+const { t} = useTranslation()
   const handleNext = () => {
-    
-    setModalVisible(false);
-    handleGoogleSignIn()
-    
-    // أضف الكود هنا حسب الإجراء اللي تحب تعملو بعد الضغط على "Next"
-  };
+        handleGoogleSignIn() 
+      };
+
   return (
+
     <KeyboardAvoidingView
     
-    behavior={Platform.OS === "ios" ? "padding" : null} 
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
   >
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+
     <View style={styles.container}>
-      <View style={styles.formBody}>
-        <View style={styles.welcomeLines}>
-          <Text style={styles.welcomeLine1}>عمر دارك </Text>
-          <Text style={styles.welcomeLine2}>مرحبا بيك لنا تلقى أرخص الأسوام</Text>
-        </View>
-        <View style={styles.inputArea}>
-          <View style={styles.formInp}>
-            <TextInput 
-              placeholder="هوني تحط بريدك الإكتروني" 
-              placeholderTextColor={COLORS.white} 
-              style={styles.input} 
-              value={email}
-              onChangeText={setEmail}
-            />
-          </View>
-          <View style={styles.formInp}>
-            <TextInput 
-              placeholder="كلمة السر" 
-              placeholderTextColor={COLORS.white} 
-               value={password}
-               onChangeText={setPassword}
-               style={styles.input}
-            />
-          </View>
-        </View>
-        <View style={styles.submitButtonCvr}>
-          <TouchableOpacity style={styles.submitButton} onPress={()=>{login(password,email)}}>
-            <Text style={styles.submitButtonText}>دخول </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.forgotPass}>
-          <TouchableOpacity>
-            <Text style={styles.forgotPassText}>نسيت كلمة السر ؟</Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={{padding:20, color:COLORS.white, left:20}} > إذا كان ماعندكش حساب تنجم تدخل لنا وتصنع حساب جديد </Text>
-        <TouchableOpacity style={{right:120, top:-37,}}><Text  onPress={()=>{navigation.navigate("SignUp")}} style={{color: '#00FF7F'}} >إضغط  هنا</Text></TouchableOpacity>
-        <View style={styles.submitButtonCvrr}>
-          <TouchableOpacity style={styles.submitButton} onPress={()=>{handleGoogleSignIn()}}>
-            <Text style={styles.submitButtonText}>الدخول عبر جوجل</Text>
-            <Image source={require('../.././assets/images/0-6167_google-app-icon-png-transparent-png-removebg-preview.png')} style={{height:30,width:30,right:70,marginTop:-25}} ></Image>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.submitButtonCvrrr}>
-          <TouchableOpacity style={styles.submitButton} onPress={()=>{setModalVisible(true)}}>
-            <Text style={styles.submitButtonTextt}>يمكن التسجيل عبر جوجل</Text>
-            <Image source={require('../.././assets/images/0-6167_google-app-icon-png-transparent-png-removebg-preview.png')} style={{height:30,width:30,right:70,marginTop:-25}} ></Image>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.bar}></View>
+     
+      <TouchableOpacity style={styles.backButton} onPress={()=>navigation.goBack()}>
+        <Ionicons name="arrow-back" size={33} color="#000" />
+      </TouchableOpacity>
 
+      <View style={styles.divider} />
+      
+      <Text style={styles.title}>{t('Login:title')}</Text>
+
+    
+      <TouchableOpacity style={styles.socialButton} onPress={()=>{handleNext()}} >
+        <Image
+          source={require("../../assets/images/GoogleLogo.png")}
+          style={styles.icon}
+        />
+        <Text style={styles.buttonText}>{t('Login:buttonGoogle')}</Text>
+      </TouchableOpacity>
+
+      <View style={styles.dividerWithText}>
+  <View style={styles.line} />
+  <Text style={styles.orText}>{t('Login:orText')}</Text>
+  <View style={styles.line} />
+</View>
+
+      
+      <TextInput
+        style={styles.input}
+        placeholder={t('SignUp:placeholderName')}
+        placeholderTextColor="#aaa"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={[styles.inputPassword, { flex: 1 }]}
+          placeholder={t('SignUp:placeholderpassword')}
+          secureTextEntry={!showPassword}
+          placeholderTextColor="#aaa"
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Ionicons name={showPassword ? 'eye' : 'eye-off'} size={24} color="#000" />
+        </TouchableOpacity>
       </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalText}>Are you sure?</Text>
-            <View style={styles.checkboxContainer}>
-            <TouchableOpacity
-              style={[styles.checkbox, isBuyerSelected && styles.checked]}
-              onPress={handleBuyerSelection}
-            >
-              {isBuyerSelected && <Text style={styles.checkmark}>✔</Text>}
-            </TouchableOpacity>
-            <Text style={styles.checkboxLabel}>Buyer</Text>
-          </View>
 
-          <View style={styles.checkboxContainer}>
-            <TouchableOpacity
-              style={[styles.checkbox, isSellerSelected && styles.checked]}
-              onPress={handleSellerSelection}
-            >
-              {isSellerSelected && <Text style={styles.checkmark}>✔</Text>}
-            </TouchableOpacity>
-            <Text style={styles.checkboxLabel}>Seller</Text>
-          </View>
+     
+      <TouchableOpacity style={styles.loginButton} onPress={()=>{login(password,email)}}>
+        <Text style={styles.loginText}>{t('Login:buttonLogin')}</Text>
+      </TouchableOpacity>
 
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.nextButton} onPress={()=>{handleNext()}}>
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      
+      <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate("ForgetPassword")}>
+        <Text style={styles.forgotText}>{t('Login:ForgetPass')}</Text>
+        </TouchableOpacity>
+        <Text style={styles.OrText}>{t('Login:or')}</Text>
+        <TouchableOpacity onPress={()=>navigation.navigate("SignUp")}> 
+        <Text style={styles.CreateNewText}>{t('Login:if')}</Text>
+           </TouchableOpacity>
+        
+      </TouchableOpacity>
     </View>
-    </ScrollView >
+    </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 370,
-    height: 800,
-    padding: 25,
-    backgroundColor: COLORS.gray,
-    boxShadow: '0px 15px 60px #00FF7F',
-    borderColor: '#2b9962',
-    borderRadius: 10,
-    position: 'relative',
-  },
-  formBody: {
-    position: 'absolute',
-    top: '50%',
-    width: 230,
-    marginTop: -225,
-    marginHorizontal: 25,
-  },
-  welcomeLines: {
-    textAlign: 'center',
-    lineHeight: 1,
-  },
-  welcomeLine1: {
-    color: '#00FF7F',
-    fontWeight: '600',
-    fontSize: 40,
-  },
-  welcomeLine2: {
-    color: '#ffffff',
-    fontSize: 18,
-    marginTop: 17,
-  },
-  inputArea: {
-    marginTop: 40,
-  },
-  formInp: {
-    padding: 11,
-    backgroundColor: 'transparent',
-    borderColor: '#e3e3e3',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 15,
-  },
-  input: {
-    width: '100%',
-    backgroundColor: 'none',
-    fontSize: 13.4,
-    color: '#00FF7F',
-    borderWidth: 0,
-    padding: 0,
-    margin: 0,
-    
-  },
-  submitButtonCvr: {
-    marginTop: 20,
-  },
-  submitButtonCvrr: {
-    marginTop: -15,
-  },
-  submitButtonCvrrr: {
-    marginTop: 15,
-  },
-  submitButton: {
-    width: '100%',
-    color: '#00FF7F',
-    backgroundColor: 'transparent',
-    fontWeight: '600',
-    fontSize: 14,
-    paddingVertical: 14,
-    borderColor: '#00FF7F',
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-  },
-  submitButtonText: {
-    color: '#00FF7F',
-  },
-  submitButtonTextt: {
-    color: '#00FF7F',
-    left:10,
-  },
-  forgotPass: {
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  forgotPassText: {
-    color: COLORS.white,
-    fontSize: 12,
-    textDecorationLine: 'none',
-  },
-  bar: {
-    position: 'absolute',
-    left: '50%',
-    bottom: -50,
-    width: 28,
-    height: 8,
-    backgroundColor: '#00FF7F',
-    borderRadius: 10,
-    transform: [{ translateX: -14 }],
-  },
-  barBefore: {
-    content: "",
-    position: 'absolute',
-    width: 8,
-    height: 8,
-    backgroundColor: '#ececec',
-    borderRadius: '50%',
-    right: -20,
-  },
-  barAfter: {
-    content: "",
-    position: 'absolute',
-    width: 8,
-    height: 8,
-    backgroundColor: '#ececec',
-    borderRadius: '50%',
-    right: -38,
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContainer: {
-    width: 300,
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  modalButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  cancelButton: {
-    backgroundColor: COLORS.gray,
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  nextButton: {
-    backgroundColor: COLORS.primary,
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginRight: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checked: {
-    backgroundColor: '#4CAF50', // اللون عندما يتم تحديد الـ checkbox
-  },
-  checkmark: {
-    color: 'white',
-    fontSize: 14,
-  },
-  checkboxLabel: {
-    fontSize: 14,
-  },
-});
 
 export default Login;

@@ -7,14 +7,18 @@ import axios from "axios"
 import {AdresseIPPP_} from '@env'
 import ModalSearch from '../modals/modalSearch'
 import { useAuth } from "../components/authcontext/authcontext";
-import styles from "../style/styleSearch"
+import styles from "../styleScreens/styleSearch"
 import { useNavigation } from "@react-navigation/native";
+import { useToast } from "../toastProvider/toast";
+import { useTranslation } from 'react-i18next'
 const Search = () => {
    const {searchInput, setSearchInput,ProductSearch,isProductInWishlist,infor,setrefreshh,refreshh,setProdSearch} = useAuth()
   const [filteredData, setFilteredData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectSearch,setSelectsearch]=useState('')
  const navigation = useNavigation();
+ const { showToast } = useToast();
+ const { t} = useTranslation()
 
  const searchwithBar=(name)=>{
   axios.get(`${AdresseIPPP_}/api/search/BarSearch/${name}`)
@@ -34,14 +38,14 @@ const Search = () => {
       console.log(res.data)
       
       setrefreshh(!refreshh) 
-      alert("added to cart")
+      showToast(t('search:toastAdedWishlist'))
     }).catch((error)=>{console.log(error)})
   }
   
   deleteFavoriteItem=(id)=>{
     axios.delete(`${AdresseIPPP_}/api/wishlist/delete/${id}`)
     .then((res) => {
-         alert("item deleted")
+         showToast(t('search:toastDeleteWishlist'),"red")
      setrefreshh(!refreshh)
    })
    .catch((error) => {
@@ -73,11 +77,12 @@ const Item = ({item}) => {
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.name}</Text>
         <Text style={styles.description}>{item.description}</Text>
-        <Text style={styles.price}>الثمن :{item.price}</Text>
-        <Text style={styles.length}>الطول: {item.length}</Text>
-        <Text style={styles.width}>العرض: {item.width}</Text>
+        <Text style={styles.price}> {t('search:price')}:{item.price}</Text>
+        <Text style={styles.length}> {t('search:length')}: {item.length}</Text>
+        <Text style={styles.width}> {t('search:width')}: {item.width}</Text>
       </View>
-      {isProductInWishlist(item.id) ? (
+      {infor.role==="buyer"&&( <View>
+        {isProductInWishlist(item.id) ? (
               <TouchableOpacity style={styles.heartIcon} onPress={() => deleteFavoriteItem(item.id)}>
                 <Ionicons 
                               name="heart-dislike" 
@@ -96,6 +101,8 @@ const Item = ({item}) => {
                           />
               </TouchableOpacity>
             )}
+      </View>)}
+     
     </View>
  ) }
 
@@ -112,7 +119,7 @@ const Item = ({item}) => {
           style={styles.searchInput} 
           value={searchInput}
           onChangeText={setSearchInput}
-          placeholder="What are you looking for?"
+          placeholder={t('search:placeholder')}
         />
       </View>
   
@@ -123,7 +130,7 @@ const Item = ({item}) => {
       </View>
     </View>
     
-    {/* FlatList للنتائج */}
+    
     {ProductSearch.length > 0 && (
      
     
