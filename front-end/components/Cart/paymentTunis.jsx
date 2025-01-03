@@ -17,6 +17,7 @@ const PaymentScreenTunisie = () => {
   const route = useRoute();
   const [infoPayment, setinfoPayment] = useState([])
   const [StatusPayment, setStatusPayment] = useState([])
+
   const {paymentId}=route.params
    const navigation=useNavigation()
     const { t} = useTranslation()
@@ -67,6 +68,7 @@ axios.post(`${AdresseIPPP_}/api/flouci/save`,{
   }
 
   return (
+
     <View >
 
    
@@ -100,6 +102,7 @@ axios.post(`${AdresseIPPP_}/api/flouci/save`,{
     </View>
   </Modal>
   </View>
+
   );
 };
 
