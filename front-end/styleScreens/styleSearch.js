@@ -24,15 +24,14 @@ const styles = StyleSheet.create({
   fontFamily:"bold",
   justifyContent: 'center',
   bottom:3,
-  right:100
+  
   
   },
   
   title: {
   fontSize: 16,
   fontFamily:"bold",
-  marginVertical: 5,
-  left:80
+  
   },
   description: {
   fontSize: 14,

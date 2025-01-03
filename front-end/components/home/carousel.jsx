@@ -3,8 +3,13 @@ import { View, Image, FlatList, Animated, Dimensions, StyleSheet, TouchableOpaci
 
 // Dummy data for carousel
 const DATA = [
-  { id: '1', title: 'https://quattro.tn/wp-content/uploads/2019/05/porte_chene-2-1170x756.jpg' },
-  { id: '2', title: 'https://quattro.tn/wp-content/uploads/2019/05/porte_chene-2-1170x756.jpg' },
+  { id: '1', title: require("../../assets/images/cuisine.jpg") },
+  { id: '2', title: require("../../assets/images/cuisine1.jpg") },
+  { id: '3', title: require("../../assets/images/porte.jpg") },
+  { id: '4', title: require("../../assets/images/porte1.jpg") },
+  { id: '5', title: require("../../assets/images/porte2.jpg") },
+  { id: '6', title: require("../../assets/images/porte3.jpg") },
+  { id: '7', title: require("../../assets/images/cuisine2.jpg") },
 ];
 
 // Screen width
@@ -36,7 +41,7 @@ const Carousel = () => {
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      <Image source={{ uri: item.title }} style={styles.image} />
+      <Image source={item.title} style={styles.image} />
     </View>
   );
  
@@ -84,7 +89,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width * 0.9,  
-    height: 200,       
+    height: 260,       
     borderRadius: 10,
   },
   pagination: {

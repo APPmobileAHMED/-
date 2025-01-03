@@ -33,7 +33,7 @@ const ProductWithCategorie = () => {
 
   .catch((error)=>console.log(error))
 
- },[refresh])
+ },[refresh,name])
 
 const specifiqueproduct=(selectcategory)=>{
   axios.get(`${AdresseIPPP_}/api/category/${name}/${selectcategory}`).then((res)=>{

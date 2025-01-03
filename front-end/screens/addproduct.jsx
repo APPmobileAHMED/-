@@ -1,16 +1,18 @@
-import React, { useState, useRef,useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Animated, Easing,ActivityIndicator } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState, useRef,useEffect } from 'react'
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Animated, Easing,ActivityIndicator } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
 import {Ionicons,MaterialCommunityIcons } from "@expo/vector-icons"
 import * as ImagePicker from 'expo-image-picker'
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker'
 import styles from "../styleScreens/styleAddProduct"
 import { useNavigation } from "@react-navigation/native"
-import axios from 'axios';
+
+import axios from 'axios'
 import {AdresseIPPP_} from '@env'
-import { useAuth } from '../components/authcontext/authcontext';
-import { useToast } from '../toastProvider/toast';
-import { useTranslation } from 'react-i18next';
+import DropDownPicker from 'react-native-dropdown-picker'
+import { useAuth } from '../components/authcontext/authcontext'
+import { useToast } from '../toastProvider/toast'
+import { useTranslation } from 'react-i18next'
 const COLORS = {
   green: '#4CAF50',
   lightGreen: '#81C784',
@@ -18,33 +20,48 @@ const COLORS = {
   white: '#FFFFFF',
   lightGray: '#E0E0E0',
   darkGray: '#757575',
-};
+}
 const AddProduct = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [stock, setStock] = useState('');
-  const [img1, setImages1] = useState('');
-  const [img2, setImages2] = useState('');
-  const [img3, setImages3] = useState('');
-  const [img4, setImages4] = useState('');
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [price, setPrice] = useState('')
+  const [stock, setStock] = useState('')
+  const [img1, setImages1] = useState('')
+  const [img2, setImages2] = useState('')
+  const [img3, setImages3] = useState('')
+  const [img4, setImages4] = useState('')
   const [file1, setfile1] = useState(null)
   const [file2, setfile2] = useState(null)
   const [file3, setfile3] = useState(null)
   const [file4, setfile4] = useState(null)
   const[allfiles,setallfiles]=useState([])
-  const [loading, setLoading] = useState(false); 
-  const [refr, setref] = useState(false)
-  const [length, setLength] = useState('');
-  const [width, setWidth] = useState('');
+  const [loading, setLoading] = useState(false) 
+  const [refr, setref] = useState(false) 
+  const [length, setLength] = useState('')
+  const [width, setWidth] = useState('')
   const navigation = useNavigation()
-  const {category,setrefreshh,refreshh,infor} = useAuth()
-  const [selectedCategory, setSelectedCategory] = useState('')
-  const { showToast } = useToast();
+  const [open, setOpen] = useState(false)
   const { t} = useTranslation()
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(50)).current;
-  const buttonScale = useRef(new Animated.Value(1)).current;
+  const [value, setValue] = useState(null)
+  
+  const {setrefreshh,refreshh,infor,} = useAuth()
+  const [selectedCategoryName, setSelectedCategoryName] = useState("")
+  const [selectedCategoryType, setSelectedCategoryType] = useState("")
+  const { showToast } = useToast()
+  const [items, setItems] = useState([ 
+    { label: t('addProduct:label1'), value: ['أبواب', 'خشب'] },
+{ label: t('addProduct:label2'), value: ['أبواب', 'حديدية'] },
+{ label: t('addProduct:label3'), value: ['أبواب', 'ألومنيوم'] },
+{ label: t('addProduct:label4'), value: ['نوافذ', 'حديدية'] },
+{ label: t('addProduct:label5'), value: ['نوافذ', 'ألومنيوم'] },
+{ label: t('addProduct:label6'), value: ['نوافذ', 'خشب'] },
+{ label: t('addProduct:label7'), value: ['أبواب حديدية كبيرة', 'حديدية'] },
+{ label: t('addProduct:label8'), value: ['مستلزمات مطبخ', 'خشب'] },
+  ])
+  const [selectedLabel, setSelectedLabel] = useState('')
+  const fadeAnim = useRef(new Animated.Value(0)).current
+  const slideAnim = useRef(new Animated.Value(50)).current
+  const buttonScale = useRef(new Animated.Value(1)).current
 
 
   React.useEffect(() => {
@@ -61,91 +78,97 @@ const AddProduct = () => {
         easing: Easing.out(Easing.exp),
         useNativeDriver: true,
       }),
-    ]).start();
-  }, []);
+    ]).start()
+  }, [])
 
 
-  
+  const handleSelect = (selectedValue,item) => {
+    
+    console.log('Selected values:', selectedValue)
+    setSelectedCategoryName(selectedValue[0])
+    setSelectedCategoryType(selectedValue[1])
+    setSelectedLabel(item.label)
+  }
 
   const pickImage = async (imageNumber) => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: 'Images',
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [6, 8],
         quality: 1,
-      });
+      })
   
-      console.log('ImagePicker result:', result);
+      console.log('ImagePicker result:', result)
   
       if (!result.canceled) {
-        const source = { uri: result.assets[0].uri };
-        console.log('Selected image URI:', source.uri);
+        const source = { uri: result.assets[0].uri }
+        console.log('Selected image URI:', source.uri)
   
-        if (imageNumber === 1) setfile1(source.uri);
-        else if (imageNumber === 2) setfile2(source.uri);
-        else if (imageNumber === 3) setfile3(source.uri);
-        else if (imageNumber === 4) setfile4(source.uri);
+        if (imageNumber === 1) setfile1(source.uri)
+        else if (imageNumber === 2) setfile2(source.uri)
+        else if (imageNumber === 3) setfile3(source.uri)
+        else if (imageNumber === 4) setfile4(source.uri)
   
-        setallfiles((prevFiles) => [...prevFiles, source.uri]);
+        setallfiles((prevFiles) => [...prevFiles, source.uri])
       }
     } catch (error) {
-      console.error('ImagePicker Error: ', error);
+      console.error('ImagePicker Error: ', error)
     }
-  };
+  }
   
 
   const uploadImage = async () => {
     setLoading(true)
-    const uploadedImages = [];
+    const uploadedImages = []
 
     
-    for (let i = 0; i < allfiles.length; i++) {
-      const formData = new FormData();
+    for (let i = 0; i < allfiles.length ;i++) {
+      const formData = new FormData()
       formData.append("file", {
         uri: allfiles[i],
         type: "image/jpeg",
         name: allfiles[i].split("/").pop(),
-      });
-      formData.append("upload_preset", "ecommer-ce");
+      })
+      formData.append("upload_preset", "ecommerce")
   
       try { 
         const response = await axios.post(
-          "https://api.cloudinary.com/v1_1/dcwa4oceq/image/upload",
+          "https://api.cloudinary.com/v1_1/dcyeimdps/image/upload",
           formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           }
-        );
+        )
   
         if (response.status === 200) {
-          const imageUrl = response.data.secure_url;
-          uploadedImages.push(imageUrl);
+          const imageUrl = response.data.secure_url
+          uploadedImages.push(imageUrl)
         } else {
-          console.error("Failed to upload image");
+          console.error("Failed to upload image")
         }
       } catch (error) {
-        console.error("Image upload error: ", error);
+        console.error("Image upload error: ", error)
       }
     }
   
     
     if (uploadedImages.length === allfiles.length) {
       
-      setImages1(uploadedImages[0] || '');
-      setImages2(uploadedImages[1] || '');
-      setImages3(uploadedImages[2] || '');
-      setImages4(uploadedImages[3] || '');
+      setImages1(uploadedImages[0] || '')
+      setImages2(uploadedImages[1] || '')
+      setImages3(uploadedImages[2] || '')
+      setImages4(uploadedImages[3] || '')
   
-      console.log("Uploaded Images:", uploadedImages);
+      console.log("Uploaded Images:", uploadedImages)
   
      
-      setallfiles([]);
+      setallfiles([])
     }
     setLoading(false)
-  };
+  }
   
   
   
@@ -154,7 +177,7 @@ const AddProduct = () => {
     transform: [{ translateY: slideAnim }],
   }
 
-  const addproduct= async ()=>{
+  const addproduct= async (nameCateg,type)=>{
 
   if(!name||!price||!width||!length||!stock||!img1||!img2||!img3||!img4){
      showToast(t('addProduct:inputEmpty'),"red")
@@ -171,7 +194,8 @@ const AddProduct = () => {
         img3:img3,
         img4:img4,
         userId:infor.id,
-        categoryId: selectedCategory.id
+        nameCategory:nameCateg,
+        specifiqueType:type
         
       }).then((result)=>{
         showToast(t('addProduct:SuccessAdd'))
@@ -186,7 +210,7 @@ setrefreshh(!refreshh)
       <Animated.View style={[styles.content, animatedStyle]}>
         <Text style={styles.title}>{t('addProduct:title')}</Text>
         
-        <TouchableOpacity onPress={() => { navigation.goBack();setName(''),setLength(""),setWidth(""),setImages1(""),setImages2(""),setImages3(""),setImages4(""),setPrice(""),setStock(""),setSelectedCategory(""),setDescription("") }}>
+        <TouchableOpacity onPress={() => { navigation.goBack(),setName(''),setLength(""),setWidth(""),setImages1(""),setImages2(""),setImages3(""),setImages4(""),setPrice(""),setStock(""),setSelectedCategoryName(""),setSelectedCategoryType(""),setDescription("") }}>
             <MaterialCommunityIcons name="arrow-left" size={30} color={COLORS.white} style={{marginTop:-30,top:-10}} />
           </TouchableOpacity>
         <View style={styles.inputContainer}>
@@ -255,22 +279,43 @@ setrefreshh(!refreshh)
           </View>
         </View>
         
-         <View style={styles.inputContainer}>
+         <View style={{fontFamily:"bold",marginBottom: 10,zIndex:999999,borderRadius:12,marginTop:25}}>
           <Text style={styles.label}>{t('addProduct:SelectCategory')}</Text>
-          <Picker 
           
-            selectedValue={selectedCategory}
-            style={{borderRadius:55,backgroundColor:"rgba(232, 245, 233, 0.9)",}}
-            onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-          >
-            {category.map((category, index) => (
-  <Picker.Item key={index} label={`${category.name} ${category.specifiqueType ? category.specifiqueType : '.'}`} value={category} />
-))}
-          </Picker>
+          <DropDownPicker
+        open={open} 
+        value={value||[]}
+        items={[ 
+          { label: t('addProduct:label1'), value: ['أبواب', 'خشب'] },
+  { label: t('addProduct:label2'), value: ['أبواب', 'حديدية'] },
+  { label: t('addProduct:label3'), value: ['أبواب', 'ألومنيوم'] },
+  { label: t('addProduct:label4'), value: ['نوافذ', 'حديدية'] },
+  { label: t('addProduct:label5'), value: ['نوافذ', 'ألومنيوم'] },
+  { label: t('addProduct:label6'), value: ['نوافذ', 'خشب'] },
+  { label: t('addProduct:label7'), value: ['أبواب حديدية كبيرة', 'حديدية'] },
+  { label: t('addProduct:label8'), value: ["مستلزمات المطبخ", 'خشب'] },
+        ]}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        placeholder={selectedLabel || t('addProduct:SelectCategory')}
+        dropDownContainerStyle={{
+          backgroundColor: "rgba(232, 245, 233, 0.9)",
+          borderRadius: 10,
+          maxHeight: 318.5, 
+        }}
+        
+        
+        onSelectItem={(item) => {
+          handleSelect(item.value, item)
+        }}
+        style={{borderRadius:55,backgroundColor:"rgba(232, 245, 233, 0.9)"}}
+        textStyle={{ color: 'black' }}
+      />
         </View>
        
-        <Text style={styles.label}>{t('addProduct:image')} (4)</Text>
-        <Text style={{color:"#2E7D32",right:134,backgroundColor:"rgba(232, 245, 233, 0.9)",marginHorizontal:129,borderRadius:5}}>{t('addProduct:MainImage')}</Text>
+        <Text style={styles.label}>{t('addProduct:image')}(4)</Text>
+        <Text style={{color:"#2E7D32",right:135,backgroundColor:"rgba(232, 245, 233, 0.9)",marginHorizontal:128,borderRadius:5,fontSize:11,}}>{t('addProduct:MainImage')}</Text>
         <View style={styles.imageContainer}>
             <TouchableOpacity  style={styles.imageBox} onPress={()=>pickImage(1)}>
               {img1 ? (
@@ -320,14 +365,14 @@ setrefreshh(!refreshh)
         </View>
         
         <Animated.View style={{ transform: [{ scale: buttonScale }] }} >
-          <TouchableOpacity style={styles.button} onPress={()=>{addproduct()}}  >
+          <TouchableOpacity style={styles.button} onPress={()=>{addproduct(selectedCategoryName,selectedCategoryType)}}  >
             <Text style={styles.buttonText}>{t('addProduct:buttonAdd')}</Text>
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
     </LinearGradient>
-  );
-};
+  )
+}
 
 
-export default AddProduct;
+export default AddProduct

@@ -1,4 +1,4 @@
-import {View,Text} from "react-native"
+import {View,Text,Image} from "react-native"
 import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import {Home,Search,Profile,AddProduct, Cart, ProductDetails} from "../screens/index.js"
@@ -13,6 +13,7 @@ import SuccessPaymentStripe from "../components/Cart/successPaymentStripe.jsx"
 import OrderScreen from "../components/Order/orderScreen.jsx"
 import OrderDetails from "../components/Order/orderDetails.jsx"
 import OrderShipped from "../components/Order/OrderShipped.jsx"
+import ProductSeller from "../screens/ProductSeller.jsx"
 
 const Tab =createBottomTabNavigator()
 
@@ -148,13 +149,25 @@ const BottomTabNav=()=>{
                 }
             }} name="AddProduct" component={AddProduct}/>
            )}
+
+
             {infor.role==="buyer" &&(
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{
-                    return <Ionicons name={"heart-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
+                    return <Ionicons name={focused ? "heart" :"heart-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
                 }
             }} name="Whishlist" component={Whishlist}/>
            )}
+
+
+{infor.role==="seller" &&(
+            <Tab.Screen options={{
+                tabBarIcon:({focused})=>{
+                    return <Ionicons name={focused ? "layers" : "layers-outline"} size={24} color={focused ? COLORS.primary : COLORS.gray2}/>
+                }
+            }} name="ProductSeller" component={ProductSeller}/>
+           )}
+
             
             <Tab.Screen options={{
                 tabBarIcon:({focused})=>{

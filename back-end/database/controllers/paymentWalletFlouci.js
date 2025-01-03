@@ -48,10 +48,10 @@ savePayment : async (req,res) => {
       const order = await db.orders.create({
         totalAmount: totalAmount,
         userId: userId,
-        status: 'pending', // الافتراضي
+        status: 'pending', 
       });
   
-      // إضافة العناصر للطلب
+      
       for (const item of cartItems) {
         await db.orderitems.create({
           orderId: order.id,
@@ -61,7 +61,7 @@ savePayment : async (req,res) => {
         });
       }
   
-      // حفظ معلومات الدفع
+     
       await db.payment.create({
         totalAmount: totalAmount,
         username: username,

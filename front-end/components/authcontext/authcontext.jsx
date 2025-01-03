@@ -10,6 +10,7 @@ import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as Linking from 'expo-linking';
 import { useToast } from "../../toastProvider/toast";
+import { useTranslation } from "react-i18next";
 
 
 const AuthContext = createContext();
@@ -34,9 +35,16 @@ const [searchInput, setSearchInput] = useState("");
   const [pendingOrders, SetPendingOrders] = useState([]);
   const [shippedOrders, setshippedOrder] = useState([]);
   const [ItemsOrder,setItemsOrder]=useState(0)
+  const [ourProducts, setOurProduct] = useState([]);
   const { showToast } = useToast();
+   const { t} = useTranslation()
+  
    
+
+
+  
  useEffect(() => {
+ 
   if(infor.id){
     axios.get(`${AdresseIPPP_}/api/order/get/${infor.id}`)
     .then((result)=>{setOrders(result.data)
@@ -130,12 +138,25 @@ const [searchInput, setSearchInput] = useState("");
     }
   };
 
+  const fetchOurProduct = async (userId) => {
+    if (!userId) return
+    try {
+      const response = await axios.get(`${AdresseIPPP_}/api/product/ourProduct/${userId}`);
+      setOurProduct(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.log(error);
+      setOurProduct([]);
+    }
+  };
+
+
  
   
   useEffect(() => {
     if (infor.id) {
       fetchCartItems(infor.id);
       fetchWishlist(infor.id)
+      fetchOurProduct(infor.id)
     }
   }, [infor.id, refreshh]);
   
@@ -281,10 +302,12 @@ const [searchInput, setSearchInput] = useState("");
       role, setRole,
       searchInput, setSearchInput,
       ProductSearch,setProdSearch,
+      ourProducts,
       code,setCode,setcategory,
       orders,ItemsOrder, setOrders,
       shippedOrders, setshippedOrder,
       pendingOrders, SetPendingOrders,
+      
       fetchCartItems}}>
       {children}
     </AuthContext.Provider>

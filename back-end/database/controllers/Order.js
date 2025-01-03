@@ -5,15 +5,15 @@ module.exports={
 
     getOrdersBySeller: async (req, res) => {
         try {
-          // Récupérer toutes les commandes avec les détails des items et de l'utilisateur
+      
           const orders = await db.orders.findAll({
             include: [
               {
-                model: db.orderitems, // Inclure les items de la commande
+                model: db.orderitems, 
                 include: [
                   {
-                    model: db.products, // Inclure les informations sur les produits
-                    where: { userId: req.params.sellerId }, // Filtrer les produits par le vendeur
+                    model: db.products, 
+                    where: { userId: req.params.sellerId }, 
                   },
                 ],
               },

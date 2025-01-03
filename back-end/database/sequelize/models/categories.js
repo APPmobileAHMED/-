@@ -3,7 +3,7 @@
 module.exports = (sequelize, DataTypes) => {
     const Categories = sequelize.define("Categories", {
       name:{ 
-          type: DataTypes.ENUM('نوافذ','أبواب','لوازم المطبخ','أبواب حديدية كبيرة'),
+          type: DataTypes.ENUM('نوافذ','أبواب',"مستلزمات المطبخ",'أبواب حديدية كبيرة'),
           allowNull: false,
          },
 

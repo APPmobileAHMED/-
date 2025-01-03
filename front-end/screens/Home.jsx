@@ -21,7 +21,7 @@ const Home = () => {
     const [language, setLanguage] = useState("tunisia") 
     const [isDropdownVisible, setDropdownVisible] = useState(false)
     const { t, i18n } = useTranslation()
-
+   
     useEffect(() => {
        
         axios.get(`${AdresseIPPP_}/api/cart/cartitems/${infor.id}`)
@@ -41,6 +41,7 @@ const Home = () => {
         setLanguage(selectedLanguage)
         i18n.changeLanguage(selectedLanguage)
         setDropdownVisible(false) 
+        
     }
 
     return (
@@ -59,15 +60,15 @@ const Home = () => {
                     
                     {isDropdownVisible && (
                         <View style={styles.dropdown}>
-                            <TouchableOpacity onPress={() => toggleLanguage("tunisia")}>
+                            <TouchableOpacity onPress={() =>{ toggleLanguage("tunisia")  } }>
                                 <Text style={styles.dropdownItem}>Tunisia</Text>
                                 <Image source={require("../assets/images/tunisie.png")} style={{height:20,width:20,left:280,bottom:28,marginBottom:-20}}/>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => toggleLanguage("french")}>
+                            <TouchableOpacity onPress={() =>{ toggleLanguage("french")  }} >
                                 <Text style={styles.dropdownItem}>France</Text>
                                 <Image source={require("../assets/images/france.png")} style={{height:20,width:20,left:280,bottom:28,marginBottom:-20}}/>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => toggleLanguage("english")}>
+                            <TouchableOpacity onPress={() =>{ toggleLanguage("english")  }}>
                                 <Text style={styles.dropdownItem}>english</Text>
                                 <Image source={require("../assets/images/britsh.png")} style={{height:20,width:20,left:280,bottom:28,marginBottom:-20}}/>
                             </TouchableOpacity>
