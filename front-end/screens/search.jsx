@@ -76,10 +76,12 @@ const Item = ({item}) => {
     </TouchableOpacity>
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.name}</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <View style={{width:85,left:10}} >
         <Text style={styles.price}> {t('search:price')}:{item.price}</Text>
         <Text style={styles.length}> {t('search:length')}: {item.length}</Text>
         <Text style={styles.width}> {t('search:width')}: {item.width}</Text>
+        </View>
+        
       </View>
       {infor.role==="buyer"&&( <View>
         {isProductInWishlist(item.id) ? (

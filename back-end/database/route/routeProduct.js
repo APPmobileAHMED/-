@@ -1,9 +1,10 @@
 const router = require("express").Router();
-const {addProduct,getproductFindeStock,getoneproduct,removeProduct}=require("../controllers/Product.js")
+const {addProduct,getproductFindeStock,getoneproduct,removeProduct,getallProductByUser}=require("../controllers/Product.js")
 
 
 router.get("/finstock",getproductFindeStock)
 router.get("/:id",getoneproduct)
+router.get("/ourProduct/:idd",getallProductByUser)
 
 router.post("/add",addProduct)
 

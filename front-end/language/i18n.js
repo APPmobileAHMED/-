@@ -1,8 +1,8 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import french from "./french/fr.js"
-import tunisia from "./tunisie/tn.js"
-import english from "./anglais/en.js"
+import french from "./french/fr.json"
+import tunisia from "./tunisie/tn.json"
+import english from "./anglais/en.json"
 const resources = {
   english,
   french,

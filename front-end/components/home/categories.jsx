@@ -35,7 +35,7 @@ const Categories = () => {
             <Text style={styles.categoryName}> {t('categories:IronDoors')}</Text>
           </TouchableOpacity>
         
-          <TouchableOpacity  style={styles.categoryCard} onPress={()=>navigation.navigate('ProductWithCategorie',{name:"لوازم المطبخ"})}>
+          <TouchableOpacity  style={styles.categoryCard} onPress={()=>navigation.navigate('ProductWithCategorie',{name:"مستلزمات المطبخ"})}>
             <View style={styles.iconWrapper}>
             <Image source={{uri:"https://cdn-icons-png.flaticon.com/128/2851/2851991.png"}} style={styles.image}/>
             </View>

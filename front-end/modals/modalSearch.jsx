@@ -5,37 +5,31 @@ import { COLORS, SIZES } from "../constants";
 import { useAuth } from '../components/authcontext/authcontext';
 import axios from 'axios';
 import {AdresseIPPP_} from '@env'
+
 import { useTranslation } from 'react-i18next';
+
 const ModalSearch = ({ setModalVisible, modalVisible }) => {
+  const { t} = useTranslation()
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [selectedCategoryName, setSelectedCategoryName] = useState(null);
   const {category,ProductSearch,setProdSearch,setSearchInput} = useAuth()
-  const [categoryName, setCategoryName] = useState([]);
+  const [categoryName, setCategoryName] = useState([
+    { label: t('categoryNames:door'), value: "أبواب" },
+    { label: t('categoryNames:Windows'), value: "نوافذ" },
+    { label: t('categoryNames:IronDoors'), value: "أبواب حديدية كبيرة" },
+    { label: t('categoryNames:KitchenSupplies'), value: "مستلزمات المطبخ"},
+  ]);
   const [typeOpen, setTypeOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
-  const [typeItems, setTypeItems] = useState([]);
+  const [typeItems, setTypeItems] = useState([
+    { label:t('categoryNames:alum'), value: "ألمنيوم" },
+    { label: t('categoryNames:wood'), value: "خشب" },
+    { label: t('categoryNames:iron'), value: "حديد" },
+  ]);
   const [width, setWidth] = useState('');
   const [length, setLength] = useState('');
-  const { t} = useTranslation()
-  useEffect(() => {
-    if (category && Array.isArray(category)) {
-      const nameCategory = Array.from(
-        new Set(category.map((item) => item.name))
-      ).map((name) => ({
-        label: name,
-        value: name,
-      }));
-      const TypeCategory = Array.from(
-        new Set(category.map((item) => item.specifiqueType))
-      ).map((specifiqueType) => ({
-        label: specifiqueType,
-        value: specifiqueType,
-      }));
-      setCategoryName(nameCategory);
-      setTypeItems(TypeCategory)
-    }
-  }, [category]);
-
+ 
+  
 
 const search=()=>{
   if(selectedCategoryName && selectedType && width && length){
@@ -114,13 +108,18 @@ const search=()=>{
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>{t('modalSearch:title')}</Text>
 
-          {/* Dropdown for Category */}
+          
           <Text style={styles.modalLabel}>{t('modalSearch:inputCatgories')}:</Text>
           <View style={{ zIndex: categoryOpen ? 1000 : 1 }}>
             <DropDownPicker
               open={categoryOpen}
               value={selectedCategoryName}
-              items={categoryName}
+              items={[
+                { label: t('categoryNames:door'), value: "أبواب" },
+                { label: t('categoryNames:Windows'), value: "نوافذ" },
+                { label: t('categoryNames:IronDoors'), value: "أبواب حديدية كبيرة" },
+                { label: t('categoryNames:KitchenSupplies'), value: "مستلزمات المطبخ"},
+              ]}
               setOpen={setCategoryOpen}
               setValue={setSelectedCategoryName}
               setItems={setCategoryName}
@@ -136,7 +135,11 @@ const search=()=>{
             <DropDownPicker
               open={typeOpen}
               value={selectedType}
-              items={typeItems}
+              items={[
+                { label:t('categoryNames:alum'), value: "ألمنيوم" },
+                { label: t('categoryNames:wood'), value: "خشب" },
+                { label: t('categoryNames:iron'), value: "حديد" },
+              ]}
               setOpen={setTypeOpen}
               setValue={setSelectedType}
               setItems={setTypeItems}

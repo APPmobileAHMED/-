@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     content: {
       flex: 1,
       padding: 10,
-      marginTop: 25,
+      marginTop: 23,
       
     },
     title: {
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     inputContainer: {
       fontFamily:"bold",
       marginBottom: 10,
+      zIndex:999999,
   
     borderRadius:12
     },
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     },
     loadingText: {
       color: '#FFF',
-      fontSize: 18,
+      fontSize: 15,
       textAlign: 'center',
       marginBottom: 10,
     },
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: 20,
+      marginBottom: -15,
     },
     halfInputContainer: {
       width: '48%',
@@ -131,11 +132,11 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       marginVertical: 10,
-      
-       left:30,
+      width:280,
+       left:35,
     },
     checkbox: {
-    right:10
+    right:25
     },
     checkboxLabel: {
       fontSize: 20,
@@ -143,7 +144,8 @@ const styles = StyleSheet.create({
     },
     checkboxText: {
       color: '#E8F5E9',
-      fontSize: 14,
+      fontSize: 12,
+      right:22
     },
   });
   

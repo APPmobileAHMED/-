@@ -103,7 +103,7 @@ useEffect(()=>{
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: 'Images',
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [5, 5],
         quality: 1,
       })
 
@@ -131,9 +131,9 @@ useEffect(()=>{
         type: "image/jpeg",
         name: file.split("/").pop() ,
       })
-      formData.append("upload_preset", "ecommer-ce")
+      formData.append("upload_preset", "ecommerce")
     
-      axios.post("https://api.cloudinary.com/v1_1/dcwa4oceq/image/upload", formData, {
+      axios.post("https://api.cloudinary.com/v1_1/dcyeimdps/image/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
