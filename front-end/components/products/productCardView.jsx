@@ -41,7 +41,7 @@ const{infor,refreshh,cartProducts, isProductInCart,setrefreshh}=useAuth()
 
   return (
     <ScrollView>
-      <TouchableOpacity key={product.id} onPress={() => navigation.navigate("ProductDetails", { productId: product.id, sellerId: product.userId })}>
+      <TouchableOpacity key={product.id} onPress={() => navigation.navigate("ProductDetails", { productId: product.id, sellerId: product.userId,price:product.price })}>
         <View style={styles.container}>
           <View style={styles.imageContainer}>
             <Image

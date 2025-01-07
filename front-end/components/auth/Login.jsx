@@ -3,19 +3,30 @@ import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet,KeyboardAvo
 import { COLORS } from '../../constants'; 
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from '../authcontext/authcontext';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons,Fontisto } from '@expo/vector-icons';
 import styles from "../auth/styleAuth/styleLogin"
 import { useTranslation } from 'react-i18next';
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
-  const {login,token,handleGoogleSignIn,role, setRole}=useAuth()
+  const {login,token,handleGoogleSignIn,role, setRole,language, setLanguage}=useAuth()
   const navigation=useNavigation()
-const { t} = useTranslation()
+   const [isDropdownVisible, setDropdownVisible] = useState(false)
+const { t,i18n} = useTranslation()
+
+
   const handleNext = () => {
         handleGoogleSignIn() 
-      };
+      }
+
+
+      const toggleLanguage = (selectedLanguage) => {
+        setLanguage(selectedLanguage)
+        i18n.changeLanguage(selectedLanguage)
+        setDropdownVisible(false) 
+        
+    }
 
   return (
 
@@ -27,9 +38,31 @@ const { t} = useTranslation()
 
     <View style={styles.container}>
      
-      <TouchableOpacity style={styles.backButton} onPress={()=>navigation.goBack()}>
+      <TouchableOpacity style={styles.backButton} onPress={()=>navigation.navigate("Start1")}>
         <Ionicons name="arrow-back" size={33} color="#000" />
       </TouchableOpacity>
+
+
+      <TouchableOpacity style={{bottom:107,left:280}} onPress={() => setDropdownVisible(!isDropdownVisible)}>
+                    <Fontisto name="world" size={24} color={"#24AD50"}  />
+                    </TouchableOpacity>
+
+      {isDropdownVisible && (
+                        <View style={styles.dropdown}>
+                            <TouchableOpacity onPress={() =>{ toggleLanguage("tunisia")  } }>
+                                <Text style={styles.dropdownItem}>Tunisia</Text>
+                                <Image source={require("../../assets/images/tunisie.png")} style={{height:20,width:20,left:110,bottom:30,marginBottom:-20}}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() =>{ toggleLanguage("french")  }} >
+                                <Text style={styles.dropdownItem}>France</Text>
+                                <Image source={require("../../assets/images/france.png")} style={{height:20,width:20,left:110,bottom:28,marginBottom:-20}}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() =>{ toggleLanguage("english")  }}>
+                                <Text style={styles.dropdownItem}>english</Text>
+                                <Image source={require("../../assets/images/britsh.png")} style={{height:20,width:20,left:110,bottom:28,marginBottom:-20}}/>
+                            </TouchableOpacity>
+                        </View>
+                    )}
 
       <View style={styles.divider} />
       

@@ -13,7 +13,7 @@ passport.use(
     {
       clientID: "615409385557-6mjbejkgvmf965pvbcoipbnc3ng8ghpo.apps.googleusercontent.com",
       clientSecret: "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",
-      callbackURL: "https://59d4-2c0f-4280-3000-5b55-dcd0-fe70-7ab4-6621.ngrok-free.app/auth/google/callback",
+      callbackURL: "https://e519-160-159-221-92.ngrok-free.app/auth/google/callback",
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
@@ -21,11 +21,11 @@ passport.use(
         const state = JSON.parse(req.query.state || '{}');
         const role = state.role || "buyer"; 
 
-        // تحقق إذا المستخدم موجود بالبريد الإلكتروني
+       
         let user = await db.users.findOne({ where: { email: profile.emails[0].value } });
 
         if (!user) {
-          // إذا مش موجود، أضف المستخدم الجديد
+         
           const hashedPassword = await bcrypt.hash("123456", 10); 
           user = await db.users.create({
             firstname: profile.name.givenName,
@@ -38,7 +38,7 @@ passport.use(
           });
         }
 
-        // إنشاء JSON Web Token
+       
         const token = jwt.sign(
           { id: user.id, email: user.email, role: user.role },
           process.env.SECRET
@@ -53,7 +53,7 @@ passport.use(
   )
 );
 
-// تخزين واسترجاع المستخدم في الجلسة
+
 passport.serializeUser((user, done) => {
   console.log("Serializing userrrrrrrrrrr:", user.user.id);
   done(null, user.user.id);

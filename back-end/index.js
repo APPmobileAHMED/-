@@ -40,7 +40,7 @@ app.get('/api/redirect', (req, res) => {
   }
 
 
-  res.redirect(`exp://192.168.100.4:8081?payment_id=${paymentId}&target=${target}`);
+  res.redirect(`exp://192.168.196.160:8081?payment_id=${paymentId}&target=${target}`);
 });
 
 

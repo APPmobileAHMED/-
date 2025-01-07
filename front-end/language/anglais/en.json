@@ -20,6 +20,7 @@
     "wishlist": {
       "title": "favoris",
       "toastDeleteWishlist": "❌ removed From Your Wishlist",
+      "toastDeletProd": "❌ removed From your list",
       "toastAdedWishlist": "✅ Added To Wish list With Success",
       "price": "price",
       "length": "length",
@@ -49,7 +50,7 @@
       "inputCurrentPassword": "Current Password",
       "inputNewPassword": "New Password",
       "buttonEdit": "Edit Profile",
-      "savelocation": "save Location"
+      "savelocation": "save"
     },
     "produitDetails": {
       "toastAdedWishlist": "✅ Added To Wish list With Success",
@@ -137,12 +138,15 @@
     "OrderShipped": {
       "titelCard": "Order Number",
       "title": "Orders",
+      "title2": "Oreders shipped",
       "Date": "Date",
       "Price": "Price",
       "Location": "Location",
       "PhoneNumber": "Phone Number",
       "buyer": "buyer",
-      "buttonView": "View Details"
+      "buttonView": "View Details",
+      "notfound": "Oreder list is empty",
+      "notfoundd": "Oreders shipped list is empty"
     },
     "OrderDetails": {
       "title": "OrderItems",
@@ -184,7 +188,8 @@
       "role": "Select Role",
       "placeholderRole": "Choose a Role...",
       "buttonSignup": "sign Up",
-      "if": "Sign In if you have account"
+      "if": "Sign In if you have account",
+      "errorPassword":"❌ Password is required"
     },
     "Login": {
       "title": "Login to Aammer Darek",
@@ -195,7 +200,8 @@
       "buttonLogin": "Login",
       "if": "Create New account",
       "ForgetPass": "Forgot your password?",
-      "or": "Or"
+      "or": "Or",
+      "error":"something is wrong with the password or email ❌"
     },
     "verifyCode": {
       "toastMailSuccess": "✅ Resend email with success",
@@ -248,7 +254,13 @@
 },
 "productSeller":{
 "title":"Our product range",
-"notfound":"You do not have any product"
+"notfound":"You do not have any product",
+"stock":"stock"
+}
+,
+"role":{
+  "buyer":"buyer",
+  "seller":"seller"
 }
   }
 

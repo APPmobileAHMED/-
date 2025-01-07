@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
        borderRadius: 10,
        alignItems: 'center',
        justifyContent: 'center',
+       height:777
      },
      icon: {
        marginBottom: 10,

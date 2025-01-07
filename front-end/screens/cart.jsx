@@ -63,7 +63,7 @@ const navigation=useNavigation()
   };
 
   const toggleModal = () => {
-    setIsModalVisible(!isModalVisible); 
+    setIsModalVisible(!isModalVisible) 
   };
 
 const nextPage=( selected )=>{
@@ -196,7 +196,10 @@ const updateQuantity=(product,quantity)=>{
         </TouchableOpacity>
 
         <View style={styles.itemDetails}>
+          <View style={{width:100,left:110}}>
           <Text style={styles.itemName}>{item.product.name}</Text>
+          </View>
+          
           <View style={{width:100,marginBottom:12,marginTop:-25}}>
           <Text style={styles.itemPrice}>{t('cart:price')}: <Text style={{color:COLORS.primary}}>{item.product.price} dinars</Text> </Text>
           <Text style={styles.itemPrice}>{t('cart:length')}: <Text style={{color:COLORS.primary}}>{item.product.width}</Text></Text>
@@ -222,9 +225,13 @@ const updateQuantity=(product,quantity)=>{
     contentContainerStyle={{ paddingBottom: 178 }} 
   />
 ) : (
-  <Text style={{ fontFamily: 'bold', fontSize: 40, top: 250, left: -65 }}>
+<View>
+
+  <Text style={{ fontFamily: 'bold', fontSize: 35, top: 150, left: 5,zIndex:9999 }}>
    {t('cart:notfound')}
   </Text>
+  <Ionicons name="receipt" size={250} style={{top:150}} color={"#ccc"}/> 
+  </View>
 )}
 
 

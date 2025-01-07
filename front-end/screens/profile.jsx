@@ -226,7 +226,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={name}
               onChangeText={setName}
-              placeholder={`${infor.username}`||t('profile:inputName')}
+              placeholder={infor.username ? `${infor.username}`:t('profile:inputName')}
             />
           </TouchableOpacity>
           <View style={styles.underline} />
@@ -235,7 +235,7 @@ useEffect(()=>{
             <FontAwesome name="map-marker" size={24} color="green" />
             <TextInput
               style={styles.detailTextInput}
-              placeholder={`${infor.location}`||t('profile:inputLocation')}
+              placeholder={ infor.location ? `${infor.location}`: t('profile:inputLocation')}
               value={placeName ? placeName : selectedLocation ? `Lat: ${selectedLocation.latitude}, Lon: ${selectedLocation.longitude}` : ''}
             />
             <TouchableOpacity onPress={() => setMapVisible(true)}>
@@ -251,7 +251,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
               value={phone}
               onChangeText={setPhone}
-              placeholder={`${infor.phoneNumber}`||t('profile:inputPhone')}
+              placeholder={infor.phoneNumber ? `${infor.phoneNumber}`: t('profile:inputPhone')}
               keyboardType="phone-pad"
 
             />
@@ -264,7 +264,7 @@ useEffect(()=>{
               style={styles.detailTextInput}
                value={instagram}
               onChangeText={setInstagram}
-              placeholder={`${infor.instagram}`||t('profile:inputInsta')}
+              placeholder={infor.instagram? `${infor.instagram}`: t('profile:inputInsta')}
             />
           </TouchableOpacity>
           <View style={styles.underline} />

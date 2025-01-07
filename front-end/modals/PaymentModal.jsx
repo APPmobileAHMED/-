@@ -57,7 +57,7 @@ const PaymentModal = ({
             onPress={() => { handlePaymentOptionSelect("Flouci") }}
             style={[styles.paymentOption, selectedPayment === 'Flouci' && styles.selectedPaymentOption]}
           >
-            <Image source={require('../assets/images/flouci_logo_new.webp')} style={{ width: 110, height: 22, right: 5 }} />
+            <Image source={require('../assets/images/flouci_logo_new.webp')} style={{ width: 80, height: 22, right: 5 }} />
             <Text style={[styles.paymentTextt, selectedPayment === 'Flouci' && styles.selectedPaymentTextt]}>
             {t('PaymentModalByOneProduct:PaymentTunisie')}
             </Text>

@@ -85,7 +85,7 @@ const verify=()=>{
 
       <Text style={styles.timerText}>
         {timer > 0
-          ? `t('verifyCode:time'): ${timer}s`
+          ? `${t('verifyCode:time')}: ${timer}s`
           : t('verifyCode:TimeOver')}
       </Text>
 

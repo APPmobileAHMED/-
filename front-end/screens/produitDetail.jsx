@@ -29,11 +29,44 @@ const ProductDetails = () => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [refresh, setrefresh] = useState(false)
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const {infor,isProductInWishlist,setrefreshh,refreshh}=useAuth()
+    const {infor,isProductInWishlist,setrefreshh,refreshh,setTotalPriceTunisie,setCartProducts}=useAuth()
      const [selectedPayment, setSelectedPayment] = useState(null);
      const { showToast } = useToast();
      const { t} = useTranslation()
 
+    
+      useEffect(() => {
+           const handleOpenURL = ({ url }) => {
+             const urlParams = new URL(url);
+            
+             const paymentId = urlParams.searchParams.get('payment_id');
+             const target = urlParams.searchParams.get('target') || 'home';
+          
+            
+             console.log('Payment ID:', paymentId);
+             console.log('Target Page:', target);
+        
+            
+             if (target === 'PaymentScreenTunisie') {
+               navigation.navigate('Main', {
+                 screen: 'PaymentScreenTunisie',
+                 params: { paymentId: paymentId },
+               });
+             } else {
+               navigation.navigate('Main', {
+                 screen: 'PaymentScreenTunisie',
+                 params: { paymentId: paymentId },
+               });
+             }
+           };
+       
+           const subscription = Linking.addEventListener('url', handleOpenURL);
+       
+           return () => {
+             subscription.remove();
+           };
+         }, []);
+     
 
     const calculTotal=(price,quantity)=>{
       return price*quantity
@@ -47,19 +80,21 @@ const ProductDetails = () => {
         setSelectedPayment(option);
       }
 
-      const nextPage=( selected,totalPrice )=>{
+      const nextPage=( selected )=>{
+        setCartProducts([{product:{price:oneproduct.price*count},productId:oneproduct.id,quantity:count}])
+        setTotalPriceTunisie(oneproduct.price*count)
         if(selected==="Visa"){
-          navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:totalPrice})
+          navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:oneproduct.price*count})
           setIsModalVisible(false)
         }else if(selected==="MasterCard"){
         
-          navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:totalPrice})
+          navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:oneproduct.price*count})
           setIsModalVisible(false)
         
         }
         else if(selected==="Flouci"){
           axios.post(`${AdresseIPPP_}/api/flouci/buy`,{
-            amount:totalPrice
+            amount:oneproduct.price*count
           })
           .then((res)=>{
             const {result}=res.data
@@ -109,6 +144,8 @@ const ProductDetails = () => {
 
         axios.get(`${AdresseIPPP_}/api/product/${productId}`).then((res) => {
             setOneproduct(res.data);
+            
+            
         })
         .catch((err) => {
             console.log(err);

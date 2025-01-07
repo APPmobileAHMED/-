@@ -107,7 +107,7 @@ const Whishlist = () => {
         
         {images.map((img, index) => (
          
-          <TouchableOpacity onPress={()=>navigation.navigate("ProductDetails", { productId: item.productId, sellerId: item.product.userId })}>
+          <TouchableOpacity onPress={()=>navigation.navigate("ProductDetails", { productId: item.productId, sellerId: item.product.userId,price:item.product.price })}>
 <Image key={index} source={{ uri: img }} style={styles.carouselImage} />
           </TouchableOpacity>
           
@@ -116,7 +116,9 @@ const Whishlist = () => {
     </TouchableOpacity>
        
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{item.product.name}</Text>
+      <View style={{width:50,left:140}}>
+        <Text style={styles.title}>{item.name}</Text>
+        </View>
         <Text style={styles.description}>{item.product.description}</Text>
         <View style={{width:80,left:85,bottom:10}}>
         <Text style={styles.price}>{t('wishlist:price')} :{item.product.price}</Text>

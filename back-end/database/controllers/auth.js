@@ -11,7 +11,7 @@ module.exports={
 register: function(req,res){
   db.users.count({where:{email:req.body.email}}).then((response)=>{
     if(response!==0){
-        res.status(400).send("email deja exist")
+        res.status(400).send("email deja exist") 
     }else{
     bcrypt.hash(req.body.password,10).then((hashpass)=>{
         db.users.create({

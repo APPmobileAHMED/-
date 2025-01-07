@@ -9,10 +9,72 @@ const styles = StyleSheet.create({
       
       height:770
     },
+    modalOverlay: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+      width: '80%',
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 20,
+      alignItems: 'center',
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontFamily: 'bold',
+      marginBottom: 20,
+    },
+    roleOptions: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      width: '100%',
+      marginBottom: 20,
+    },
+    roleOption: {
+      fontSize: 16,
+      padding: 10,
+      borderWidth: 1,
+      borderColor: '#ccc',
+      fontFamily: 'bold',
+      borderRadius: 5,
+      textAlign: 'center',
+    },
+    selectedRole: {
+      borderColor: '#24AD50',
+      backgroundColor: '#e6ffe6',
+    },
+    modalActions: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    
+      width: '100%',
+     
+    },
     backButton: {
       marginBottom: 100,
-      top: 20
+      top: 20,
+      width:55
     },
+    dropdownn: {
+      position: "absolute",
+      top: 75,
+      left: 180,
+      width:140,
+      right: 0,
+      backgroundColor: "#fff",
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: "#ddd",
+      zIndex: 9999
+  },
+  dropdownItem: {
+    padding: 10,
+    fontSize: 16,
+    color: COLORS.gray,
+},
     divider: {
       width: '150%',
       borderBottomWidth: 1,
@@ -22,7 +84,7 @@ const styles = StyleSheet.create({
       marginVertical: 10, 
     },
     title: {
-      fontSize: 35,
+      fontSize: 28,
       fontFamily: "bold",
       color: COLORS.primary,
       bottom:80,
@@ -35,12 +97,13 @@ const styles = StyleSheet.create({
       borderColor: '#ccc',
       padding: 15,
       borderRadius: 8,
+      alignItems:"center",
       marginBottom: 15,
     },
     icon: {
       width: 24,
       height: 24,
-      marginLeft: "20%",
+      marginLeft: "10%",
       right: 10,
       bottom: 1
     },

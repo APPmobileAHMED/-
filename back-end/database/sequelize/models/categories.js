@@ -1,6 +1,6 @@
 
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => { 
     const Categories = sequelize.define("Categories", {
       name:{ 
           type: DataTypes.ENUM('نوافذ','أبواب',"مستلزمات المطبخ",'أبواب حديدية كبيرة'),

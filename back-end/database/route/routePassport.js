@@ -17,7 +17,7 @@ router.get('/auth/google/callback',
     const token = req.user.token; 
 
     
-    res.redirect(`exp://192.168.32.160:8081?role=${role}&token=${token}`); 
+    res.redirect(`exp://192.168.196.160:8081?role=${role}&token=${token}`); 
   }
 );
 

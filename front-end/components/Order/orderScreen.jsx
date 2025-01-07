@@ -6,18 +6,18 @@ import { useNavigation } from "@react-navigation/native";
 import { Fontisto, Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import { AdresseIPPP_ } from '@env';
-
+import { useTranslation } from 'react-i18next';
 const OrderScreen = () => {
   const { pendingOrders, orders, setrefreshh, refreshh } = useAuth();
   const navigation = useNavigation();
   
-  
+  const { t} = useTranslation()
   const [animationStates, setAnimationStates] = useState({});
   const [shipped, setShipped] = useState(true);
 
 
   useEffect(() => {
-    console.log(pendingOrders,"hahhahahhaahha")
+ 
     const initialStates = {};
     pendingOrders.forEach(order => {
       initialStates[order.id] = {
@@ -91,18 +91,21 @@ const OrderScreen = () => {
         />
       }
       <View style={styles.orderCard}>
-        <Text style={styles.orderTitle}>Order Number: {item.id}</Text>
+        <Text style={styles.orderTitle}>{t('OrderShipped:titelCard')}: {item.id}</Text>
         {item.User.photoDeprofile && (
           <Image source={{ uri: item.User.photoDeprofile }} style={styles.userImage} />
         )}
-        <Text style={styles.orderDetail}>Phone Number: {item.User.phoneNumber}</Text>
-        <Text style={styles.orderDetail}>buyer: {item.User.firstname}</Text>
-        <Text style={styles.orderDetail}>Location: {item.User.location}</Text>
-        <Text style={styles.orderDetail}>Price: ${item.totalAmount}</Text>
-        <Text style={styles.orderDetail}>Date: {new Date(item.createdAt).toLocaleDateString()}</Text>
+        <View style={{width:200}}>
+        <Text style={styles.orderDetail}>{t('OrderShipped:PhoneNumber')}: {item.User.phoneNumber}</Text>
+        <Text style={styles.orderDetail}>{t('OrderShipped:buyer')}: {item.User.firstname}</Text>
+        <Text style={styles.orderDetail}>{t('OrderShipped:Location')}: {item.User.location}</Text>
+        <Text style={styles.orderDetail}>{t('OrderShipped:Price')}: ${item.totalAmount}</Text>
+        <Text style={styles.orderDetail}>{t('OrderShipped:Date')}: {new Date(item.createdAt).toLocaleDateString()}</Text>
+        </View>
+       
         
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("OrderDetails", {OrderId: item.id})}>
-          <Text style={styles.buttonText}>View Details</Text>
+          <Text style={styles.buttonText}>{t('OrderShipped:buttonView')}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => shippedOrder(item.id)}>
           <Image
@@ -129,7 +132,7 @@ const OrderScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Orders</Text>
+      <Text style={styles.header}>{t('OrderShipped:title')}</Text>
       <View>
       <TouchableOpacity style={{ left: 10, marginTop: 0, marginBottom: 15 }}>
         <Ionicons name="arrow-back-outline" size={35} color={COLORS.black} onPress={() => { navigation.goBack() }} />
@@ -138,12 +141,19 @@ const OrderScreen = () => {
         <Image source={require("../../assets/images/orderSuccess.png")} style={{height:50,width:50,left:"85%", marginTop: -60}}/>
       </TouchableOpacity>
       </View>
+      {pendingOrders.length> 0 ?(
       <FlatList
         data={pendingOrders}
         keyExtractor={(item, index) => item.id ? item.id.toString() : `${index}`}
         renderItem={renderOrder}
         contentContainerStyle={styles.list}
-      />
+      />):(
+        <View>
+                <Text style={{ fontFamily: 'bold', fontSize: 35, top: 50, left: -3, zIndex:99999}}> {t('OrderShipped:notfound')}</Text>
+                <Ionicons name="receipt" size={350} style={{top:20}} color={"#ccc"}/>    
+              </View>
+      
+      )}
     </View>
   );
 };
@@ -184,13 +194,14 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   orderTitle: {
-    fontSize: 25,
+    fontSize: 20,
     fontFamily: 'bold',
     color: '#333',
     marginBottom: -50,
+    width:150
   },
   orderDetail: {
-    fontSize: 19,
+    fontSize: 16,
     color: '#555',
     fontFamily: "bold",
     marginBottom: 3,
@@ -199,7 +210,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: COLORS.primary,
     padding: 10,
-    width: 100,
+    width: 150,
     borderRadius: 5,
     alignItems: 'center',
   },

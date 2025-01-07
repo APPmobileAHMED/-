@@ -62,5 +62,22 @@ module.exports={
           });
         }
       },
+      
+ 
+deletePayment:(req,res)=>{
+      
+    db.payment.destroy({where:{id:req.params.id}})
+    .then((response)=>res.sendStatus(201))
+   .catch((err)=>{res.json(err)})
+
+  }
+  ,
+  deleteOrderItmes:(req,res)=>{
+      
+    db.orderitems.destroy({where:{id:req.params.id}})
+    .then((response)=>res.sendStatus(201))
+   .catch((err)=>{res.json(err)})
+
+  }
     
 }

@@ -44,7 +44,7 @@ const SuccessPaymentStripe = () => {
     <View >
 
    
-    <Modal isVisible={isModalVisible} animationIn="zoomIn" animationOut="zoomOut">
+    {/* <Modal isVisible={isModalVisible} animationIn="zoomIn" animationOut="zoomOut"> */}
     <View style={styles.modalContent}>
       {/* Success Icon */}
       {status==="SUCCESS" &&(<Ionicons name="checkmark-circle" size={80} color="#4CAF50" style={styles.icon} />) ||
@@ -53,7 +53,7 @@ const SuccessPaymentStripe = () => {
       
 
       {/* Success Message */}
-      <Text style={styles.title}>{t('successPayment:title')}</Text>
+      <Text style={styles.title}>{t('successPayment:title')} STRIPE</Text>
       <Text style={styles.subtitle}>{t('successPayment:subtitle')}</Text>
   
       {/* User Info */}
@@ -72,7 +72,7 @@ const SuccessPaymentStripe = () => {
         <Text style={styles.buttonText}>{t('successPayment:close')}</Text>
       </TouchableOpacity>
     </View>
-  </Modal>
+  {/* </Modal> */}
   </View>
   );
 };

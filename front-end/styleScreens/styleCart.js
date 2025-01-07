@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     },
     itemName: {
       fontWeight:"bold",
-      fontSize: 18,
+      fontSize: 15,
      left:20
       
     },
@@ -153,8 +153,7 @@ const styles = StyleSheet.create({
     },
     paymentTextt: {
       flex: 1,
-      right:10,
-      fontSize: 16,
+      fontSize: 14,
       color: '#000',
     },
     paymentText: {

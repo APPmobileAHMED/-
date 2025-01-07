@@ -107,7 +107,7 @@ const deleteItem=(product)=>{
     return (
       
       <View style={styles.item}>
-        <TouchableOpacity onPress={() => navigation.navigate("ProductDetails", { productId: item.id, sellerId: item.userId })}>
+        <TouchableOpacity onPress={() => navigation.navigate("ProductDetails", { productId: item.id, sellerId: item.userId,price:item.price })}>
       <Image source={{ uri: item.img1 }} style={styles.image} />
       </TouchableOpacity>
       <View style={styles.textContainer}>
@@ -119,13 +119,16 @@ const deleteItem=(product)=>{
         </View>
        
       </View>
-      
+      {infor.role==="buyer"&&(
+      <View  style={{right:5}}>
+
+    
       {isProductInWishlist(item.id) ? (
         <TouchableOpacity style={styles.heartIcon} onPress={() => deleteFavoriteItem(item.id)}>
           <Ionicons 
                         name="heart-dislike" 
                         size={25}
-                        style={{top:1}}
+                        style={{top:20,right:25}}
                         color={"#f95151"} 
                     />
         </TouchableOpacity>
@@ -134,7 +137,7 @@ const deleteItem=(product)=>{
           <Ionicons 
                         name="heart-circle" 
                         size={33}
-                        style={{top:1}}
+                        style={{top:20,right:25}}
                         color={"black"} 
                     />
         </TouchableOpacity>
@@ -142,16 +145,20 @@ const deleteItem=(product)=>{
 
       {isProductInCart(item.id) ? (
         <TouchableOpacity style={styles.cartticon} onPress={() => deleteItem(item.id)}>
-          <Fontisto name="shopping-basket-remove" size={25} />
+          <Fontisto name="shopping-basket-remove" size={25} style={{bottom:15,left:10}}/>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity  style={styles.cartticon} onPress={() => addtocart(item.id)}>
-          <Fontisto name="shopping-basket-add" size={25}  />
+          <Fontisto name="shopping-basket-add" size={25} style={{bottom:15,left:10}}  />
         </TouchableOpacity>
       )}
-      
+
+</View>
+      )}
+        
     </View>
     );
+
   };
 
 

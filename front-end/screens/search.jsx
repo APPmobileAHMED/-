@@ -21,6 +21,7 @@ const Search = () => {
  const { t} = useTranslation()
 
  const searchwithBar=(name)=>{
+  setSearchInput(name)
   axios.get(`${AdresseIPPP_}/api/search/BarSearch/${name}`)
   .then((response)=>{
     setProdSearch(response.data)
@@ -57,6 +58,7 @@ const Search = () => {
 useEffect(()=>{
     if(searchInput===""){
         setFilteredData([])
+        setProdSearch([])
     }else{ 
     axios.get(`${AdresseIPPP_}/api/search/BarSearch/${searchInput}`)
     .then((response)=>{
@@ -71,7 +73,7 @@ const Item = ({item}) => {
      
     <View style={styles.item}>
       
-    <TouchableOpacity onPress={()=>navigation.navigate("ProductDetails", { productId: item.id, sellerId: item.userId })}>
+    <TouchableOpacity onPress={()=>navigation.navigate("ProductDetails", { productId: item.id, sellerId: item.userId,price:item.price })}>
           <Image  source={{ uri: item.img1 }} style={styles.image} />
     </TouchableOpacity>
       <View style={styles.textContainer}>
@@ -147,14 +149,14 @@ const Item = ({item}) => {
       
     )}
     
-    {/* Dropdown مستقل */}
+    
     {filteredData.length > 0 && searchInput.length > 0 && (
       <View style={styles.dropdownContainer}>
         <View style={styles.dropdown}>
           {filteredData.map((item) => (
             <TouchableOpacity
               key={item.id}
-              onPress={() => searchwithBar(item.name)}
+              onPress={() => setSearchInput(item.name)}
               style={styles.dropdownItem}
             >
               <Text style={styles.dropdownText}>{item.name}</Text>
