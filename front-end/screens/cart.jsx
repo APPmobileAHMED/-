@@ -6,12 +6,14 @@ import {Ionicons,MaterialCommunityIcons } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from '../constants';
 import {AdresseIPPP_} from '@env'
+
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import styles from "../styleScreens/styleCart"
 import PaymentModal from '../modals/PaymentModal';
 import { useToast } from '../toastProvider/toast';
 import { useTranslation } from 'react-i18next';
+
 
 const Cart = () => {
 const { t} = useTranslation()
@@ -58,6 +60,7 @@ const navigation=useNavigation()
   
 
 
+
   const handlePaymentOptionSelect = (option) => {
     setSelectedPayment(option);
   };
@@ -74,6 +77,7 @@ if(selected==="Visa"){
 
   navigation.navigate('PaymentScreen',{methodpayment:selectedPayment,totalPrice:totalPrice})
   setIsModalVisible(false)
+
 
 }
 else if(selected==="Flouci"){
@@ -93,7 +97,9 @@ else if(selected==="Flouci"){
 
   })
   .catch((err)=>console.log(err))
+
 }
+
 }
    
   useEffect(() => {

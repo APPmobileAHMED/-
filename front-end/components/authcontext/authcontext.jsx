@@ -66,13 +66,15 @@ const [searchInput, setSearchInput] = useState("");
 
   const handleGoogleSignIn = async () => {
     try {
+
       const authUrl = `${AdresseIPPP_}/auth/google?redirect_uri=${encodeURIComponent("https://e519-160-159-221-92.ngrok-free.app/auth/google/callback")}&role=${role}`;
       const result = await WebBrowser.openAuthSessionAsync(authUrl, "exp://192.168.196.160:8081"); 
  
+
       if (result.type === 'success') {
         const params = Linking.parse(result.url);
         const { token } = params.queryParams;
-        
+
   
         if (token) {
           

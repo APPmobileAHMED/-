@@ -10,6 +10,7 @@ import styles from "../../components/Cart/StyleCart/StylePaymentTunisie";
 import { useTranslation } from 'react-i18next';
 
 const PaymentScreenTunisie = () => {
+
   const { infor, refreshh, setrefreshh, cartProducts, totalPriceTunisie, setTotalPriceTunisie, setCartProducts } = useAuth();
   const [isModalVisible, setModalVisible] = useState(false); // Set initial state to false to prevent showing before payment status is fetched
   const [infoPayment, setInfoPayment] = useState([]);
@@ -17,6 +18,7 @@ const PaymentScreenTunisie = () => {
   const { paymentId } = useRoute().params;
   const navigation = useNavigation();
   const { t } = useTranslation();
+
 
   const deleteAllItems = async () => {
     try {
@@ -67,6 +69,7 @@ const PaymentScreenTunisie = () => {
     }
   };
 
+
   const onClose = () => {
     setCartProducts([{}]);
     setTotalPriceTunisie(0);
@@ -75,6 +78,7 @@ const PaymentScreenTunisie = () => {
     navigation.navigate('Main', { screen: 'Home' });
     setModalVisible(false);
   };
+
 
   return (
     <View>
@@ -109,6 +113,7 @@ const PaymentScreenTunisie = () => {
         </View>
      
     </View>
+
   );
 };
 
