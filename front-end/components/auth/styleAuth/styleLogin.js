@@ -10,8 +10,25 @@ const styles = StyleSheet.create({
     },
     backButton: {
       marginBottom: 100,
-      top:20
+      top:20,width:55
     },
+    dropdown: {
+      position: "absolute",
+      top: 75,
+      left: 180,
+      width:140,
+      right: 0,
+      backgroundColor: "#fff",
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: "#ddd",
+      zIndex: 9999
+  },
+  dropdownItem: {
+    padding: 10,
+    fontSize: 16,
+    color: COLORS.gray,
+},
     divider: {
       width: '150%',
       borderBottomWidth: 1,
@@ -21,7 +38,7 @@ const styles = StyleSheet.create({
       marginVertical: 10, 
     },
     title: {
-      fontSize: 35,
+      fontSize: 28,
       fontFamily:"bold",
       color: COLORS.primary,
       marginBottom: 20,

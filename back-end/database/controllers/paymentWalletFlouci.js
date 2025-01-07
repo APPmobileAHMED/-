@@ -16,8 +16,8 @@ paymentWalletFlouci : async (req,res)=>{
     "amount":req.body.amount,
     "accept_card": "true",
     "session_timeout_secs": 1200,
-    "success_link":"http://192.168.100.4:8080/api/redirect", 
-    "fail_link":"http://192.168.100.4:8080/api/redirect",
+    "success_link":"http://192.168.196.160:8080/api/redirect", 
+    "fail_link":"http://192.168.196.160:8080/api/redirect",
     "developer_tracking_id": "e39466b5-c72e-4495-9bcf-e958a6baa68e"
     } 
     await axios.post(url, payload)

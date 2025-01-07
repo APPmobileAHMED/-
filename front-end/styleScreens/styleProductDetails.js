@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
       
       marginTop: 35,
       top: -55,
-      width:85,
+      width:95,
       left:50
     },
     

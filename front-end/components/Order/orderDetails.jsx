@@ -32,16 +32,19 @@ useEffect(()=>{
   const renderCard = ({ item }) => {
     const scaleValue = new Animated.Value(1);
     return (
-      <TouchableOpacity onPress={()=>navigation.navigate("ProductDetails",{productId:item.product.id,sellerId:item.product.userId})}> 
+      <TouchableOpacity onPress={()=>navigation.navigate("ProductDetails",{productId:item.product.id,sellerId:item.product.userId,price:item.product.price})}> 
         <View style={styles.item}>
       <Image source={{ uri: item.product.img1 }} style={styles.image} />
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.product.name}</Text>
-        <Text style={styles.description}>{item.product.description}</Text>
+      <View style={{width:110,bottom:-15}}>
         <Text style={styles.price}> {t('ProductCardView:price')} :{item.product.price}</Text>
         <Text style={styles.rating}>{t('ProductCardView:length')} : {item.product.length}</Text>
         <Text style={styles.sizes}>{t('ProductCardView:width')} : {item.product.width}</Text>
         <Text style={{fontSize: 16,fontFamily:"bold",color: 'green',}}> {t('OrderDetails:quantity')} : x{item.quantity}</Text>
+        </View>
+        
+       
       </View>    
     </View>
       </TouchableOpacity>
@@ -62,7 +65,8 @@ useEffect(()=>{
     <TouchableOpacity style={{ left: 20,marginTop:30,top:35,marginBottom:20 }}>
          <Ionicons name="arrow-back-outline" size={35} color={COLORS.black} onPress={() => { navigation.navigate("OrderScreen") }} />
        </TouchableOpacity>
-       <Text style={{fontFamily:"bold",fontSize:24,left:"35%",bottom:55}} >{t('OrderDetails:title')} {OrderId}</Text>
+       <Text style={{fontFamily:"bold",fontSize:24,left:"35%",}} ></Text>
+       <Text  style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center',bottom:70 }}>{t('OrderDetails:title')} {OrderId}</Text>
       
     <FlatList
          data={allProductOrder}
@@ -135,8 +139,8 @@ const styles = StyleSheet.create({
   fontSize: 16,
   fontFamily:"bold",
   marginVertical: 5,
-  top:40,
-  right:15
+  top:30,
+  width:55,left:120
   },
   description: {
   fontSize: 14,

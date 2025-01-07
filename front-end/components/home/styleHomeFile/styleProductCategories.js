@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   heartIcon: {
   alignSelf: 'center',
-  marginLeft: 10,
+  
   bottom:45,
   left:25
   },

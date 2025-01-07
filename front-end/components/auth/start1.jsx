@@ -19,7 +19,7 @@ const Start1 = () => {
     />
 
   
-    <Text style={styles.title}>Fumio</Text>
+    <Text style={styles.title}>Aamer Darek</Text>
     <Text style={styles.subtitle}>
     {t('start1:title')}
     </Text>

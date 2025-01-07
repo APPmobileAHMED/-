@@ -26,9 +26,6 @@ const PaymentScreen = () => {
   const [loading, setLoading] = useState(false);
  const { showToast } = useToast();
 
-  
-
-
 
 const handlePayment = async () => {
   console.log(cardDetails)

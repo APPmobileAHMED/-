@@ -136,9 +136,9 @@ const search=()=>{
               open={typeOpen}
               value={selectedType}
               items={[
-                { label:t('categoryNames:alum'), value: "ألمنيوم" },
+                { label:t('categoryNames:alum'), value: "ألومنيوم" },
                 { label: t('categoryNames:wood'), value: "خشب" },
-                { label: t('categoryNames:iron'), value: "حديد" },
+                { label: t('categoryNames:iron'), value: "حديدية" },
               ]}
               setOpen={setTypeOpen}
               setValue={setSelectedType}

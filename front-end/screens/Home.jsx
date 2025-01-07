@@ -16,9 +16,9 @@ import { AdresseIPPP_ } from '@env'
 import { useTranslation } from 'react-i18next'
 
 const Home = () => {
-    const { infor, refreshh, setrefreshh, setSearchInput,orders, ItemsOrder } = useAuth()
+    const { infor, refreshh, setrefreshh, setSearchInput,orders, ItemsOrder,language, setLanguage } = useAuth()
     const [cartItems, setCartItems] = useState([])
-    const [language, setLanguage] = useState("tunisia") 
+    
     const [isDropdownVisible, setDropdownVisible] = useState(false)
     const { t, i18n } = useTranslation()
    

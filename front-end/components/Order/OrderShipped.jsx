@@ -24,46 +24,50 @@ const OrderShipped = () => {
         />
       }
       <View style={styles.orderCard}>
-        <Text style={styles.orderTitle}>{t('ProductCardView:titelCard')}: {item.id}</Text>
+        <Text style={styles.orderTitle}>{t('OrderShipped:titelCard')}: {item.id}</Text>
         {item.User.photoDeprofile && (
           <Image source={{ uri: item.User.photoDeprofile }} style={styles.userImage} />
         )}
-        <Text style={styles.orderDetail}>{t('ProductCardView:PhoneNumber')}: {item.User.phoneNumber}</Text>
-        <Text style={styles.orderDetail}>{t('ProductCardView:buyer')}: {item.User.firstname}</Text>
-        <Text style={styles.orderDetail}>{t('ProductCardView:Location')}: {item.User.location}</Text>
-        <Text style={styles.orderDetail}>{t('ProductCardView:Price')}: ${item.totalAmount}</Text>
-        <Text style={styles.orderDetail}>{t('ProductCardView:Date')}: {new Date(item.createdAt).toLocaleDateString()}</Text>
-        
+        <View style={{width:200}}>
+        <Text style={styles.orderDetail}>{t('OrderShipped:PhoneNumber')}: {item.User.phoneNumber}</Text>
+        <Text style={styles.orderDetail}>{t('OrderShipped:buyer')}: {item.User.firstname}</Text>
+        <Text style={styles.orderDetail}>{t('OrderShipped:Location')}: {item.User.location}</Text>
+        <Text style={styles.orderDetail}>{t('OrderShipped:Price')}: ${item.totalAmount}</Text>
+        <Text style={styles.orderDetail}>{t('OrderShipped:Date')}: {new Date(item.createdAt).toLocaleDateString()}</Text>
+        </View>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("OrderDetails", {OrderId: item.id})}>
-          <Text style={styles.buttonText}>{t('ProductCardView:buttonView')}</Text>
+          <Text style={styles.buttonText}>{t('OrderShipped:buttonView')}</Text>
         </TouchableOpacity>
        
       </View>
       <Image
             source={require("../../assets/images/verified.png")}
-            style={{height:150,width:150,zIndex:9999999,left:180,bottom:160,marginBottom:-180}}
+            style={{height:150,width:150,zIndex:9999999,left:195,bottom:160,marginBottom:-180}}
           />
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{t('ProductCardView:title')}</Text>
+      <Text style={styles.header}>{t('OrderShipped:title2')}</Text>
     
       <TouchableOpacity style={{ left: 10, marginTop: 0, marginBottom: 15 }}>
         <Ionicons name="arrow-back-outline" size={35} color={COLORS.black} onPress={() => { navigation.navigate("OrderScreen") }} />
       </TouchableOpacity>
-  
-     
-      
-
-     
+      {shippedOrders.length> 0 ?(
       <FlatList
         data={shippedOrders}
         keyExtractor={(item, index) => item.id ? item.id.toString() : `${index}`}
         renderItem={renderOrder}
         contentContainerStyle={styles.list}
       />
+      ):(
+         <View>
+           <Text style={{ fontFamily: 'bold', fontSize: 35, top: 50, left: -3, zIndex:99999}}> {t('OrderShipped:notfoundd')}</Text>
+           <Ionicons name="receipt" size={350} style={{top:20}} color={"#ccc"}/>    
+         </View>
+              
+              )}
     </View>
   );
 };
@@ -104,13 +108,14 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   orderTitle: {
-    fontSize: 25,
+    fontSize: 20,
     fontFamily: 'bold',
     color: '#333',
     marginBottom: -50,
+    width:190
   },
   orderDetail: {
-    fontSize: 19,
+    fontSize: 16,
     color: '#555',
     fontFamily: "bold",
     marginBottom: 3,
@@ -119,7 +124,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: COLORS.primary,
     padding: 10,
-    width: 100,
+    width: 150,
     borderRadius: 5,
     alignItems: 'center',
   },

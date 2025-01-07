@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
       fontFamily: "bold",
       fontSize: SIZES.large,
       marginBottom: 2,
+      width:110
     },
     addBtn: {
       position: "absolute",

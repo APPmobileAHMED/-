@@ -13,7 +13,7 @@ const nodeMailer = async (to,subject,html) => {
     });
 
     const message = {
-      from: '"bookify 👻" <ahmed.gafsi.2001@gmail.com>', // sender address
+      from: '"Ammer Darek 👻" <ahmed.gafsi.2001@gmail.com>', // sender address
       to: to, // list of receivers
       subject: subject, // Subject line
       text: subject, // plain text body

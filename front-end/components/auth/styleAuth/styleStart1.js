@@ -29,14 +29,16 @@ const styles = StyleSheet.create({
     signupButton: {
       backgroundColor: '#fff',
       paddingVertical: 8,
-      paddingHorizontal: "41%",
+      paddingHorizontal: "30%",
       borderRadius: 5,
       marginTop: "140%",
+      
     },
     loginText: {
-      fontSize: 24,
+      fontSize: 18,
       color: '#000',
       fontFamily: 'bold',
+      
       
     },
     linksContainer: {

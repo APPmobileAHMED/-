@@ -76,6 +76,16 @@ module.exports={
           res.status(500).json({ message: 'Error updating Order' });
         });
       }
+      ,
+ 
+deleteOrders:(req,res)=>{
+      
+    db.orders.destroy({where:{id:req.params.id}})
+    .then((response)=>res.sendStatus(201))
+   .catch((err)=>{res.json(err)})
+
+  },
+  
 
 
     }
